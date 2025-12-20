@@ -14,7 +14,8 @@ public class TorsoMovement : MonoBehaviour
     float torsoYaw = 0f;
     float headYaw = 0f;
 
-    float rotateTimer = 0f;
+    float followThreshold = 3f;
+    float followSpeed = 3f;
 
     private void LateUpdate()
     {
@@ -33,7 +34,14 @@ public class TorsoMovement : MonoBehaviour
 
         // if the head yaw is facing a direction for a period of time 
         // then rotate the body yaw to face the head direction
-        
+        float yawDelta = Mathf.DeltaAngle(torsoYaw, cameraYaw);
+        if (Mathf.Abs(yawDelta) > followThreshold)
+        {
+            float targetYaw = Mathf.LerpAngle( torsoYaw, cameraYaw, followSpeed * Time.deltaTime );
+            torsoBone.rotation = Quaternion.Euler(0f, targetYaw, 0f);
+        }
+
+
 
     }
 
