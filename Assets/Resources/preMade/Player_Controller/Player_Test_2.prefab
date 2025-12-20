@@ -694,7 +694,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5455727397693067681}
-  - component: {fileID: 1376297808172425978}
   - component: {fileID: 8712419780078418617}
   m_Layer: 0
   m_Name: Player_Test_2
@@ -720,20 +719,6 @@ Transform:
   - {fileID: 6837357462187027311}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1376297808172425978
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2829880368864475257}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5669709a548958e42be92c0a258e754f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MouseCamera
-  sensitivity: 2
-  verticalLookLimit: 80
 --- !u!114 &8712419780078418617
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -741,7 +726,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2829880368864475257}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 22ddfeef596768942833900ffd127bd1, type: 3}
   m_Name: 
@@ -2278,6 +2263,7 @@ GameObject:
   - component: {fileID: 6837357462187027311}
   - component: {fileID: 2212053423789170474}
   - component: {fileID: 3631147941094782368}
+  - component: {fileID: 5880799506273647375}
   m_Layer: 0
   m_Name: Camera
   m_TagString: MainCamera
@@ -2359,6 +2345,20 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8284232633275681886}
   m_Enabled: 1
+--- !u!114 &5880799506273647375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8284232633275681886}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5669709a548958e42be92c0a258e754f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MouseCamera
+  sensitivity: 2
+  verticalLookLimit: 80
 --- !u!1 &8290466752342198840
 GameObject:
   m_ObjectHideFlags: 0
