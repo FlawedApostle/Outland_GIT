@@ -23,6 +23,24 @@ Directional Lighting: - DONT REMOVE (IN HIERCHY SUNLIGHT)
 Acts as the SUN. Shading angles can be manipulated with such, HOWEVER SHOULD NEVER BE USED AS A CRUTCH !
 
 
+SCRIPT: TorsoMovement - How it works:
 
-SCRIPT Movement:
-add movement Boolean if moveing ?
+Camera controls head
+Head rotates independently
+Torso rotates only when head rotation exceeds a threshold
+Torso “catches up” to the head
+
+
+
+
+Assets:
+Procedural Planets and Stars
+Sci-Fi PBR Props
+Link Plataforms
+Interiors A
+Sci-Fi Old Rusty Props PBR
+Sci-Fi Construction Kit (Modular)
+Old Floor Linoleum FREE
+Backrooms like asset pack
+Flashlight
+Survival Props Pack 1.0
