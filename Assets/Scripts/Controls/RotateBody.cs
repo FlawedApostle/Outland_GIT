@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-// F****** i FEEL SO ***** DUMB ITS SO CLOSE WHAT THE ****
+// THis script EXPECTS THE PLAYER TO HAVE A CHARACTER CONTROLLER
 
-public class BodyLookFollowDelay : MonoBehaviour
+public class RotateBody : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] Transform body;
@@ -28,10 +28,15 @@ public class BodyLookFollowDelay : MonoBehaviour
     {
         mouseLook = GetComponent<MouseLook>();
         movement = GetComponent<Movement>();
+
+
     }
 
     void LateUpdate()
     {
+
+
+
         // 1. Observe movement
         bool isMoving = controller.velocity.magnitude > movementThreshold;
         //bool isMoving = movement.GetInput().magnitude > movementThreshold;
