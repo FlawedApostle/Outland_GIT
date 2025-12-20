@@ -1,0 +1,22 @@
+MouseLook script:
+This is how/what makes the head turn on the Y-Bot model
+
+attached to; 
+Y-Bot -> Hips -> Spine -> Spine 2 -> Neck -> Head
+The camera is attached to the HEAD_TOP
+
+SHADERS:
+Shader(s) is set to standard NOT UNLIT
+
+
+Library Files missing 
+
+PackageCache - last file to add ! its 1.27 GB have to use GLF
+
+Directional Lighting: - DONT REMOVE (IN HIERCHY SUNLIGHT)
+Acts as the SUN. Shading angles can be manipulated with such, HOWEVER SHOULD NEVER BE USED AS A CRUTCH !
+
+
+
+SCRIPT Movement:
+add movement Boolean if moveing ?
