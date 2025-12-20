@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Windows;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.XR;
-
+// Relative Camera Movement. Player will follow facing the direction of the camera (head)
 
 public class RelativeMovement : MonoBehaviour
 {
@@ -27,7 +27,7 @@ public class RelativeMovement : MonoBehaviour
 
         // Bonus: Show the orientation as a Quaternion if needed
         Quaternion camOrientation = Camera.main.transform.rotation;
-        Debug.Log($"Full Camera Orientation (Quaternion): {camOrientation}");
+        //Debug.Log($"Full Camera Orientation (Quaternion): {camOrientation}");
 
         // 1. Get input from WASD or Joystick
         float horizontal = UnityEngine.Input.GetAxis("Horizontal");
