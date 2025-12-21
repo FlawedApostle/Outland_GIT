@@ -3,12 +3,16 @@ using UnityEngine;
 
 public class MouseCamera : MonoBehaviour
 {
+    ///[SerializeField] Transform MainCameraTransform;  - if there are multiple cams in the scene
     [SerializeField] float sensitivity = 2.0f;
     [SerializeField] float verticalLookLimit = 80f;
     [SerializeField] float horizontalLookLimit = 80f;
 
     private float _rotationX = 0f; // Left/Right (Yaw)
     private float _rotationY = 0f; // Up/Down (Pitch)
+
+    // Clamp check
+    float _rotationXClampCheck = 80f;
 
     void Start()
     {
@@ -29,17 +33,24 @@ public class MouseCamera : MonoBehaviour
 
         // 3. Clamp the vertical look to prevent the camera from flipping over
         _rotationY = Mathf.Clamp(_rotationY, -verticalLookLimit, verticalLookLimit);
-        
+
         /// 3.5 Clamp the vertical look to prevent the camera from flipping over
         /// We must set if the clamp reaches its limit the clamp reverts back to zero to then continue rotation in a realistic manner
-        //_rotationX = Mathf.Clamp(_rotationX, -horizontalLookLimit, horizontalLookLimit);
+        _rotationX = Mathf.Clamp(_rotationX, -horizontalLookLimit, horizontalLookLimit);
+        _rotationX = Mathf.Clamp(_rotationX, -horizontalLookLimit, horizontalLookLimit);
+        
 
         // 4. Apply the rotation directly to the camera
         transform.eulerAngles = new Vector3(_rotationY, _rotationX, 0f);
+        if (_rotationX >= _rotationXClampCheck)
+        {
+            Debug.Log("[MouseCamera::DEBUG] Clamp Limit");
+            _rotationX = Mathf.Clamp(_rotationX, -horizontalLookLimit, horizontalLookLimit);
+        }
 
-
-        // Get the rotation as a Quaternion (best for math/interpolation)
-        Quaternion camRotation = Camera.main.transform.rotation;
+            // This takes the camera with the tag MainCamera. - to have muiltiple cams, a serialized transform will directly take the chosen camera
+            /// Get the rotation as a Quaternion (best for math/interpolation)
+            Quaternion camRotation = Camera.main.transform.rotation;
         // Get the rotation as Euler angles (Vector3 - X, Y, Z)
         Vector3 camEulerAngles = Camera.main.transform.eulerAngles;
 
