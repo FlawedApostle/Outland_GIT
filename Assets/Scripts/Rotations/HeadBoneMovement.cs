@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BoneFollowMouse : MonoBehaviour
+public class HeadBoneMovement : MonoBehaviour
 {
     [SerializeField] Transform headBone; // Drag the head bone here in the Inspector
     [SerializeField] float sensitivity = 2.0f;
