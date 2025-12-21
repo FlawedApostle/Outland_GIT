@@ -22,13 +22,13 @@ public class TorsoMovement : MonoBehaviour
         //1. we need the Camera yaw !
         /// We are taking the Main Scene Camera - which has a tag NAMED "MAIN CAMERA" (WHICH IS UNITYS DEFAULT CAMERA TAG NAME) 
         cameraYaw = Camera.main.transform.eulerAngles.y;
-        Debug.Log("[TorsoMovement Debug] cameraYaw eulerAngle.y : " +  cameraYaw);
+        Debug.Log("cameraYaw eulerAngle.y : " +  cameraYaw);
         //2. We need the torso yaw
         torsoYaw = torsoBone.eulerAngles.y;
-        Debug.Log("[TorsoMovement Debug] torsoYaw eulerAngle.y : " + torsoYaw);
+        Debug.Log("torsoYaw eulerAngle.y : " + torsoYaw);
         // 3. we need the head yaw
         headYaw = headBoneYaw.eulerAngles.y;
-        Debug.Log("[TorsoMovement Debug] headYaw eulerAngle.y : " + headYaw);
+        Debug.Log("headYaw eulerAngle.y : " + headYaw);
         // 4. we need relative camera 'movememt' ?
         // do i need to get relative movement ? I dont think so no.
 
