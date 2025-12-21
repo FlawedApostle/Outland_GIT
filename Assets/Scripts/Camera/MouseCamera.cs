@@ -5,6 +5,7 @@ public class MouseCamera : MonoBehaviour
 {
     [SerializeField] float sensitivity = 2.0f;
     [SerializeField] float verticalLookLimit = 80f;
+    [SerializeField] float horizontalLookLimit = 80f;
 
     private float _rotationX = 0f; // Left/Right (Yaw)
     private float _rotationY = 0f; // Up/Down (Pitch)
@@ -28,6 +29,10 @@ public class MouseCamera : MonoBehaviour
 
         // 3. Clamp the vertical look to prevent the camera from flipping over
         _rotationY = Mathf.Clamp(_rotationY, -verticalLookLimit, verticalLookLimit);
+        
+        /// 3.5 Clamp the vertical look to prevent the camera from flipping over
+        /// We must set if the clamp reaches its limit the clamp reverts back to zero to then continue rotation in a realistic manner
+        //_rotationX = Mathf.Clamp(_rotationX, -horizontalLookLimit, horizontalLookLimit);
 
         // 4. Apply the rotation directly to the camera
         transform.eulerAngles = new Vector3(_rotationY, _rotationX, 0f);
