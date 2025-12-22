@@ -51,7 +51,7 @@ public class RelativeMovement : MonoBehaviour
             transform.position += moveDirection.normalized * speed * Time.deltaTime;
 
             // Debug the final direction vector
-            Debug.Log($"Moving in relative direction: {moveDirection.normalized}");
+            ///Debug.Log($"[RelativeMovement DEBUG] Moving in relative direction: {moveDirection.normalized}");
         }
     }
 }
