@@ -1,9 +1,10 @@
+using System;
 using Unity.VisualScripting;
 using UnityEngine;
 // This takes the camera with the tag MainCamera. - to have muiltiple cams, a serialized transform will directly take the chosen camera
 public class MouseCamera : MonoBehaviour
 {
-    ///[SerializeField] Transform MainCameraTransform;  - if there are multiple cams in the scene
+     public Transform MainCameraTransform;  // for multiple cams in the scene
     [SerializeField] float sensitivity = 2.0f;
     [SerializeField] float verticalLookLimit = 80f;
     [SerializeField] float horizontalLookLimit = -80f;
@@ -30,12 +31,18 @@ public class MouseCamera : MonoBehaviour
     }
     public void PrintClampAxisRotation_Y(float Clampvalue) { Debug.Log("[MouseCamera DEBUG] Current Clamp Y Axis " + Clampvalue); }
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Camera Position
+    // PRINTS Camera Position
     public void CamCoordinateLocation()
     {
         Debug.Log("[MouseCamera DEBUG] Camera Coordinate Location: (" + _rotationX + " , " + _rotationY + ")" );
     }
-
+    public void CamCoordinateLocation(float x, float y)
+    {
+        Debug.Log("[MouseCamera DEBUG] Camera Coordinate Location: (" + x + " , " + y + ")");
+    }
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// Return Cam Transform
+    public Transform returnMainCameraTransform() { return MainCameraTransform; }
 
     ////////////////////////////////////////// Camera Euler Angles - can only use in awake, so dont call for now. It cannot call an instance when it is null at scene start
     //Vector3 _camEulerAngles = Camera.main.transform.eulerAngles;
@@ -47,6 +54,9 @@ public class MouseCamera : MonoBehaviour
     //////////////////////////////////////////////////////////
     private void Awake()
     {
+        if (MainCameraTransform == null)
+        MainCameraTransform = GetComponent<Transform>();
+
         _rotationX = 0f;
         _rotationY = 0f;
     }
@@ -71,16 +81,23 @@ public class MouseCamera : MonoBehaviour
 
         // 3. Clamp the vertical look to prevent the camera from flipping over 
         _rotationY = Mathf.Clamp(_rotationY, -verticalLookLimit, verticalLookLimit); // Axis Y 
-         //Debug.Log("[MouseCamera] Axis Y Clamp " + _rotationY);
+                                                                                     //Debug.Log("[MouseCamera] Axis Y Clamp " + _rotationY);
 
         // 4. Apply the rotation directly to the camera
-        transform.eulerAngles = new Vector3(_rotationY, _rotationX, 0f);
+        //transform.eulerAngles = new Vector3(_rotationY, _rotationX, 0f);          // OG
+        MainCameraTransform.eulerAngles = new Vector3(_rotationY, _rotationX, 0f);  // Applying it to a set transform to ensure data integrety
         PrintClampAxisRotation_Y(_rotationY); // DEBUG - print the y axis clamp
 
         /// We must set if the clamp reaches its limit the clamp reverts back to zero to then continue rotation in a realistic manner
 
+        /* Rotation Interpolation
         /// Get the rotation as a Quaternion (best for math/interpolation)
         //Quaternion camRotation = Camera.main.transform.rotation;
+        //camRotation.x = _rotationX;
+        //camRotation.y = _rotationY;
+        //Debug.Log("Quaternion Cam Rotation: "); CamCoordinateLocation(_rotationX, _rotationY);
+
+
         //Get the rotation as Euler angles (Vector3 - X, Y, Z)
         //Vector3 camEulerAngles = Camera.main.transform.eulerAngles;
 
@@ -90,7 +107,7 @@ public class MouseCamera : MonoBehaviour
         //    //  Or use the rotation directly Sets full rotation - this is used for Bone Movement
         //    // use camRotation as a global object for headBone to get exact movement
         //transform.rotation = camRotation;
-
+        */
         ///Debug.Log("[MouseCamera DEBUG] Camera Rotation (Euler): " + transform.eulerAngles);
     }
 

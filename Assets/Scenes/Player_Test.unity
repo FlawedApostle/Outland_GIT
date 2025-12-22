@@ -231,6 +231,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1110213002 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8306553345766996977, guid: 59f5edbc825041946860455f04e2d5be, type: 3}
+  m_PrefabInstance: {fileID: 1857340237}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1110213003 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6658382057938661639, guid: 59f5edbc825041946860455f04e2d5be, type: 3}
+  m_PrefabInstance: {fileID: 1857340237}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5669709a548958e42be92c0a258e754f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MouseCamera
 --- !u!1 &1791990298
 GameObject:
   m_ObjectHideFlags: 0
@@ -340,6 +356,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4360861887812620210, guid: 59f5edbc825041946860455f04e2d5be, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     - target: {fileID: 4931346146901612539, guid: 59f5edbc825041946860455f04e2d5be, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.003964998
@@ -384,10 +404,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player_YBot(RelativeCamera)
       objectReference: {fileID: 0}
+    - target: {fileID: 6658382057938661639, guid: 59f5edbc825041946860455f04e2d5be, type: 3}
+      propertyPath: MainCameraTransform
+      value: 
+      objectReference: {fileID: 1110213002}
     - target: {fileID: 8912696333648431143, guid: 59f5edbc825041946860455f04e2d5be, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8912696333648431143, guid: 59f5edbc825041946860455f04e2d5be, type: 3}
+      propertyPath: mouseCamera
+      value: 
+      objectReference: {fileID: 1110213003}
+    - target: {fileID: 8912696333648431143, guid: 59f5edbc825041946860455f04e2d5be, type: 3}
+      propertyPath: MouseCamera_CAMERA
+      value: 
+      objectReference: {fileID: 1110213002}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
