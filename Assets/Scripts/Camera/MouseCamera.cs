@@ -73,18 +73,13 @@ public class MouseCamera : MonoBehaviour
         // 1. Get the change in mouse position since last frame
         float mouseX = Input.GetAxis("Mouse X") * sensitivity;
         float mouseY = Input.GetAxis("Mouse Y") * sensitivity;
-
         // 2. Accumulate the values
         _rotationX += mouseX;
         _rotationY -= mouseY; // Inverted so moving mouse up looks up
         CamCoordinateLocation();    // DEBUG
-
         // 3. Clamp the vertical look to prevent the camera from flipping over 
         _rotationY = Mathf.Clamp(_rotationY, -verticalLookLimit, verticalLookLimit); // Axis Y 
-                                                                                     //Debug.Log("[MouseCamera] Axis Y Clamp " + _rotationY);
-
         // 4. Apply the rotation directly to the camera
-        //transform.eulerAngles = new Vector3(_rotationY, _rotationX, 0f);          // OG
         MainCameraTransform.eulerAngles = new Vector3(_rotationY, _rotationX, 0f);  // Applying it to a set transform to ensure data integrety
         PrintClampAxisRotation_Y(_rotationY); // DEBUG - print the y axis clamp
 
