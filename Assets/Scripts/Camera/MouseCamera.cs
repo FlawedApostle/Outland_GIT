@@ -4,7 +4,7 @@ using UnityEngine;
 // This takes the camera with the tag MainCamera. - to have muiltiple cams, a serialized transform will directly take the chosen camera
 public class MouseCamera : MonoBehaviour
 {
-     public Transform MainCameraTransform;  // for multiple cams in the scene
+     public Transform MainCameraTransform;  // FPS cam in scene
     [SerializeField] float sensitivity = 2.0f;
     [SerializeField] float verticalLookLimit = 80f;
     [SerializeField] float horizontalLookLimit = -80f;
@@ -63,8 +63,11 @@ public class MouseCamera : MonoBehaviour
         _rotationX = 0f;
         _rotationY = 0f;
     }
+
+    RelativeMovement relativeMovement;
     void Start()
     {
+
         // Lock the cursor to the center of the screen for better control
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -107,6 +110,17 @@ public class MouseCamera : MonoBehaviour
         //transform.rotation = camRotation;
         */
         ///Debug.Log("[MouseCamera DEBUG] Camera Rotation (Euler): " + transform.eulerAngles);
+
+
+
+        // DEBUGGING CAM COORDS
+        if (UnityEngine.Input.GetKeyDown(KeyCode.F1))
+        {
+            // 4. DEBUG output to show current movement directions
+            Debug.Log("Coordinates");
+            CamCoordinateLocation();
+            PrintClampAxisRotation_Y();
+        }
     }
 
 

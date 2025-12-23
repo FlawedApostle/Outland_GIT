@@ -18,8 +18,8 @@ public class RelativeMovement : MonoBehaviour
     // In this case we have absolute controll ? or is it a reference ? - here is where I get lost a little bit,
     // I do not want to be able to change the value here in RelativeMovement, rather I want A COPY of all values to which I can compare against other values
     [Header("Camera - FPS")]
-    [Tooltip("Ensure MATCHING FPS CAMERAS - Taking a refernce of the Camera from MouseCamera Script")] Transform MouseCamera_CAMERA;
-    public MouseCamera mouseCamera;
+    [SerializeField][Tooltip("Ensure MATCHING FPS CAMERAS - Taking a refernce of the Camera from MouseCamera Script")] Transform MouseCamera_CAMERA;
+   
     [Header("Player Attributes")]
     [SerializeField] float speed = 5f;
     [SerializeField] float gravity = 9.8f;
@@ -27,6 +27,25 @@ public class RelativeMovement : MonoBehaviour
     [SerializeField] float sprintSpeed = 5f;
     // The degree to which we can control our movement while in midair.
     [Range(0, 10), SerializeField, Tooltip("The degree to which we can control our movement while in midair")] float airControl = 5;
+    
+    /// Character Controller
+    [SerializeField] [Tooltip("Character Controller is Needed for Movement Input")]CharacterController characterController;
+    public void Debug_characterController(CharacterController charactercontroller)
+    {
+        charactercontroller = characterController;
+        if (characterController == null)
+        {
+            Debug.Log("No Character Controller , One has now been set");
+            characterController = GetComponent<CharacterController>();
+        }
+        Debug.Log("Character Controller set");
+    }
+    // MOVEMENT DIRECTION
+    Vector3 moveDirection = Vector3.zero;
+    Vector3 input;
+
+    // Input Controlls
+    float horizontal , vertical;
 
     // CAMERA Direction (relative)
     /*IMPORTANT NOTE
@@ -39,7 +58,9 @@ public class RelativeMovement : MonoBehaviour
     /// Relative direction will take the coordinates of the Camera direction in relation
     public void RelativeCameraMovementDirection_Vector()
     {
+        
         Debug.Log($"[RelativeMovement DEBUG] Cam Relative Forward: {camForward} | Cam Relative Right: {camRight}");
+
     }
     public void RelativeCameraMovementDirection_Quaternion()
     {
@@ -47,15 +68,11 @@ public class RelativeMovement : MonoBehaviour
     }
 
 
-    Vector3 input;
 
     private void Start()
     {
-        if (mouseCamera != null)
-        {
-            MouseCamera_CAMERA = mouseCamera.MainCameraTransform;
-        }
-            
+        characterController = GetComponent<CharacterController>();
+        Debug_characterController(characterController);
     }
 
     void Update()
@@ -66,10 +83,12 @@ public class RelativeMovement : MonoBehaviour
         //Vector3 camForward = Camera.main.transform.forward;
         //Vector3 camRight = Camera.main.transform.right;
         */
+        /* NOTES - MouseCamera_CAMERA explained
         // 1. Get raw camera directions without an Inspector slot - 
         // Taking the transform directly from MouseCamera, and then creating a copy (Safe)
         // Unity axis works as follows DO THE 3D hand gun axis on YOUR LEFT HAND if you look you will see the following;
         // Y axis is up, perpendicular to Y is the X axis (to the right). Finally Z axis points forward (index finger)
+        */
         camForward = MouseCamera_CAMERA.transform.forward;
         camRight = MouseCamera_CAMERA.transform.right;
         // 2. Flatten the vectors so you don't move into the ground
@@ -78,37 +97,35 @@ public class RelativeMovement : MonoBehaviour
         // 3. Re-normalize to ensure the length is exactly 1
         camForward.Normalize();
         camRight.Normalize();
-                                        
-        // Bonus: Show the orientation as a Quaternion if needed
+
+        // Show the orientation as a Quaternion if needed                           //Quaternion camOrientation = Camera.main.transform.rotation;               // OG
         camOrientation = MouseCamera_CAMERA.transform.rotation;                     // Referencing the transform camera input
-        //Quaternion camOrientation = Camera.main.transform.rotation;               // OG
         //Debug.Log($"Full Camera Orientation (Quaternion): {camOrientation}");     // DEBUG output Quaternion orientation
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         //////////////////////////////////////// GETTING WASD or JOYSTICK INPUT \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
         // 1. Get input from WASD or Joystick
-        float horizontal = UnityEngine.Input.GetAxis("Horizontal");
-        float vertical = UnityEngine.Input.GetAxis("Vertical");
+        horizontal = UnityEngine.Input.GetAxis("Horizontal");
+        vertical = UnityEngine.Input.GetAxis("Vertical");
 
         // 3. Combine into a final movement vector
-        Vector3 moveDirection = (camForward * vertical) + (camRight * horizontal);
+        moveDirection = (camForward * vertical) + (camRight * horizontal);
 
+        //////////////////////////////////////// MOVEMENT BLOCK \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
         // 4. Apply movement (using normalization to keep speed consistent)
         if (moveDirection.magnitude > 0.1f)
         {
             // Move the object
             transform.position += moveDirection.normalized * speed * Time.deltaTime;
 
+
             // Debug the final direction vector
             ///Debug.Log($"[RelativeMovement DEBUG] Moving in relative direction: {moveDirection.normalized}");
         }
-        if (UnityEngine.Input.GetKeyDown(KeyCode.F1))
+        // DEBUGGING RelativeMovement DIRECTION COORDS
+        if (UnityEngine.Input.GetKeyDown(KeyCode.F2))       
         {
-            // 4. DEBUG output to show current movement directions
-            Debug.Log("Coordinates");
             RelativeCameraMovementDirection_Vector();
-            mouseCamera.CamCoordinateLocation();
-            mouseCamera.PrintClampAxisRotation_Y();
         }
 
         if (UnityEngine.Input.GetButton("Jump"))
