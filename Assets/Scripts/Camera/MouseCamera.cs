@@ -12,6 +12,8 @@ public class MouseCamera : MonoBehaviour
     // I am using my own set values for better control, frame to frame management
     private float _rotationX = 0f; // Left/Right (Yaw)
     private float _rotationY = 0f; // Up/Down (Pitch)
+    private float mouseX = 0f;
+    private float mouseY = 0f;
 
     // Clamp
     float min, max, clamp_X, clamp_Y;
@@ -71,8 +73,8 @@ public class MouseCamera : MonoBehaviour
     {
 
         // 1. Get the change in mouse position since last frame
-        float mouseX = Input.GetAxis("Mouse X") * sensitivity;
-        float mouseY = Input.GetAxis("Mouse Y") * sensitivity;
+        mouseX = Input.GetAxis("Mouse X") * sensitivity;
+        mouseY = Input.GetAxis("Mouse Y") * sensitivity;
         // 2. Accumulate the values
         _rotationX += mouseX;
         _rotationY -= mouseY; // Inverted so moving mouse up looks up
