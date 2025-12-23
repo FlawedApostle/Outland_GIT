@@ -32,6 +32,7 @@ public class MouseCamera : MonoBehaviour
         return clamp_X;
     }
     public void PrintClampAxisRotation_Y(float Clampvalue) { Debug.Log("[MouseCamera DEBUG] Current Clamp Y Axis " + Clampvalue); }
+    public void PrintClampAxisRotation_Y() { Debug.Log("[MouseCamera DEBUG] Current Clamp Y Axis " + _rotationY); }
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // PRINTS Camera Position
     public void CamCoordinateLocation()
@@ -77,13 +78,13 @@ public class MouseCamera : MonoBehaviour
         mouseY = Input.GetAxis("Mouse Y") * sensitivity;
         // 2. Accumulate the values
         _rotationX += mouseX;
-        _rotationY -= mouseY; // Inverted so moving mouse up looks up
-        CamCoordinateLocation();    // DEBUG
+        _rotationY -= mouseY; /// Inverted so moving mouse up looks up
+        ///CamCoordinateLocation();    // DEBUG
         // 3. Clamp the vertical look to prevent the camera from flipping over 
         _rotationY = Mathf.Clamp(_rotationY, -verticalLookLimit, verticalLookLimit); // Axis Y 
         // 4. Apply the rotation directly to the camera
         MainCameraTransform.eulerAngles = new Vector3(_rotationY, _rotationX, 0f);  // Applying it to a set transform to ensure data integrety
-        PrintClampAxisRotation_Y(_rotationY); // DEBUG - print the y axis clamp
+        ///PrintClampAxisRotation_Y(_rotationY); // DEBUG - print the y axis clamp
 
         /// We must set if the clamp reaches its limit the clamp reverts back to zero to then continue rotation in a realistic manner
 

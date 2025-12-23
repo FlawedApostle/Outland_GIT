@@ -4,6 +4,12 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.XR;
 // Relative Camera Movement. Player will follow facing the direction of the camera (head)
 
+/// <summary>
+///  TO DO
+///  ADD A CHARACTER CONTROLLER FOR MOVEMENT
+///  FIX MOVMEMNT IF/ELSE SCRIPT
+/// </summary>
+
 public class RelativeMovement : MonoBehaviour
 {
     // I am calling an object of the MouseCamera script , Which has a [Serialized Field] Transform of the INTENDED FPS camera
@@ -11,10 +17,16 @@ public class RelativeMovement : MonoBehaviour
     // When RelativeMovement awakes the Transform of the MouseCamera script is called, and is set to the Transform of the RelativeMovement script
     // In this case we have absolute controll ? or is it a reference ? - here is where I get lost a little bit,
     // I do not want to be able to change the value here in RelativeMovement, rather I want A COPY of all values to which I can compare against other values
-    public MouseCamera mouseCamera;
+    [Header("Camera - FPS")]
     [Tooltip("Ensure MATCHING FPS CAMERAS - Taking a refernce of the Camera from MouseCamera Script")] Transform MouseCamera_CAMERA;
-    //[SerializeField] public Transform Camera;
+    public MouseCamera mouseCamera;
+    [Header("Player Attributes")]
     [SerializeField] float speed = 5f;
+    [SerializeField] float gravity = 9.8f;
+    [SerializeField] float jumpHeight = 2f;
+    [SerializeField] float sprintSpeed = 5f;
+    // The degree to which we can control our movement while in midair.
+    [Range(0, 10), SerializeField, Tooltip("The degree to which we can control our movement while in midair")] float airControl = 5;
 
     // CAMERA Direction (relative)
     /*IMPORTANT NOTE
@@ -33,9 +45,9 @@ public class RelativeMovement : MonoBehaviour
     {
         Debug.Log($"[RelativeMovement DEBUG] Full Camera Orientation (Quaternion): {camOrientation}");
     }
-    
 
-    ///  I now need to compare the direction vectors  !
+
+    Vector3 input;
 
     private void Start()
     {
@@ -56,7 +68,7 @@ public class RelativeMovement : MonoBehaviour
         */
         // 1. Get raw camera directions without an Inspector slot - 
         // Taking the transform directly from MouseCamera, and then creating a copy (Safe)
-        // Unity axis works as follows do the 3D hand gun axis on YOUR RIGHT HAND if you look you will see the following;
+        // Unity axis works as follows DO THE 3D hand gun axis on YOUR LEFT HAND if you look you will see the following;
         // Y axis is up, perpendicular to Y is the X axis (to the right). Finally Z axis points forward (index finger)
         camForward = MouseCamera_CAMERA.transform.forward;
         camRight = MouseCamera_CAMERA.transform.right;
@@ -66,8 +78,7 @@ public class RelativeMovement : MonoBehaviour
         // 3. Re-normalize to ensure the length is exactly 1
         camForward.Normalize();
         camRight.Normalize();
-        // 4. DEBUG output to show current movement directions
-        RelativeCameraMovementDirection_Vector();                                          
+                                        
         // Bonus: Show the orientation as a Quaternion if needed
         camOrientation = MouseCamera_CAMERA.transform.rotation;                     // Referencing the transform camera input
         //Quaternion camOrientation = Camera.main.transform.rotation;               // OG
@@ -78,17 +89,6 @@ public class RelativeMovement : MonoBehaviour
         // 1. Get input from WASD or Joystick
         float horizontal = UnityEngine.Input.GetAxis("Horizontal");
         float vertical = UnityEngine.Input.GetAxis("Vertical");
-
-        // 2. Get and "Flatten" camera directions (ignore tilt)
-        //camForward = Camera.main.transform.forward;     // OG
-        //camRight = Camera.main.transform.right;         // OG
-
-        camForward = MouseCamera_CAMERA.transform.forward;
-        camRight = MouseCamera_CAMERA.transform.right;
-        camForward.y = 0;
-        camRight.y = 0;
-        camForward.Normalize();
-        camRight.Normalize();
 
         // 3. Combine into a final movement vector
         Vector3 moveDirection = (camForward * vertical) + (camRight * horizontal);
@@ -101,6 +101,33 @@ public class RelativeMovement : MonoBehaviour
 
             // Debug the final direction vector
             ///Debug.Log($"[RelativeMovement DEBUG] Moving in relative direction: {moveDirection.normalized}");
+        }
+        if (UnityEngine.Input.GetKeyDown(KeyCode.F1))
+        {
+            // 4. DEBUG output to show current movement directions
+            Debug.Log("Coordinates");
+            RelativeCameraMovementDirection_Vector();
+            mouseCamera.CamCoordinateLocation();
+            mouseCamera.PrintClampAxisRotation_Y();
+        }
+
+        if (UnityEngine.Input.GetButton("Jump"))
+        {
+            Debug.Log("Jump Pressed");
+            moveDirection.y = Mathf.Sqrt(2 * gravity * jumpHeight);
+        }
+
+        if(UnityEngine.Input.GetButton("Sprint"))
+        {
+            Debug.Log("Sprint Pressed");
+            moveDirection *= sprintSpeed;
+        }
+
+        else
+        {
+            moveDirection.y = 0;
+            input.y = moveDirection.y;
+            moveDirection = Vector3.Lerp(moveDirection, input, airControl * Time.deltaTime);
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
