@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 837395369}
   - component: {fileID: 837395368}
   - component: {fileID: 837395367}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -247,6 +247,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5669709a548958e42be92c0a258e754f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MouseCamera
+--- !u!143 &1586116457 stripped
+CharacterController:
+  m_CorrespondingSourceObject: {fileID: 512353189268032310, guid: 59f5edbc825041946860455f04e2d5be, type: 3}
+  m_PrefabInstance: {fileID: 1857340237}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1791990298
 GameObject:
   m_ObjectHideFlags: 0
@@ -352,6 +357,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 512353189268032310, guid: 59f5edbc825041946860455f04e2d5be, type: 3}
+      propertyPath: m_Height
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 512353189268032310, guid: 59f5edbc825041946860455f04e2d5be, type: 3}
+      propertyPath: m_Center.y
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3050227449285750802, guid: 59f5edbc825041946860455f04e2d5be, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -362,15 +375,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4931346146901612539, guid: 59f5edbc825041946860455f04e2d5be, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.003964998
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4931346146901612539, guid: 59f5edbc825041946860455f04e2d5be, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.00000047683716
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4931346146901612539, guid: 59f5edbc825041946860455f04e2d5be, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.939362
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4931346146901612539, guid: 59f5edbc825041946860455f04e2d5be, type: 3}
       propertyPath: m_LocalRotation.w
@@ -420,6 +433,10 @@ PrefabInstance:
       propertyPath: MouseCamera_CAMERA
       value: 
       objectReference: {fileID: 1110213002}
+    - target: {fileID: 8912696333648431143, guid: 59f5edbc825041946860455f04e2d5be, type: 3}
+      propertyPath: characterController
+      value: 
+      objectReference: {fileID: 1586116457}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
