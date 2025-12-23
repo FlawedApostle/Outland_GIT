@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Windows;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.XR;
@@ -19,17 +19,28 @@ public class RelativeMovement : MonoBehaviour
     // I do not want to be able to change the value here in RelativeMovement, rather I want A COPY of all values to which I can compare against other values
     [Header("Camera - FPS")]
     [SerializeField][Tooltip("Ensure MATCHING FPS CAMERAS - Taking a refernce of the Camera from MouseCamera Script")] Transform MouseCamera_CAMERA;
-   
-    [Header("Player Attributes")]
-    [SerializeField] float speed = 5f;
-    [SerializeField] float gravity = 9.8f;
-    [SerializeField] float jumpHeight = 2f;
-    [SerializeField] float sprintSpeed = 5f;
-    // The degree to which we can control our movement while in midair.
-    [Range(0, 10), SerializeField, Tooltip("The degree to which we can control our movement while in midair")] float airControl = 5;
-    
+    // CAMERA Direction (relative)
+    /*IMPORTANT NOTE
+    // Taking the transform directly from MouseCamera, and then creating a copy (Safe)
+    // Unity axis works as follows do the 3D hand gun axis on YOUR RIGHT HAND if you look you will see the following;
+    // Y axis is up, perpendicular to Y is the X axis (to the right). Finally Z axis points forward (index finger) 
+    */
+    Vector3 camForward, camRight;
+    Quaternion camOrientation;
+    /// Relative direction will take the coordinates of the Camera direction in relation
+    public void RelativeCameraMovementDirection_Vector()
+    {
+
+        Debug.Log($"[RelativeMovement DEBUG] Cam Relative Forward: {camForward} | Cam Relative Right: {camRight}");
+
+    }
+    public void RelativeCameraMovementDirection_Quaternion()
+    {
+        Debug.Log($"[RelativeMovement DEBUG] Full Camera Orientation (Quaternion): {camOrientation}");
+    }
+
     /// Character Controller
-    [SerializeField] [Tooltip("Character Controller is Needed for Movement Input")]CharacterController characterController;
+    [SerializeField][Tooltip("Character Controller is Needed for Movement Input")] CharacterController characterController;
     public void Debug_characterController(CharacterController charactercontroller)
     {
         charactercontroller = characterController;
@@ -40,44 +51,35 @@ public class RelativeMovement : MonoBehaviour
         }
         Debug.Log("Character Controller set");
     }
-    // MOVEMENT DIRECTION
-    Vector3 moveDirection = Vector3.zero;
-    Vector3 input;
 
     // Input Controlls
-    float horizontal , vertical;
+    private float horizontal;
+    private float vertical;
 
-    // CAMERA Direction (relative)
-    /*IMPORTANT NOTE
-    // Taking the transform directly from MouseCamera, and then creating a copy (Safe)
-    // Unity axis works as follows do the 3D hand gun axis on YOUR RIGHT HAND if you look you will see the following;
-    // Y axis is up, perpendicular to Y is the X axis (to the right). Finally Z axis points forward (index finger) 
-    */
-    Vector3 camForward , camRight;
-    Quaternion camOrientation;
-    /// Relative direction will take the coordinates of the Camera direction in relation
-    public void RelativeCameraMovementDirection_Vector()
-    {
-        
-        Debug.Log($"[RelativeMovement DEBUG] Cam Relative Forward: {camForward} | Cam Relative Right: {camRight}");
+    [Header("Player Attributes")]
+    [SerializeField] float sprintSpeed = 6f;            /// the speed in which player can move, units per second
+    [SerializeField] float moveSpeed = 4;
+    [SerializeField] float jumpHeight = 2f;
+    [SerializeField] float gravity = 9.8f;
+    // The degree to which we can control our movement while in midair.
+    [Range(0, 10), SerializeField, Tooltip("The degree to which we can control our movement while in midair")] float airControl = 5;
 
-    }
-    public void RelativeCameraMovementDirection_Quaternion()
-    {
-        Debug.Log($"[RelativeMovement DEBUG] Full Camera Orientation (Quaternion): {camOrientation}");
-    }
-
-
+    
+    // MOVEMENT DIRECTION
+    Vector3 horizontalMove = Vector3.zero;
+    Vector3 moveDirection = Vector3.zero;
+    Vector3 finalMove = Vector3.zero;
+    Vector3 input;
+    bool isGrounded;
+    float verticalVelocity = 0f;
 
     private void Start()
     {
         characterController = GetComponent<CharacterController>();
         Debug_characterController(characterController);
     }
-
     void Update()
     {
-
         //////////////////////////////////////// GETTING CAMERA ORIENTATION \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
         /* IMPORTANT NOTE: This is using the TAG system, Camera Must have MainCamera Tag associated
         //Vector3 camForward = Camera.main.transform.forward;
@@ -101,40 +103,106 @@ public class RelativeMovement : MonoBehaviour
         // Show the orientation as a Quaternion if needed                           //Quaternion camOrientation = Camera.main.transform.rotation;               // OG
         camOrientation = MouseCamera_CAMERA.transform.rotation;                     // Referencing the transform camera input
         //Debug.Log($"Full Camera Orientation (Quaternion): {camOrientation}");     // DEBUG output Quaternion orientation
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         //////////////////////////////////////// GETTING WASD or JOYSTICK INPUT \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
         // 1. Get input from WASD or Joystick
         horizontal = UnityEngine.Input.GetAxis("Horizontal");
         vertical = UnityEngine.Input.GetAxis("Vertical");
+      
+        // 2. Apply horizontal movement (camera‑relative)
+        moveDirection = (camForward * vertical) + (camRight * horizontal);          // normalize ?
+        isGrounded = characterController.isGrounded;
+        
+        moveDirection *= moveSpeed;         //test line
 
-        // 3. Combine into a final movement vector
-        moveDirection = (camForward * vertical) + (camRight * horizontal);
 
         //////////////////////////////////////// MOVEMENT BLOCK \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-        // 4. Apply movement (using normalization to keep speed consistent)
-        if (moveDirection.magnitude > 0.1f)
+
+        // 4. Calculate input magnitude on the ground plane (for "movement > 0.01f" check)
+        Vector2 inputPlane = new Vector2(horizontal, vertical);
+        float inputMagnitude = inputPlane.magnitude;
+
+        // 5. Decide current speed: base moveSpeed or sprintSpeed
+        float currentSpeed = moveSpeed;
+        if (isGrounded && inputMagnitude > 0.01f )
         {
+
+            if(UnityEngine.Input.GetButton("Sprint"))
+            {
+            Debug.Log("Sprint Pressed");
+            currentSpeed = sprintSpeed;
+
+            }
+        }
+
+        // 6. Handle jump and gravity
+        if (isGrounded)
+        {
+            // Only allow jump if grounded and there's some input or not (design choice)
+            if (UnityEngine.Input.GetButtonDown("Jump"))
+            {
+                Debug.Log("Jump Pressed");
+                verticalVelocity = Mathf.Sqrt(2 * gravity * jumpHeight);
+            }
+            else if (verticalVelocity < 0f)
+            {
+                // Slight negative to keep controller grounded
+                verticalVelocity = -1f;
+            }
+        }
+        else
+        {
+            // In the air: apply gravity over time
+            verticalVelocity -= gravity * Time.deltaTime;
+
+            // Optional air control: blend moveDirection towards input, without killing Y
+            input = moveDirection; // keep your variable in use
+            moveDirection = Vector3.Lerp(moveDirection, input, airControl * Time.deltaTime);
+        }
+
+        // 7. Build horizontal movement (camera-relative)
+        horizontalMove = moveDirection.normalized * currentSpeed;
+
+        // 8. Combine horizontal + vertical into finalMove
+        finalMove = new Vector3(horizontalMove.x, verticalVelocity, horizontalMove.z);
+
+        // 9. Only move if we're actually trying to move
+        if (inputMagnitude > 0.01f || !isGrounded || verticalVelocity > 0f)
+        {
+            characterController.Move(finalMove * Time.deltaTime);
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+        /*
+        if (moveDirection.magnitude > 0.1f) // moveDirection.magnitude > 0.1f
+        {
+
+            characterController.Move(finalMove * moveSpeed  * Time.deltaTime);
+
+            // Slight negative to keep controller grounded
+            verticalVelocity = -1f;
+
+            //moveDirection = input;
             // Move the object
-            transform.position += moveDirection.normalized * speed * Time.deltaTime;
-
-
-            // Debug the final direction vector
-            ///Debug.Log($"[RelativeMovement DEBUG] Moving in relative direction: {moveDirection.normalized}");
-        }
-        // DEBUGGING RelativeMovement DIRECTION COORDS
-        if (UnityEngine.Input.GetKeyDown(KeyCode.F2))       
-        {
-            RelativeCameraMovementDirection_Vector();
+            //transform.position += moveDirection.normalized * speed * Time.deltaTime;      // OG
         }
 
-        if (UnityEngine.Input.GetButton("Jump"))
+        if (isGrounded && UnityEngine.Input.GetButtonDown("Jump"))
         {
             Debug.Log("Jump Pressed");
-            moveDirection.y = Mathf.Sqrt(2 * gravity * jumpHeight);
+            verticalVelocity = Mathf.Sqrt(2 * gravity * jumpHeight);
         }
 
-        if(UnityEngine.Input.GetButton("Sprint"))
+
+         if (UnityEngine.Input.GetButton("Sprint"))
         {
             Debug.Log("Sprint Pressed");
             moveDirection *= sprintSpeed;
@@ -146,10 +214,24 @@ public class RelativeMovement : MonoBehaviour
             input.y = moveDirection.y;
             moveDirection = Vector3.Lerp(moveDirection, input, airControl * Time.deltaTime);
         }
+        */
+
+        /* DEBUGGING
+        //// DEBUGGING RelativeMovement DIRECTION COORDS
+        //if (UnityEngine.Input.GetKeyDown(KeyCode.F2))
+        //{
+        //    RelativeCameraMovementDirection_Vector();
+        //}
+        // Debug the final direction vector
+        ///Debug.Log($"[RelativeMovement DEBUG] Moving in relative direction: {moveDirection.normalized}")
+        */
+
+
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    
-    
+
+
     }
 
 }       // !#END of Class RelativeMovement
