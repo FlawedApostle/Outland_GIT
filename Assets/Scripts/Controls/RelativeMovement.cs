@@ -2,7 +2,16 @@
 using UnityEngine.Windows;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.XR;
-// Relative Camera Movement. Player will follow facing the direction of the camera (head)
+/*IMPORTANT NOTE: 
+ * THIS IS BUILT BY SAMUEL FEARNLY WHOM IS THE SOLE CREATOR AND PROPIETER OF SUCH SOFTWARE
+ * IF YOU WISH TO USE THE CODE PLEASE REACH OUT TO EITHER MY DISCORD, OR GITHUB ACCOUNTS - IM REALLY NOT PICKY, I JUST WANT TO BE SURE NOTHING IS USED MALICOUSLY 
+ */
+/* These notes are for me, I dont care what others think. I have to keep track of what I am doing.
+* Relative Camera Movement. Player will follow facing the direction of the camera (head)
+* magnitude depends on movement  inputMagnitude > 0.01f
+* Unity uses a left hand 3D Coord system. [LEFT/RIGHT = X AXIS | UP/DOWN = Y AXIS | FORWARD/BACK = Z AXIS] 
+* InputVector is the movement vector,
+* */
 
 /// <summary>
 ///  TO DO
@@ -61,7 +70,7 @@ public class RelativeMovement : MonoBehaviour
     [SerializeField] float moveSpeed = 4;
     [SerializeField] float jumpHeight = 2f;
     [SerializeField] float gravity = 9.8f;
-    // The degree to which we can control our movement while in midair.
+    // Build a slider - The degree to which we can control our movement while in midair.
     [Range(0, 10), SerializeField, Tooltip("The degree to which we can control our movement while in midair")] float airControl = 5;
 
     
@@ -87,11 +96,10 @@ public class RelativeMovement : MonoBehaviour
     void Update()
     {
         //////////////////////////////////////// GETTING CAMERA ORIENTATION \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-        /* IMPORTANT NOTE: This is using the TAG system, Camera Must have MainCamera Tag associated
-        //Vector3 camForward = Camera.main.transform.forward;
-        //Vector3 camRight = Camera.main.transform.right;
-        */
         /* NOTES - MouseCamera_CAMERA explained
+        // IMPORTANT NOTE: This is using the TAG system, Camera Must have MainCamera Tag associated
+        // Vector3 camForward = Camera.main.transform.forward;
+        // Vector3 camRight = Camera.main.transform.right; 
         // 1. Get raw camera directions without an Inspector slot - 
         // Taking the transform directly from MouseCamera, and then creating a copy (Safe)
         // Unity axis works as follows DO THE 3D hand gun axis on YOUR LEFT HAND if you look you will see the following;
@@ -120,8 +128,8 @@ public class RelativeMovement : MonoBehaviour
 
         //////////////////////////////////////// MOVEMENT BLOCK \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
         // 4. movement vector  [left, right , up , down]
-        Vector2 inputPlane = new Vector2(horizontal, vertical);
-        float inputMagnitude = inputPlane.magnitude;                    // getting the length of the vector
+        Vector2 inputMovementVector = new Vector2(horizontal, vertical); 
+        float inputMovementMagnitude = inputMovementVector.magnitude;                    // getting the length of the vector
 
         // Debug Yaw and Pitch coordinats
         // I need to get he faciing direction ofthe camera Yaw - debug and gather data on that
@@ -144,7 +152,7 @@ public class RelativeMovement : MonoBehaviour
 
         // 5. Decide current speed: base moveSpeed or sprintSpeed
         float currentSpeed = moveSpeed; 
-        if (isGrounded && inputMagnitude > 0.01f )
+        if (isGrounded && inputMovementMagnitude > 0.01f )
         {
 
             if(UnityEngine.Input.GetButton("Sprint"))
@@ -175,19 +183,17 @@ public class RelativeMovement : MonoBehaviour
             // In the air: apply gravity over time
             verticalVelocity -= gravity * Time.deltaTime;
 
-            // Optional air control: blend moveDirection towards input, without killing Y
-            input = moveDirection; // keep your variable in use
+            // blend moveDirection towards input, without killing Y
+            input = moveDirection; // keep variable in use
             moveDirection = Vector3.Lerp(moveDirection, input, airControl * Time.deltaTime);
         }
 
-        // 7. Build horizontal movement (camera-relative)
+        // 7. Build horizontal movement (camera-relative) [CREATING MOVEMENT VECTOR]
         horizontalMove = moveDirection.normalized * currentSpeed;
-
         // 8. Combine horizontal + vertical into finalMove
-        finalMove = new Vector3(horizontalMove.x, verticalVelocity, horizontalMove.z);
-
+        finalMove = new Vector3(horizontalMove.x, verticalVelocity, horizontalMove.z); // [LEFT HAND 3D AXIS] (this line is here to ensure sprint works - (for now))
         // 9. Only move if we're actually trying to move
-        if (inputMagnitude > 0.01f || !isGrounded || verticalVelocity > 0f)
+        if (inputMovementMagnitude > 0.01f || !isGrounded || verticalVelocity > 0f)
         {
             characterController.Move(finalMove * Time.deltaTime);
         }
