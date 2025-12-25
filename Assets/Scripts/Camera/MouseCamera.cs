@@ -10,8 +10,8 @@ public class MouseCamera : MonoBehaviour
     [SerializeField] float horizontalLookLimit = -80f;
 
     // I am using my own set values for better control, frame to frame management
-    private float _rotationX = 0f; // Left/Right (Yaw)
-    private float _rotationY = 0f; // Up/Down (Pitch)
+    private float _rotationX = 0f; // (Yaw)    Left/Right 
+    private float _rotationY = 0f; // (Pitch)  Up/Down
     private float mouseX = 0f;
     private float mouseY = 0f;
 
@@ -33,18 +33,6 @@ public class MouseCamera : MonoBehaviour
     }
     public void PrintClampAxisRotation_Y(float Clampvalue) { Debug.Log("[MouseCamera DEBUG] Current Clamp Y Axis " + Clampvalue); }
     public void PrintClampAxisRotation_Y() { Debug.Log("[MouseCamera DEBUG] Current Clamp Y Axis " + _rotationY); }
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // PRINTS Camera Position
-    public void CamCoordinateLocation()
-    {
-        Debug.Log("[MouseCamera DEBUG] Camera Coordinate Location: (" + _rotationX + " , " + _rotationY + ")" );
-    }
-    public void CamCoordinateLocation(float x, float y)
-    {
-        Debug.Log("[MouseCamera DEBUG] Camera Coordinate Location: (" + x + " , " + y + ")");
-    }
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /// Return Cam Transform
     public Transform returnMainCameraTransform() { return MainCameraTransform; }
 
     ////////////////////////////////////////// Camera Euler Angles - can only use in awake, so dont call for now. It cannot call an instance when it is null at scene start
@@ -59,18 +47,17 @@ public class MouseCamera : MonoBehaviour
     {
         if (MainCameraTransform == null)
         MainCameraTransform = GetComponent<Transform>();
-
-        _rotationX = 0f;
-        _rotationY = 0f;
     }
 
     RelativeMovement relativeMovement;
     void Start()
     {
-
         // Lock the cursor to the center of the screen for better control
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        _rotationX = 0f;
+        _rotationY = 0f;
     }
 
     void Update()
@@ -81,8 +68,7 @@ public class MouseCamera : MonoBehaviour
         mouseY = Input.GetAxis("Mouse Y") * sensitivity;
         // 2. Accumulate the values
         _rotationX += mouseX;
-        _rotationY -= mouseY; /// Inverted so moving mouse up looks up
-        ///CamCoordinateLocation();    // DEBUG
+        _rotationY -= mouseY; /// (-=) Inverted so moving mouse up looks up
         // 3. Clamp the vertical look to prevent the camera from flipping over 
         _rotationY = Mathf.Clamp(_rotationY, -verticalLookLimit, verticalLookLimit); // Axis Y 
         // 4. Apply the rotation directly to the camera
@@ -111,17 +97,23 @@ public class MouseCamera : MonoBehaviour
         */
         ///Debug.Log("[MouseCamera DEBUG] Camera Rotation (Euler): " + transform.eulerAngles);
 
-
-
         // DEBUGGING CAM COORDS
         if (UnityEngine.Input.GetKeyDown(KeyCode.F1))
         {
             // 4. DEBUG output to show current movement directions
-            Debug.Log("Coordinates");
+            Debug.Log("[MouseCamera DEBUG] Rotational Coords");
             CamCoordinateLocation();
-            PrintClampAxisRotation_Y();
+            //PrintClampAxisRotation_Y();
         }
     }
 
+
+    // PRINTS Camera Position - we need the Yaw
+    public void CamCoordinateLocation()
+    {
+        Debug.Log("[MouseCamera DEBUG] " + "\n" +
+            "CAMERA COORDS (MAIN) " +
+            "Camera Coordinate Location: (" + _rotationX + " , " + _rotationY + ")");     // raw values multiplyed by sensitivity
+    }
 
 }
