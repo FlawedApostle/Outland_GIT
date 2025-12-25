@@ -2283,8 +2283,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 4141754919573813818}
   - {fileID: 7463182117353408086}
+  - {fileID: 4141754919573813818}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &703951817293002368
@@ -2299,6 +2299,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22ddfeef596768942833900ffd127bd1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RelativeMovement
+  anim: {fileID: 0}
   MouseCamera_CAMERA: {fileID: 7463182117353408086}
   characterController: {fileID: 7596150309238134721}
   sprintSpeed: 6
