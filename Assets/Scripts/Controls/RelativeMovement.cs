@@ -183,7 +183,7 @@ public class RelativeMovement : MonoBehaviour
         horizontalMove = moveDirection.normalized * currentSpeed;
         ///  Combine horizontal + vertical into finalMove - [LEFT HAND 3D AXIS] (this line is here to ensure sprint works - (for now))
         finalMove = new Vector3(horizontalMove.x, verticalVelocity, horizontalMove.z);
-        /// “This condition decides whether we should apply movement, no matter if the player is walking, in the air, or in the first frame of a jump.”
+        /// “This condition decides WHETHER we should apply movement, no matter if the player is walking, in the air, or in the first frame of a jump.”
         if (inputMovementMagnitude > 0.01f || !isGrounded || verticalVelocity > 0f)
         {
             characterController.Move(finalMove * Time.deltaTime);
