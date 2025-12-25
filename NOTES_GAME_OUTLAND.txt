@@ -30,6 +30,11 @@ Shader(s) is set to standard NOT UNLIT
 Directional Lighting: - DONT REMOVE (IN HIERCHY SUNLIGHT)
 Acts as the SUN. Shading angles can be manipulated with such, HOWEVER SHOULD NEVER BE USED AS A CRUTCH !
 
+/////////////////////////////// ANIMATIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+Adding walking animation
+- inside SCRIPTS - ANIMATIONCONTROLLER is playeranimationController which contrlls the players animations 
+- Root 3D model has animator attached - this is where the 'above' playerAnimationController is 'placed' (in inspector) to be used.
+- inside Animation tab - drag in animation (this case walking)
 
 
 /////////////////////////////// ASSETS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
