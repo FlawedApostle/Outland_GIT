@@ -70,14 +70,20 @@ public class RelativeMovement : MonoBehaviour
     Vector3 moveDirection = Vector3.zero;
     Vector3 finalMove = Vector3.zero;
     Vector3 input;
-    bool isGrounded;
-    float verticalVelocity = 0f;
-
+    private bool isGrounded;
+    private float verticalVelocity = 0f;
+    private float currentSpeed;
+    
+    
     private void Start()
     {
         characterController = GetComponent<CharacterController>();
         Debug_characterController(characterController);
+        // Set player controller movement speed
+        currentSpeed = moveSpeed;
     }
+    
+    
     void Update()
     {
         //////////////////////////////////////// GETTING CAMERA ORIENTATION \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -91,39 +97,53 @@ public class RelativeMovement : MonoBehaviour
         // Unity axis works as follows DO THE 3D hand gun axis on YOUR LEFT HAND if you look you will see the following;
         // Y axis is up, perpendicular to Y is the X axis (to the right). Finally Z axis points forward (index finger)
         */
-        camForward = MouseCamera_CAMERA.transform.forward;
-        camRight = MouseCamera_CAMERA.transform.right;
+        camForward = MouseCamera_CAMERA.transform.forward;                      // W/S forwad / backward - think of it on a 3D axis (finger axis left hand)
+        camRight = MouseCamera_CAMERA.transform.right;                          // A/D left / right
         // 2. Flatten the vectors so you don't move into the ground
         camForward.y = 0;
         camRight.y = 0;
         // 3. Re-normalize to ensure the length is exactly 1
         camForward.Normalize();
         camRight.Normalize();
-
         // Show the orientation as a Quaternion if needed                           //Quaternion camOrientation = Camera.main.transform.rotation;               // OG
         camOrientation = MouseCamera_CAMERA.transform.rotation;                     // Referencing the transform camera input
         //Debug.Log($"Full Camera Orientation (Quaternion): {camOrientation}");     // DEBUG output Quaternion orientation
-
         //////////////////////////////////////// GETTING WASD or JOYSTICK INPUT \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
         // 1. Get input from WASD or Joystick
-        horizontal = UnityEngine.Input.GetAxis("Horizontal");
-        vertical = UnityEngine.Input.GetAxis("Vertical");
-      
+        horizontal = UnityEngine.Input.GetAxis("Horizontal");           // A/D left, right
+        vertical = UnityEngine.Input.GetAxis("Vertical");               // W/S Up, down
         // 2. Apply horizontal movement (camera‑relative)
-        moveDirection = (camForward * vertical) + (camRight * horizontal);          // normalize ?
-        isGrounded = characterController.isGrounded;
-        
+        moveDirection = (camForward * vertical) + (camRight * horizontal);
+        isGrounded = characterController.isGrounded;      
         moveDirection *= moveSpeed;         //test line
 
 
         //////////////////////////////////////// MOVEMENT BLOCK \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-        // 4. Calculate input magnitude on the ground plane (for "movement > 0.01f" check)
+        // 4. movement vector  [left, right , up , down]
         Vector2 inputPlane = new Vector2(horizontal, vertical);
-        float inputMagnitude = inputPlane.magnitude;
+        float inputMagnitude = inputPlane.magnitude;                    // getting the length of the vector
+
+        // Debug Yaw and Pitch coordinats
+        // I need to get he faciing direction ofthe camera Yaw - debug and gather data on that
+        if(UnityEngine.Input.GetKeyDown(KeyCode.F2))
+        {
+            //Debug.Log("[Relative Movement DEBUG] horizontal coords: " + horizontal);            // input - 'when moving'
+            Debug.Log("[Relative Movement DEBUG] " + "\n" +
+
+                "INPUT COORDS " + "\n" +
+                "moveDirection coords: " + moveDirection + "\n" +
+                "vertical and horizonatal movement (raw): " + vertical + horizontal + "\n" +
+
+
+                "MOUSE CAMERA COORDS " + "\n" +
+                "mouseCamera coords: " + camForward + " , " + camRight + "\n" +
+                "mouseCamera eulerAngles.y: " + MouseCamera_CAMERA.transform.eulerAngles.y);
+
+            //Debug.Log("[Relative Movement DEBUG] mouseCamera eularAngle y: " + MouseCamera_CAMERA.transform.eulerAngles.y);
+        }
 
         // 5. Decide current speed: base moveSpeed or sprintSpeed
-        float currentSpeed = moveSpeed;
+        float currentSpeed = moveSpeed; 
         if (isGrounded && inputMagnitude > 0.01f )
         {
 
