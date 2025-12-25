@@ -23,6 +23,8 @@ using UnityEngine.InputSystem.XR;
 
 public class RelativeMovement : MonoBehaviour
 {
+    // Animation Player Controller
+    [SerializeField] private Animator anim;
     // I am calling an object of the MouseCamera script , Which has a [Serialized Field] Transform of the INTENDED FPS camera
     // Inside RelativeMovement I am using a public [Serialized Field] Transform of which the user places the SAME INTENDED FPS camera into
     // When RelativeMovement awakes the Transform of the MouseCamera script is called, and is set to the Transform of the RelativeMovement script
@@ -186,6 +188,7 @@ public class RelativeMovement : MonoBehaviour
         /// “This condition decides WHETHER we should apply movement, no matter if the player is walking, in the air, or in the first frame of a jump.”
         if (inputMovementMagnitude > 0.01f || !isGrounded || verticalVelocity > 0f)
         {
+            anim.SetBool("isWalking", inputMovementMagnitude > 0.01f && isGrounded);
             characterController.Move(finalMove * Time.deltaTime);
         }
 
