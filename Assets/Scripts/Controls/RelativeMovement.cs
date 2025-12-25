@@ -10,11 +10,9 @@ using UnityEngine.InputSystem.XR;
 * Relative Camera Movement. Player will follow facing the direction of the camera (head)
 * magnitude depends on movement  inputMagnitude > 0.01f
 * Unity uses a left hand 3D Coord system. [LEFT/RIGHT = X AXIS | UP/DOWN = Y AXIS | FORWARD/BACK = Z AXIS] 
-* InputVector  - 
-* VERTICAL_VELOCITY: When the player jumps for one frame isGrounded is still TRUE, vertical velocity is > 0 - so Jump blows his load before checking is grounded...
-* therefore the check with !isGrounded this checks for negative values (is it falling ?) , the final verticalVel check determines any positive numbers on the y axis
-* which is why there is a check of !isGrounded
-* 
+* inputMovementVector  - is the raw input data from the x(horizontal) , y(vertical) axis of the mouse input
+* VERTICAL_VELOCITY: Move the character if the player is moving, OR the player is not on the ground, OR the player is going upward.
+* (inputMovementMagnitude > 0.01f || !isGrounded || verticalVelocity > 0f) “This condition decides whether we should apply movement, no matter if the player is walking, in the air, or in the first frame of a jump.”
 * */
 
 /// <summary>
@@ -51,7 +49,6 @@ public class RelativeMovement : MonoBehaviour
     {
         Debug.Log($"[RelativeMovement DEBUG] Full Camera Orientation (Quaternion): {camOrientation}");
     }
-
     /// Character Controller
     [SerializeField][Tooltip("Character Controller is Needed for Movement Input")] CharacterController characterController;
     public void Debug_characterController(CharacterController charactercontroller)
@@ -64,11 +61,9 @@ public class RelativeMovement : MonoBehaviour
         }
         Debug.Log("Character Controller set");
     }
-
     // Input Controlls
     private float horizontal;
     private float vertical;
-
     [Header("Player Attributes")]
     [SerializeField] float sprintSpeed = 6f;            /// the speed in which player can move, units per second
     [SerializeField] float moveSpeed = 4;
@@ -77,7 +72,6 @@ public class RelativeMovement : MonoBehaviour
     // Build a slider - The degree to which we can control our movement while in midair.
     [Range(0, 10), SerializeField, Tooltip("The degree to which we can control our movement while in midair")] float airControl = 5;
 
-    
     // MOVEMENT DIRECTION
     Vector3 horizontalMove = Vector3.zero;
     Vector3 moveDirection = Vector3.zero;
@@ -87,7 +81,6 @@ public class RelativeMovement : MonoBehaviour
     private float verticalVelocity = 0f;
     private float currentSpeed;
     
-    
     private void Start()
     {
         characterController = GetComponent<CharacterController>();
@@ -95,7 +88,6 @@ public class RelativeMovement : MonoBehaviour
         // Set player controller movement speed
         currentSpeed = moveSpeed;
     }
-    
     
     void Update()
     {
@@ -128,7 +120,6 @@ public class RelativeMovement : MonoBehaviour
         moveDirection = (camForward * vertical) + (camRight * horizontal);
         isGrounded = characterController.isGrounded;      
         moveDirection *= moveSpeed;         //test line
-
 
         //////////////////////////////////////// MOVEMENT BLOCK \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
         // 4. movement vector  [left, right , up , down]
@@ -179,20 +170,20 @@ public class RelativeMovement : MonoBehaviour
                 verticalVelocity = -1f;
             }
         }
-        else 
+        else // In the Air
         {
-            // In the air: apply gravity over time
+            /// In the air: apply gravity over time
             verticalVelocity -= gravity * Time.deltaTime;
-            // blend moveDirection towards input, without killing Y
+            /// blend moveDirection towards input, without killing Y
             input = moveDirection; // keep variable in use
             moveDirection = Vector3.Lerp(moveDirection, input, airControl * Time.deltaTime);
         }
-
-        //  Build horizontal movement (camera-relative) [CREATING MOVEMENT VECTOR]
+        // MOVING CONDITIONS
+        ///  Build horizontal movement (camera-relative) [CREATING MOVEMENT VECTOR]
         horizontalMove = moveDirection.normalized * currentSpeed;
-        //  Combine horizontal + vertical into finalMove
-        finalMove = new Vector3(horizontalMove.x, verticalVelocity, horizontalMove.z); // [LEFT HAND 3D AXIS] (this line is here to ensure sprint works - (for now))
-        //  MOVE - ONLY WHEN ON THE GROUND (NO JUMP) AND INPUT MAGNITUDE, ALONG WITH VERTICAL VELOCITY GREATER THAN 0
+        ///  Combine horizontal + vertical into finalMove - [LEFT HAND 3D AXIS] (this line is here to ensure sprint works - (for now))
+        finalMove = new Vector3(horizontalMove.x, verticalVelocity, horizontalMove.z);
+        /// “This condition decides whether we should apply movement, no matter if the player is walking, in the air, or in the first frame of a jump.”
         if (inputMovementMagnitude > 0.01f || !isGrounded || verticalVelocity > 0f)
         {
             characterController.Move(finalMove * Time.deltaTime);
