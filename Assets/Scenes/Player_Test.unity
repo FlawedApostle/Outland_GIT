@@ -119,6 +119,11 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!143 &6851777 stripped
+CharacterController:
+  m_CorrespondingSourceObject: {fileID: 7596150309238134721, guid: 3ceefc2d7d1c5a844aeda98e99c58099, type: 3}
+  m_PrefabInstance: {fileID: 845856243}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &837395366
 GameObject:
   m_ObjectHideFlags: 0
@@ -247,6 +252,10 @@ PrefabInstance:
       propertyPath: jumpHeight
       value: 1.5
       objectReference: {fileID: 0}
+    - target: {fileID: 703951817293002368, guid: 3ceefc2d7d1c5a844aeda98e99c58099, type: 3}
+      propertyPath: characterController
+      value: 
+      objectReference: {fileID: 6851777}
     - target: {fileID: 1288214812246111162, guid: 3ceefc2d7d1c5a844aeda98e99c58099, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.11195046
@@ -287,6 +296,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7596150309238134721, guid: 3ceefc2d7d1c5a844aeda98e99c58099, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8467699022599059221, guid: 3ceefc2d7d1c5a844aeda98e99c58099, type: 3}
       propertyPath: m_Name
       value: Player_YBot(RelativeCamera_RelativeMovement) - TEST
@@ -314,7 +327,7 @@ Animator:
   m_GameObject: {fileID: 1784333016}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 8bf199988f123424f9ec3ff5ccc11b3e, type: 2}
+  m_Controller: {fileID: 9100000, guid: 4c153f2538478f44696521fc9cb56d74, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

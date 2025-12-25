@@ -85,8 +85,8 @@ public class RelativeMovement : MonoBehaviour
     
     private void Start()
     {
-        characterController = GetComponent<CharacterController>();
-        Debug_characterController(characterController);
+        //characterController = GetComponent<CharacterController>();
+        //Debug_characterController(characterController);
         // Set player controller movement speed
         currentSpeed = moveSpeed;
     }
