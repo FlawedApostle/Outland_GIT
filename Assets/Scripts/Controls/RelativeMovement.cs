@@ -157,6 +157,9 @@ public class RelativeMovement : MonoBehaviour
             }
         }
 
+        anim.SetBool("isWalking", inputMovementMagnitude > 0.01f && isGrounded);            // animate
+        Debug.Log("isWalking = " + anim.GetBool("isWalking") + " | magnitude = " + inputMovementMagnitude);
+
         // Handle jump and gravity
         if (isGrounded)
         {
@@ -188,8 +191,16 @@ public class RelativeMovement : MonoBehaviour
         /// “This condition decides WHETHER we should apply movement, no matter if the player is walking, in the air, or in the first frame of a jump.”
         if (inputMovementMagnitude > 0.01f || !isGrounded || verticalVelocity > 0f)
         {
-            anim.SetBool("isWalking", inputMovementMagnitude > 0.01f && isGrounded);
-            characterController.Move(finalMove * Time.deltaTime);
+
+            
+            // Only move when needed
+            //if (inputMovementMagnitude > 0.01f || !isGrounded || verticalVelocity > 0f)
+            //{
+                characterController.Move(finalMove * Time.deltaTime);
+            //}
+
+
+            //characterController.Move(finalMove * Time.deltaTime);
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
