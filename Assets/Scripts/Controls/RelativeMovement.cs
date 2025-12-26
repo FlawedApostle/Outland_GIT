@@ -140,9 +140,9 @@ public class RelativeMovement : MonoBehaviour
                 "vertical and horizonatal movement (raw): " + vertical + horizontal + "\n" +
 
 
-                "MOUSE CAMERA COORDS " + "\n" +
+                "MOUSE CAMERA COORDS " +
                 "mouseCamera coords: " + camForward + " , " + camRight + "\n" +
-                "mouseCamera eulerAngles.y: " + MouseCamera_CAMERA.transform.eulerAngles.y);
+                "mouseCamera Yaw (eulerAngles.y): " + MouseCamera_CAMERA.transform.eulerAngles.y);
 
             //Debug.Log("[Relative Movement DEBUG] mouseCamera eularAngle y: " + MouseCamera_CAMERA.transform.eulerAngles.y);
         }
@@ -157,6 +157,7 @@ public class RelativeMovement : MonoBehaviour
             }
         }
 
+        // Animate walking - its sticking a bit look into  it
         anim.SetBool("isWalking", inputMovementMagnitude > 0.01f && isGrounded);            // animate
         Debug.Log("isWalking = " + anim.GetBool("isWalking") + " | magnitude = " + inputMovementMagnitude);
 
