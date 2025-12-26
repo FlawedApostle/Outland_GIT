@@ -115,11 +115,11 @@ public class RelativeMovement : MonoBehaviour
         camOrientation = MouseCamera_CAMERA.transform.rotation;                     // Referencing the transform camera input
         //Debug.Log($"Full Camera Orientation (Quaternion): {camOrientation}");     // DEBUG output Quaternion orientation
         //////////////////////////////////////// GETTING WASD or JOYSTICK INPUT \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-        // 1. Get input from WASD or Joystick
-        horizontal = UnityEngine.Input.GetAxis("Horizontal");           // A/D left, right
-        vertical = UnityEngine.Input.GetAxis("Vertical");               // W/S Up, down
+        /// 1. Get input from WASD or Joystick
+        horizontal = UnityEngine.Input.GetAxis("Horizontal");           /// A/D left, right
+        vertical = UnityEngine.Input.GetAxis("Vertical");               /// W/S Up, down
         // 2. Apply horizontal movement (camera‑relative)
-        moveDirection = (camForward * vertical) + (camRight * horizontal);
+        moveDirection = (camForward * vertical) + (camRight * horizontal);  /// yaw * input axis + pitch * input axis 
         isGrounded = characterController.isGrounded;      
         moveDirection *= moveSpeed;         //test line
 
@@ -167,7 +167,7 @@ public class RelativeMovement : MonoBehaviour
             if (UnityEngine.Input.GetButtonDown("Jump")) 
             {
                 Debug.Log("Jump Pressed");
-                verticalVelocity = Mathf.Sqrt(2 * gravity * jumpHeight);
+                verticalVelocity = Mathf.Sqrt(2 * gravity * jumpHeight);        /// function ?
             }
             else if (verticalVelocity < 0f) 
             {
@@ -191,26 +191,8 @@ public class RelativeMovement : MonoBehaviour
         /// “This condition decides WHETHER we should apply movement, no matter if the player is walking, in the air, or in the first frame of a jump.”
         if (inputMovementMagnitude > 0.01f || !isGrounded || verticalVelocity > 0f)
         {
-
-            
-            // Only move when needed
-            //if (inputMovementMagnitude > 0.01f || !isGrounded || verticalVelocity > 0f)
-            //{
-                characterController.Move(finalMove * Time.deltaTime);
-            //}
-
-
-            //characterController.Move(finalMove * Time.deltaTime);
+              characterController.Move(finalMove * Time.deltaTime);
         }
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
 
         /*
         if (moveDirection.magnitude > 0.1f) // moveDirection.magnitude > 0.1f
@@ -256,13 +238,6 @@ public class RelativeMovement : MonoBehaviour
         // Debug the final direction vector
         ///Debug.Log($"[RelativeMovement DEBUG] Moving in relative direction: {moveDirection.normalized}")
         */
-
-
-
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
     }
 
 }       // !#END of Class RelativeMovement
