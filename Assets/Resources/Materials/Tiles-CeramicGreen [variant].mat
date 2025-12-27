@@ -19,6 +19,7 @@ Material:
   - _PARALLAXMAP
   m_InvalidKeywords:
   - _DETAIL_SCALED
+  - _ENVIRONMENTREFLECTIONS_OFF
   - _METALLICSPECGLOSSMAP
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -33,7 +34,7 @@ Material:
     m_TexEnvs:
     - _BaseMap:
         m_Texture: {fileID: 2800000, guid: fc0d1b19f44e5da499f070826e5f4eca, type: 3}
-        m_Scale: {x: 0.5, y: 2.5}
+        m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
         m_Texture: {fileID: 2800000, guid: 81c062f97952be746a8f2318cfd7b49e, type: 3}
@@ -103,7 +104,7 @@ Material:
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _DstBlendAlpha: 0
-    - _EnvironmentReflections: 1
+    - _EnvironmentReflections: 0
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
@@ -113,7 +114,7 @@ Material:
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _Smoothness: 1
+    - _Smoothness: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1

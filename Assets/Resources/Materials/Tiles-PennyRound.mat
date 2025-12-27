@@ -31,6 +31,7 @@ Material:
   - _NORMALMAP
   - _PARALLAXMAP
   m_InvalidKeywords:
+  - _ENVIRONMENTREFLECTIONS_OFF
   - _METALLICSPECGLOSSMAP
   - _OCCLUSIONMAP
   m_LightmapFlags: 4
@@ -46,7 +47,7 @@ Material:
     m_TexEnvs:
     - _BaseMap:
         m_Texture: {fileID: 2800000, guid: 26dcec207620fee44a375b8c6cfcfa86, type: 3}
-        m_Scale: {x: 1, y: 1}
+        m_Scale: {x: 2, y: 2}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
         m_Texture: {fileID: 2800000, guid: d2d0a4601301bc04a81b49141badc1f6, type: 3}
@@ -54,7 +55,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
         m_Texture: {fileID: 2800000, guid: 237c68fea6855374397f9b95bcada4b7, type: 3}
-        m_Scale: {x: 2, y: 2}
+        m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailMask:
         m_Texture: {fileID: 0}
@@ -81,7 +82,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ParallaxMap:
-        m_Texture: {fileID: 2800000, guid: c72ab4153e339e544bae04d7e12dc244, type: 3}
+        m_Texture: {fileID: 2800000, guid: d64d33ab6c6d0be4c97a2c19cc02e466, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
@@ -116,7 +117,7 @@ Material:
     - _DetailNormalMapScale: 0.04
     - _DstBlend: 0
     - _DstBlendAlpha: 0
-    - _EnvironmentReflections: 1
+    - _EnvironmentReflections: 0
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
@@ -126,7 +127,7 @@ Material:
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _Smoothness: 1
+    - _Smoothness: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
