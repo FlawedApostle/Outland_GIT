@@ -2,8 +2,8 @@
 using UnityEngine.Windows;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.XR;
-/*IMPORTANT NOTE: 
- * THIS IS BUILT BY SAMUEL FEARNLY WHOM IS THE SOLE CREATOR AND PROPIETER OF SUCH SOFTWARE
+/* NOTE: 
+ * THIS IS BUILT BY SAMUEL FEARNLEY WHOM IS THE SOLE CREATOR AND PROPIETER OF SUCH SOFTWARE
  * IF YOU WISH TO USE THE CODE PLEASE REACH OUT TO EITHER MY DISCORD, OR GITHUB ACCOUNTS - IM REALLY NOT PICKY, I JUST WANT TO BE SURE NOTHING IS USED MALICOUSLY 
  */
 /* These notes are for me, I dont care what others think. I have to keep track of what I am doing.
@@ -23,17 +23,19 @@ using UnityEngine.InputSystem.XR;
 
 public class RelativeMovement : MonoBehaviour
 {
-    // Animation Player Controller
+    /// Animation Player Controller calling it from inspector
     [SerializeField] private Animator anim;
+    /* NOTES: MOUSECAM
     // I am calling an object of the MouseCamera script , Which has a [Serialized Field] Transform of the INTENDED FPS camera
     // Inside RelativeMovement I am using a public [Serialized Field] Transform of which the user places the SAME INTENDED FPS camera into
     // When RelativeMovement awakes the Transform of the MouseCamera script is called, and is set to the Transform of the RelativeMovement script
     // In this case we have absolute controll ? or is it a reference ? - here is where I get lost a little bit,
     // I do not want to be able to change the value here in RelativeMovement, rather I want A COPY of all values to which I can compare against other values
+    */
     [Header("Camera - FPS")]
     [SerializeField][Tooltip("Ensure MATCHING FPS CAMERAS - Taking a refernce of the Camera from MouseCamera Script")] Transform MouseCamera_CAMERA;
     // CAMERA Direction (relative)
-    /*IMPORTANT NOTE
+    /* NOTES: MOUSECAM
     // Taking the transform directly from MouseCamera, and then creating a copy (Safe)
     // Unity axis works as follows do the 3D hand gun axis on YOUR RIGHT HAND if you look you will see the following;
     // Y axis is up, perpendicular to Y is the X axis (to the right). Finally Z axis points forward (index finger) 
