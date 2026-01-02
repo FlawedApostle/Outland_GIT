@@ -107,7 +107,7 @@ public class RelativeMovement : MonoBehaviour
         */
         camForward = MouseCamera_CAMERA.transform.forward;                      // W/S forwad / backward - think of it on a 3D axis (finger axis left hand)
         camRight = MouseCamera_CAMERA.transform.right;                          // A/D left / right
-        // 2. Flatten the vectors so you don't move into the ground
+        // 2. Flatten the vectors - Rmove pitch and roll for absolute yaw controll
         camForward.y = 0;
         camRight.y = 0;
         // 3. Re-normalize to ensure the length is exactly 1
@@ -158,6 +158,36 @@ public class RelativeMovement : MonoBehaviour
             currentSpeed = sprintSpeed;
             }
         }
+
+        // ------------------------------------------------------------
+        // BODY ROTATION TOWARD MOVEMENT DIRECTION (SAFE ADD-ON BLOCK)
+        // ------------------------------------------------------------
+
+        // Only rotate if the player is giving movement input
+        if (inputMovementMagnitude > 0.01f)
+        {
+            // Flatten movement direction so we only rotate on the ground plane
+            Vector3 flatMoveDir = new Vector3(moveDirection.x, 0f, moveDirection.z);
+
+            // Safety check: avoid zero-length vectors
+            if (flatMoveDir.sqrMagnitude > 0.0001f)
+            {
+                // Compute the desired facing rotation
+                Quaternion targetRotation = Quaternion.LookRotation(flatMoveDir);
+
+                // Smoothly rotate the body toward movement direction
+                transform.rotation = Quaternion.Slerp(
+                    transform.rotation,
+                    targetRotation,
+                    10f * Time.deltaTime   // rotation speed (tweakable)
+                );
+            }
+        }
+        // ------------------------------------------------------------
+        // END BODY ROTATION BLOCK
+        // ------------------------------------------------------------
+
+
 
         // Animate walking - its sticking a bit look into  it
         anim.SetBool("isWalking", inputMovementMagnitude > 0.01f && isGrounded);            // animate
