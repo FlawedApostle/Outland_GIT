@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.LowLevel;
 
 /* NOTE:
  * THIS SCRIPT IS BUILT BY SAMUEL FEARNLEY (Root00)
@@ -7,11 +8,16 @@ using UnityEngine;
  * This prevents unrealistic "crab walking" and adds realism to the character controller.
  */
 
-public class TorsoBoneMovement : MonoBehaviour
+public class RotateBodyMovement : MonoBehaviour
 {
-    [Header("Torso Bone Reference")]
-    [SerializeField, Tooltip("Place the torso/spine bone here")]
-    private Transform torsoBone;
+    [Header("Rotate Body Reference Reference [Empty Player Root]")]
+    [SerializeField, Tooltip("Place 'Empty' Player Root")]
+    private Transform transformBodyRoot;
+
+
+    [Header("FPS Camera inheritance")]
+    [SerializeField, Tooltip("Place FPS camera")]
+    private Transform MainCameraChild;
 
     [Header("Movement Input Reference")]
     [SerializeField, Tooltip("Reference to the RelativeMovement script for movement direction")]
@@ -23,6 +29,9 @@ public class TorsoBoneMovement : MonoBehaviour
 
     [SerializeField, Tooltip("Smoothing factor for torso rotation")]
     private float rotationSmooth = 10f;
+
+    [SerializeField] private float rotationSpeed = 5f;
+
 
     // Internal variables
     private float clampedYaw = 0f;
@@ -54,14 +63,20 @@ public class TorsoBoneMovement : MonoBehaviour
         if (moveDir.sqrMagnitude < 0.01f)
         {
             clampedYaw = Mathf.Lerp(clampedYaw, 0f, rotationSmooth * Time.deltaTime);
-            torsoBone.localRotation = Quaternion.Euler(0f, clampedYaw, 0f);
+            //transformRotateBody.localRotation = Quaternion.Euler(0f, clampedYaw, 0f);
+            //transformRotateBody.Rotate(Vector3.up * moveDir.x * rotationSpeed, Space.Self);
+            transformBodyRoot.rotation = Quaternion.Euler(0, MainCameraChild.eulerAngles.y, 0);
+
             return;
         }
 
         /* 2. Convert movement direction into a YAW angle
          * Atan2 gives us the angle in degrees relative to world forward.
          */
-        targetYaw = Mathf.Atan2(moveDir.x, moveDir.z) * Mathf.Rad2Deg;
+        //targetYaw = Mathf.Atan2(moveDir.x, moveDir.z) * Mathf.Rad2Deg;
+        Vector3 worldMove = transformBodyRoot.TransformDirection(moveDir);
+        targetYaw = Mathf.Atan2(worldMove.x, worldMove.z) * Mathf.Rad2Deg;
+
 
         /* 3. Get the character body's current yaw
          * This is the root transform's Y rotation.
@@ -84,8 +99,8 @@ public class TorsoBoneMovement : MonoBehaviour
         Quaternion targetRotation = Quaternion.Euler(0f, clampedYaw, 0f);
 
         // Smooth rotation for realism
-        torsoBone.localRotation = Quaternion.Slerp(
-            torsoBone.localRotation,
+        transformBodyRoot.localRotation = Quaternion.Slerp(
+            transformBodyRoot.localRotation,
             targetRotation,
             rotationSmooth * Time.deltaTime
         );

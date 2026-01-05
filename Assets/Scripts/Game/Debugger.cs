@@ -10,16 +10,16 @@ public class Debuger : MonoBehaviour
     //[SerializeField, Tooltip("Reference to the RelativeMovement script for movement direction")]
     private Animator DEBUG_animator;
 
-    [Header("TorsoBone Script Reference")]
-    [SerializeField]// Tooltip("Reference to the RelativeMovement script for movement direction")]
-    private TorsoBoneMovement DEBUG_TorsoBoneMovement;
+    //[Header("TorsoBone Script Reference")]
+    //[SerializeField]// Tooltip("Reference to the RelativeMovement script for movement direction")]
+    //private TorsoBoneMovement DEBUG_TorsoBoneMovement;
 
 
     private void Update()
     {
         
     //Debug.Log("MoveDir: " + moveDir + " | targetYaw: " + targetYaw);
-    Debug.Log("MoveDir: " + DEBUG_TorsoBoneMovement.Get_moveDir() + " | targetYaw: " + DEBUG_TorsoBoneMovement.Get_targetYaw());
+    //Debug.Log("MoveDir: " + DEBUG_TorsoBoneMovement.Get_moveDir() + " | targetYaw: " + DEBUG_TorsoBoneMovement.Get_targetYaw());
     }
 
 

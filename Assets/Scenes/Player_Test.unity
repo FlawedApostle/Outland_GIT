@@ -136,6 +136,14 @@ PrefabInstance:
       propertyPath: MainCameraChild
       value: 
       objectReference: {fileID: 385266034}
+    - target: {fileID: 1121236148421467829, guid: f55074ac0f141d240b9bb36f04a05c18, type: 3}
+      propertyPath: cameraTransform
+      value: 
+      objectReference: {fileID: 385266034}
+    - target: {fileID: 1121236148421467829, guid: f55074ac0f141d240b9bb36f04a05c18, type: 3}
+      propertyPath: relativeMovementDir
+      value: 
+      objectReference: {fileID: 1592492347}
     - target: {fileID: 2798487353953319790, guid: f55074ac0f141d240b9bb36f04a05c18, type: 3}
       propertyPath: m_Name
       value: Player_YBot(RelativeCamera_RelativeMovement) - ANIMATION - TEST
@@ -188,8 +196,18 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 2798487353953319790, guid: f55074ac0f141d240b9bb36f04a05c18, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1592492344}
+      addedObject: {fileID: 1592492348}
   m_SourcePrefab: {fileID: 100100000, guid: f55074ac0f141d240b9bb36f04a05c18, type: 3}
+--- !u!1 &509414954 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2798487353953319790, guid: f55074ac0f141d240b9bb36f04a05c18, type: 3}
+  m_PrefabInstance: {fileID: 509414953}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &509414955 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8108289884553878273, guid: f55074ac0f141d240b9bb36f04a05c18, type: 3}
+  m_PrefabInstance: {fileID: 509414953}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &830036463
 GameObject:
   m_ObjectHideFlags: 0
@@ -234,8 +252,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bddd38e8228161547bfd4c04e9c1d6db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Debuger
-  DEBUG_relativeMovement: {fileID: 0}
-  DEBUG_TorsoBoneMovement: {fileID: 1592492344}
+  DEBUG_relativeMovement: {fileID: 1592492347}
 --- !u!1 &837395366
 GameObject:
   m_ObjectHideFlags: 0
@@ -395,43 +412,35 @@ Transform:
   - {fileID: 830036464}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &1328122098 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4266587066010801255, guid: f55074ac0f141d240b9bb36f04a05c18, type: 3}
-  m_PrefabInstance: {fileID: 509414953}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1592492343 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2798487353953319790, guid: f55074ac0f141d240b9bb36f04a05c18, type: 3}
-  m_PrefabInstance: {fileID: 509414953}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1592492344
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1592492343}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 73cbd3a3d6bfc4a41a7f2ef24c0e64dd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TorsoBoneMovment
-  torsoBone: {fileID: 1328122098}
-  relativeMovement: {fileID: 1592492347}
-  torsoYawLimit: 360
-  rotationSmooth: 10
 --- !u!114 &1592492347 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6282661241852750495, guid: f55074ac0f141d240b9bb36f04a05c18, type: 3}
   m_PrefabInstance: {fileID: 509414953}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1592492343}
+  m_GameObject: {fileID: 509414954}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 22ddfeef596768942833900ffd127bd1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RelativeMovement
+--- !u!114 &1592492348
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 509414954}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66843cb9606c69f4ca856db27bf7f195, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RotateBodyMovement
+  transformBodyRoot: {fileID: 509414955}
+  MainCameraChild: {fileID: 385266034}
+  relativeMovement: {fileID: 1592492347}
+  torsoYawLimit: 360
+  rotationSmooth: 10
+  rotationSpeed: 5
 --- !u!1 &1791990298
 GameObject:
   m_ObjectHideFlags: 0
@@ -578,7 +587,7 @@ MonoBehaviour:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 1267075944}
   - {fileID: 1791990300}
   - {fileID: 837395370}
   - {fileID: 509414953}
-  - {fileID: 1267075944}

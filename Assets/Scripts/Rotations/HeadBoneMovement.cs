@@ -10,6 +10,9 @@ public class HeadBoneMovement : MonoBehaviour
     private float _rotationX = 0f;
     private float _rotationY = 0f;
 
+    [SerializeField] RelativeMovement relativeMovementDir;
+
+
     void LateUpdate() // Use LateUpdate to override standard animations
     {
         // 1. Get Mouse Input
@@ -22,6 +25,7 @@ public class HeadBoneMovement : MonoBehaviour
         // convert angles to signed values
         float yaw = Mathf.DeltaAngle(0, camChildAbsoluteRotation.y);
         float pitch = Mathf.DeltaAngle(0, camChildAbsoluteRotation.x);
+
 
         //_rotationX += MainCameraChild.eulerAngles.x * sensitivity;
         //_rotationY -= MainCameraChild.eulerAngles.y * sensitivity;
