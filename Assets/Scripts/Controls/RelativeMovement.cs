@@ -88,6 +88,14 @@ public class RelativeMovement : MonoBehaviour
     {
         return moveDirection;
     }
+    public float GetMoveDirectionX()
+    {
+        return moveDirection.x;
+    }
+    public float GetMoveDirectionY()
+    {
+        return moveDirection.y;
+    }
 
     public bool animatorSwitch = false;
 
