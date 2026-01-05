@@ -180,11 +180,61 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5467733653985241784, guid: f55074ac0f141d240b9bb36f04a05c18, type: 3}
+    - {fileID: 4484744655094715925, guid: f55074ac0f141d240b9bb36f04a05c18, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2798487353953319790, guid: f55074ac0f141d240b9bb36f04a05c18, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1592492344}
   m_SourcePrefab: {fileID: 100100000, guid: f55074ac0f141d240b9bb36f04a05c18, type: 3}
+--- !u!1 &830036463
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 830036464}
+  - component: {fileID: 830036465}
+  m_Layer: 0
+  m_Name: Debuger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &830036464
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 830036463}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.46618, y: 0, z: 0.05041}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1267075944}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &830036465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 830036463}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bddd38e8228161547bfd4c04e9c1d6db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Debuger
+  DEBUG_TorsoBoneMovement: {fileID: 1592492344}
 --- !u!1 &837395366
 GameObject:
   m_ObjectHideFlags: 0
@@ -292,7 +342,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 30, y: 1, z: 30}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -341,8 +391,46 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1839422135}
+  - {fileID: 830036464}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1328122098 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4266587066010801255, guid: f55074ac0f141d240b9bb36f04a05c18, type: 3}
+  m_PrefabInstance: {fileID: 509414953}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1592492343 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2798487353953319790, guid: f55074ac0f141d240b9bb36f04a05c18, type: 3}
+  m_PrefabInstance: {fileID: 509414953}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1592492344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1592492343}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73cbd3a3d6bfc4a41a7f2ef24c0e64dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TorsoBoneMovment
+  torsoBone: {fileID: 1328122098}
+  relativeMovement: {fileID: 1592492347}
+  torsoYawLimit: 360
+  rotationSmooth: 10
+--- !u!114 &1592492347 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6282661241852750495, guid: f55074ac0f141d240b9bb36f04a05c18, type: 3}
+  m_PrefabInstance: {fileID: 509414953}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1592492343}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22ddfeef596768942833900ffd127bd1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RelativeMovement
 --- !u!1 &1791990298
 GameObject:
   m_ObjectHideFlags: 0

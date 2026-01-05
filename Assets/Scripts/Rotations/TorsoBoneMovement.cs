@@ -7,7 +7,7 @@ using UnityEngine;
  * This prevents unrealistic "crab walking" and adds realism to the character controller.
  */
 
-public class TorsoBoneMovment : MonoBehaviour
+public class TorsoBoneMovement : MonoBehaviour
 {
     [Header("Torso Bone Reference")]
     [SerializeField, Tooltip("Place the torso/spine bone here")]
@@ -26,16 +26,29 @@ public class TorsoBoneMovment : MonoBehaviour
 
     // Internal variables
     private float clampedYaw = 0f;
-    private float targetYaw = 0f;
     private float bodyYaw = 0f;
+    private float targetYaw = 0f;
+    public float Get_targetYaw()
+    {
+        return targetYaw;
+    }
+
+    private float moveDir;
+    public float Get_moveDir()
+    {
+        return moveDir;
+    }
 
     void LateUpdate()
     {
+
         /* 1. Get the movement direction from RelativeMovement
          * This is the SAME vector used to move the character controller.
          * It is already camera-relative, so we can use it directly.
          */
-        Vector3 moveDir = relativeMovement.GetMoveDirection(); // You will add this getter to your movement script
+        Vector3 moveDir = relativeMovement.GetMoveDirection();
+        //Debug.Log("MoveDir: " + moveDir + " | targetYaw: " + targetYaw);
+
 
         // If no movement input, smoothly return torso to neutral
         if (moveDir.sqrMagnitude < 0.01f)

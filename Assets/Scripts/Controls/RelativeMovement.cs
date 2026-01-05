@@ -89,6 +89,9 @@ public class RelativeMovement : MonoBehaviour
         return moveDirection;
     }
 
+    public bool animatorSwitch = false;
+
+
 
     private void Start()
     {
@@ -165,8 +168,9 @@ public class RelativeMovement : MonoBehaviour
         }
 
         // Animate walking - its sticking a bit look into  it
-        anim.SetBool("isWalking", inputMovementMagnitude > 0.01f && isGrounded);            // animate
-        Debug.Log("isWalking = " + anim.GetBool("isWalking") + " | magnitude = " + inputMovementMagnitude);
+        anim.enabled = false;                                       /// TURNED OFF ANIMATION
+        //anim.SetBool("isWalking", inputMovementMagnitude > 0.01f && isGrounded);            // animate
+        //Debug.Log("isWalking = " + anim.GetBool("isWalking") + " | magnitude = " + inputMovementMagnitude);       /// DEBUG
 
         // Handle jump and gravity
         if (isGrounded)
