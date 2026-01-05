@@ -84,7 +84,12 @@ public class RelativeMovement : MonoBehaviour
     private bool isGrounded;
     private float verticalVelocity = 0f;
     private float currentSpeed;
-    
+    public Vector3 GetMoveDirection()
+    {
+        return moveDirection;
+    }
+
+
     private void Start()
     {
         //characterController = GetComponent<CharacterController>();
