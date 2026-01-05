@@ -133,6 +133,14 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1121236148421467829, guid: f55074ac0f141d240b9bb36f04a05c18, type: 3}
+      propertyPath: bodyRoot
+      value: 
+      objectReference: {fileID: 509414955}
+    - target: {fileID: 1121236148421467829, guid: f55074ac0f141d240b9bb36f04a05c18, type: 3}
+      propertyPath: mouseCamera
+      value: 
+      objectReference: {fileID: 1485362757}
+    - target: {fileID: 1121236148421467829, guid: f55074ac0f141d240b9bb36f04a05c18, type: 3}
       propertyPath: MainCameraChild
       value: 
       objectReference: {fileID: 385266034}
@@ -141,7 +149,15 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 385266034}
     - target: {fileID: 1121236148421467829, guid: f55074ac0f141d240b9bb36f04a05c18, type: 3}
+      propertyPath: _rotateBodyMovement
+      value: 
+      objectReference: {fileID: 1592492348}
+    - target: {fileID: 1121236148421467829, guid: f55074ac0f141d240b9bb36f04a05c18, type: 3}
       propertyPath: relativeMovementDir
+      value: 
+      objectReference: {fileID: 1592492347}
+    - target: {fileID: 1121236148421467829, guid: f55074ac0f141d240b9bb36f04a05c18, type: 3}
+      propertyPath: _relativeMovementDir
       value: 
       objectReference: {fileID: 1592492347}
     - target: {fileID: 2798487353953319790, guid: f55074ac0f141d240b9bb36f04a05c18, type: 3}
@@ -412,6 +428,17 @@ Transform:
   - {fileID: 830036464}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1485362757 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3992948224261657837, guid: f55074ac0f141d240b9bb36f04a05c18, type: 3}
+  m_PrefabInstance: {fileID: 509414953}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5669709a548958e42be92c0a258e754f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MouseCamera
 --- !u!114 &1592492347 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6282661241852750495, guid: f55074ac0f141d240b9bb36f04a05c18, type: 3}

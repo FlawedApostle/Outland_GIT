@@ -33,8 +33,8 @@ public class RelativeMovement : MonoBehaviour
     // I do not want to be able to change the value here in RelativeMovement, rather I want A COPY of all values to which I can compare against other values
     */
     [Header("Camera - FPS")]
-    [SerializeField][Tooltip("Ensure MATCHING FPS CAMERAS - Taking a refernce of the Camera from MouseCamera Script")] Transform MouseCamera_CAMERA;
-    // CAMERA Direction (relative)
+    [SerializeField][Tooltip("Ensure MATCHING FPS CAMERAS - Taking a refernce of the Camera from MouseCamera Script")] 
+    Transform MouseCamera_CAMERA;
     /* NOTES: MOUSECAM
     // Taking the transform directly from MouseCamera, and then creating a copy (Safe)
     // Unity axis works as follows do the 3D hand gun axis on YOUR RIGHT HAND if you look you will see the following;

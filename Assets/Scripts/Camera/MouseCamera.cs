@@ -33,7 +33,24 @@ public class MouseCamera : MonoBehaviour
     }
     public void PrintClampAxisRotation_Y(float Clampvalue) { Debug.Log("[MouseCamera DEBUG] Current Clamp Y Axis " + Clampvalue); }
     public void PrintClampAxisRotation_Y() { Debug.Log("[MouseCamera DEBUG] Current Clamp Y Axis " + _rotationY); }
-    public Transform returnMainCameraTransform() { return MainCameraTransform; }
+    public Transform Get_MainCameraTransform() 
+    { 
+        return MainCameraTransform; 
+    }
+
+    public Vector3 Get_MainCameraTransform_EulerAngles()
+    {
+        return MainCameraTransform.eulerAngles;
+    }
+
+    public float Get_MainCameraTransform_EulerAngles_X()
+    {
+        return MainCameraTransform.eulerAngles.x;
+    }
+    public float Get_MainCameraTransform_EulerAngles_Y()
+    {
+        return MainCameraTransform.eulerAngles.y;
+    }
 
     ////////////////////////////////////////// Camera Euler Angles - can only use in awake, so dont call for now. It cannot call an instance when it is null at scene start
     //Vector3 _camEulerAngles = Camera.main.transform.eulerAngles;
