@@ -63,7 +63,7 @@ public class RotateBodyMovement : MonoBehaviour
         if (moveDir.sqrMagnitude < 0.01f)
         {
             clampedYaw = Mathf.Lerp(clampedYaw, 0f, rotationSmooth * Time.deltaTime);
-            //transformBodyRoot.rotation = Quaternion.Euler(0, MainCameraChild.eulerAngles.y, 0);
+            //transformBodyRoot.rotation = Quaternion.Euler(0, MainCameraChild.eulerAngles.y, 0);       // face the came even when not moving
 
 
             return;
