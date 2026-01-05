@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.LowLevel;
 
 /* NOTE:
@@ -63,42 +63,38 @@ public class RotateBodyMovement : MonoBehaviour
         if (moveDir.sqrMagnitude < 0.01f)
         {
             clampedYaw = Mathf.Lerp(clampedYaw, 0f, rotationSmooth * Time.deltaTime);
-            //transformRotateBody.localRotation = Quaternion.Euler(0f, clampedYaw, 0f);
-            //transformRotateBody.Rotate(Vector3.up * moveDir.x * rotationSpeed, Space.Self);
-            transformBodyRoot.rotation = Quaternion.Euler(0, MainCameraChild.eulerAngles.y, 0);
+            //transformBodyRoot.rotation = Quaternion.Euler(0, MainCameraChild.eulerAngles.y, 0);
+
 
             return;
         }
 
-        /* 2. Convert movement direction into a YAW angle
-         * Atan2 gives us the angle in degrees relative to world forward.
-         */
-        //targetYaw = Mathf.Atan2(moveDir.x, moveDir.z) * Mathf.Rad2Deg;
-        Vector3 worldMove = transformBodyRoot.TransformDirection(moveDir);
-        targetYaw = Mathf.Atan2(worldMove.x, worldMove.z) * Mathf.Rad2Deg;
+            Vector3 worldMove = transformBodyRoot.TransformDirection(moveDir);      // legit line to convert from local to world space.......
+            targetYaw = Mathf.Atan2(worldMove.x, worldMove.z) * Mathf.Rad2Deg;      // calling the converted coords to apply rotation correctly
 
 
-        /* 3. Get the character body's current yaw
-         * This is the root transform's Y rotation.
-         */
-        bodyYaw = transform.eulerAngles.y;
 
-        /* 4. Compute the DELTA angle between body and movement direction
-         * DeltaAngle converts wrapped Euler angles (0–360) into signed angles (-180 to 180)
-         */
+        ///* 3. Get the character body's current yaw
+        // * This is the root transform's Y rotation.
+        // */
+        bodyYaw = transformBodyRoot.eulerAngles.y;
+
+        ///* 4. Compute the DELTA angle between body and movement direction
+        // * DeltaAngle converts wrapped Euler angles (0â€“360) into signed angles (-180 to 180)
+        // */
         float deltaYaw = Mathf.DeltaAngle(bodyYaw, targetYaw);
 
-        /* 5. Clamp the torso twist so it doesn't rotate unnaturally
-         * Example: -45° to +45°
-         */
+        ///* 5. Clamp the torso twist so it doesn't rotate unnaturally
+        // * Example: -45Â° to +45Â°
+        // */
         clampedYaw = Mathf.Clamp(deltaYaw, -torsoYawLimit, torsoYawLimit);
 
-        /* 6. Apply rotation to the torso bone
-         * Only rotate around Y (twist). X and Z remain controlled by animations.
-         */
+        ///* 6. Apply rotation to the torso bone
+        // * Only rotate around Y (twist). X and Z remain controlled by animations.
+        // */
         Quaternion targetRotation = Quaternion.Euler(0f, clampedYaw, 0f);
 
-        // Smooth rotation for realism
+        //// Smooth rotation for realism
         transformBodyRoot.localRotation = Quaternion.Slerp(
             transformBodyRoot.localRotation,
             targetRotation,
