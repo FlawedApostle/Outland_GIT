@@ -64,8 +64,6 @@ public class RotateBodyMovement : MonoBehaviour
         {
             clampedYaw = Mathf.Lerp(clampedYaw, 0f, rotationSmooth * Time.deltaTime);
             //transformBodyRoot.rotation = Quaternion.Euler(0, MainCameraChild.eulerAngles.y, 0);       // face the came even when not moving
-
-
             return;
         }
 
@@ -95,10 +93,6 @@ public class RotateBodyMovement : MonoBehaviour
         Quaternion targetRotation = Quaternion.Euler(0f, clampedYaw, 0f);
 
         //// Smooth rotation for realism
-        transformBodyRoot.localRotation = Quaternion.Slerp(
-            transformBodyRoot.localRotation,
-            targetRotation,
-            rotationSmooth * Time.deltaTime
-        );
+        transformBodyRoot.localRotation = Quaternion.Slerp(  transformBodyRoot.localRotation,  targetRotation,  rotationSmooth * Time.deltaTime );
     }
 }
