@@ -91,8 +91,6 @@ public class RelativeMovement : MonoBehaviour
 
     public bool animatorSwitch = false;
 
-
-
     private void Start()
     {
         //characterController = GetComponent<CharacterController>();
@@ -103,6 +101,8 @@ public class RelativeMovement : MonoBehaviour
     
     void Update()
     {
+
+
         //////////////////////////////////////// GETTING CAMERA ORIENTATION \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
         /* NOTES - MouseCamera_CAMERA explained
         // IMPORTANT NOTE: This is using the TAG system, Camera Must have MainCamera Tag associated
@@ -168,8 +168,8 @@ public class RelativeMovement : MonoBehaviour
         }
 
         // Animate walking - its sticking a bit look into  it
-        anim.enabled = false;                                       /// TURNED OFF ANIMATION
-        //anim.SetBool("isWalking", inputMovementMagnitude > 0.01f && isGrounded);            // animate
+        //anim.enabled = false;                                       /// TURNED OFF ANIMATION
+        anim.SetBool("isWalking", inputMovementMagnitude > 0.01f && isGrounded);            // animate
         //Debug.Log("isWalking = " + anim.GetBool("isWalking") + " | magnitude = " + inputMovementMagnitude);       /// DEBUG
 
         // Handle jump and gravity
