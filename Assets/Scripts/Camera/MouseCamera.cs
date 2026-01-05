@@ -7,7 +7,7 @@ public class MouseCamera : MonoBehaviour
      public Transform MainCameraTransform;  // FPS cam in scene
     [SerializeField] float sensitivity = 2.0f;
     [SerializeField] float verticalLookLimit = 80f;
-    [SerializeField] float horizontalLookLimit = -80f;
+    [SerializeField] float horizontalLookLimit = -80f;          /// not using currently, may implement later as a layer for torso movemnt
 
     // I am using my own set values for better control, frame to frame management
     private float _rotationX = 0f; // (Yaw)    Left/Right 
