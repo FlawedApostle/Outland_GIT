@@ -97,7 +97,6 @@ public class RelativeMovement : MonoBehaviour
         return moveDirection.y;
     }
 
-    public bool animatorSwitch = false;
 
     private void Start()
     {
