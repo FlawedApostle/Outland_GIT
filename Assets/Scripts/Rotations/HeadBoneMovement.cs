@@ -18,6 +18,14 @@ public class HeadBoneMovement : MonoBehaviour
         return headBone.rotation = Quaternion.Slerp(headBone.rotation, headRotationSlerp, _cameraSmooth * Time.deltaTime);
     }
 
+    public Quaternion Get_HeadBone_Rotation()
+    {
+        return headBone.localRotation;
+    }
+    public Vector3 Get_HeadBone_Yaw()
+    {
+        return headBone.eulerAngles;
+    }
 
 
     void LateUpdate()

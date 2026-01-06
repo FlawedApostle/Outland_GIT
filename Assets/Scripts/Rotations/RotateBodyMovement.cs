@@ -10,30 +10,48 @@ using UnityEngine.LowLevel;
 
 public class RotateBodyMovement : MonoBehaviour
 {
-    [Header("FPS Camera inheritance")]
-    [SerializeField, Tooltip("Place FPS camera")]
-    private Transform MainCameraChild;
+    [Header("FPS Camera")]
+    [SerializeField, Tooltip("FPS camera inheritance")]
+    private Transform Transform_FPSCamera;
 
-    [Header("Rotate Body Reference Reference [Empty Player Root]")]
-    [SerializeField, Tooltip("Place 'Empty' Player Root")]
-    private Transform transformBodyRoot;
+    [Header("Player Root Empty")]
+    [SerializeField, Tooltip("Place Empty with all scripts")]
+    private Transform Transform_Empty;
 
+    [Header("HeadBone"), Tooltip("Headbone from model")]
     [SerializeField] private Transform transformHeadBone;
     
-    [Header("Movement Input Reference")]
-    [SerializeField, Tooltip("Reference to the RelativeMovement script for movement direction")]
+    [Header("SCRIPT: RelativeMovement")]
+    [SerializeField, Tooltip("RelativeMovement Script Reference")]
     private RelativeMovement relativeMovement;
+
 
     [Header("Torso Rotation Settings")]
     [SerializeField, Tooltip("Maximum degrees the torso can twist left/right")]
     private float torsoYawLimit = 45f;
-
     [SerializeField, Tooltip("Smoothing factor for torso rotation")]
     private float rotationSmooth = 10f;
 
+    float _headYaw;
+    float _bodyYaw;
+
+
+
+    void LateUpdate()
+    {
+
+     
+
+    }
+}
+
+
+
+
+/*      OLD MOVEMENT DIRECTION SCRIPT - TORSO ROTATES TO DIRECTION OF MOVEMENT - WILL REMOVE EVENTUALLY
+       
+
     [SerializeField] private float rotationSpeed = 5f;
-
-
     // Internal variables
     private float clampedYaw = 0f;
     private float bodyYaw = 0f;
@@ -43,7 +61,6 @@ public class RotateBodyMovement : MonoBehaviour
         float temp = targetYaw;
         return temp;
     }
-
     private Vector3 moveDir;
     public Vector3 Get_moveDir()
     {
@@ -51,10 +68,7 @@ public class RotateBodyMovement : MonoBehaviour
         return temp;
     }
 
-    void LateUpdate()
-    {
-
-        moveDir = relativeMovement.GetMoveDirection();
+moveDir = relativeMovement.GetMoveDirection();
         //Debug.Log("MoveDir: " + moveDir + " | targetYaw: " + targetYaw);
 
         // If no movement input, smoothly return torso to neutral
@@ -65,11 +79,11 @@ public class RotateBodyMovement : MonoBehaviour
             return;
         }
 
-        Vector3 worldMove = transformBodyRoot.TransformDirection(moveDir);      // legit line to convert from local to world space.......
+        Vector3 worldMove = Transform_Empty.TransformDirection(moveDir);      // legit line to convert from local to world space.......
         targetYaw = Mathf.Atan2(worldMove.x, worldMove.z) * Mathf.Rad2Deg;      // calling the converted coords to apply rotation correctly
 
-        bodyYaw = transformBodyRoot.eulerAngles.y;                  // empty controller that holds the player
-        float cameraYaw = MainCameraChild.eulerAngles.y;            // camera direction and where its facing on the y axis
+        bodyYaw = Transform_Empty.eulerAngles.y;                  // empty controller that holds the player
+        float cameraYaw = Transform_FPSCamera.eulerAngles.y;            // camera direction and where its facing on the y axis
 
         ///* 4. Compute the DELTA angle between body and movement direction
         float deltaYaw = Mathf.DeltaAngle(bodyYaw, cameraYaw);
@@ -83,9 +97,7 @@ public class RotateBodyMovement : MonoBehaviour
         //Quaternion targetRotation = Quaternion.Euler(0f, cameraYaw, 0f);
 
         // Smooth rotation for realism
-        transformBodyRoot.rotation = Quaternion.Slerp(transformBodyRoot.rotation, targetRotation, rotationSmooth * Time.deltaTime);
+        Transform_Empty.rotation = Quaternion.Slerp(Transform_Empty.rotation, targetRotation, rotationSmooth * Time.deltaTime);
         //transformBodyRoot.localRotation = Quaternion.Slerp(transformBodyRoot.rotation, targetRotation, rotationSmooth * Time.deltaTime);
         //transformBodyRoot.rotation = Quaternion.Euler(0, cameraYaw, 0);
-
-    }
-}
+ */
