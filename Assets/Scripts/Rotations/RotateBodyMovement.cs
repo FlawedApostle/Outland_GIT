@@ -30,32 +30,52 @@ public class RotateBodyMovement : MonoBehaviour
 
     float _headYaw;
     float _headPitch;
+    Vector3 moveDir;
+    public Vector3 Get_moveDir()
+    {
+        return moveDir;
+    }
 
 
-    public Quaternion Get_CameraFPS_LocalRotation() {
+    public Quaternion Get_Transform_CameraFPS_LocalRotation() {
         return Transform_CameraFPS.localRotation;   /// local rot
     }
-    public float Get_CameraFPS_Yaw() {
+    public float Get_Transform_CameraFPS_Yaw() {
         return Transform_CameraFPS.eulerAngles.y;
     }
-    public float Get_HeadYaw() {
-        return _headYaw;
-    }
-    public float Get__headPitch() {
-        return _headPitch;
-    }
-    public Quaternion Get_TransformHeadBone() {
+   
+    public Quaternion Get_Transform_HeadBone_LocalRotation()
+    {
         return Transform_HeadBone.localRotation;
     }
+    public float Get_Transform_HeadBone_Yaw() {
+        return Transform_HeadBone.eulerAngles.y; //_headYaw;
+    }
+    public float Get_Transform_HeadBone_Pitch() {
+        return Transform_HeadBone.eulerAngles.x; //_headPitch;
+    }
+
 
 
 
     void LateUpdate()
     {
 
+        moveDir = relativeMovement.GetMoveDirection();
+
         _headYaw = Transform_HeadBone.eulerAngles.y;
         _headPitch = Transform_HeadBone.eulerAngles.x;
 
+
+       
+
+        // If no movement input, smoothly return torso to neutral
+        //if (moveDir.sqrMagnitude < 0.01f)
+        //{
+        //float clampedYaw = Mathf.Lerp(0f, 0f, rotationSmooth * Time.deltaTime);
+        //transformBodyRoot.rotation = Quaternion.Euler(0, MainCameraChild.eulerAngles.y, 0);       // face the came even when not moving
+        //return;
+        //}
 
     }
 }

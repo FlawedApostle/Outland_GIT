@@ -17,17 +17,17 @@ public class HeadBoneMovement : MonoBehaviour
     }
 
     // GET HEADBONE ORIENTATION
-    public Quaternion Get_HeadBone_LocalRotation()  {
+    public Quaternion Get_Transform_Bone_Head_LocalRotation()  {
         return Transform_Bone_Head.localRotation;
     }
-    public float Get_HeadBone_Yaw() {
+    public float Get_Transform_Bone_Head_Yaw() {
         return Transform_Bone_Head.eulerAngles.y;
     }
     // GET CAMERA ORIENTATION
-    public Quaternion Get_CameraTransform_LocalRotation(){
+    public Quaternion Get_Transform_Camera_LocalRotation(){
         return Transform_Camera.localRotation;  /// local rot
     }
-    public float Get_CameraTransform_Yaw(){
+    public float Get_Transform_Camera_Yaw(){
         return Transform_Camera.eulerAngles.y;  /// y axis is the yaw
     }
 
