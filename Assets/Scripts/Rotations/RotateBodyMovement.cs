@@ -77,6 +77,8 @@ public class RotateBodyMovement : MonoBehaviour
         // */
         bodyYaw = transformBodyRoot.eulerAngles.y;
 
+        float cameraYaw = MainCameraChild.eulerAngles.y;
+
         ///* 4. Compute the DELTA angle between body and movement direction
         // * DeltaAngle converts wrapped Euler angles (0–360) into signed angles (-180 to 180)
         // */
@@ -93,6 +95,8 @@ public class RotateBodyMovement : MonoBehaviour
         Quaternion targetRotation = Quaternion.Euler(0f, clampedYaw, 0f);
 
         //// Smooth rotation for realism
-        transformBodyRoot.localRotation = Quaternion.Slerp(  transformBodyRoot.localRotation,  targetRotation,  rotationSmooth * Time.deltaTime );
+        //transformBodyRoot.localRotation = Quaternion.Slerp(  transformBodyRoot.localRotation,  targetRotation,  rotationSmooth * Time.deltaTime );
+        transformBodyRoot.rotation = Quaternion.Euler(0, cameraYaw, 0);
+
     }
 }

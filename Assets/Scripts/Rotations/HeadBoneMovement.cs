@@ -10,8 +10,8 @@ public class HeadBoneMovement : MonoBehaviour
     private float _rotationX = 0f;
     private float _rotationY = 0f;
 
-    [SerializeField] RelativeMovement _relativeMovementDir;
-    [SerializeField] RotateBodyMovement _rotateBodyMovement;
+    //[SerializeField] RelativeMovement _relativeMovementDir; 
+    //[SerializeField] RotateBodyMovement _rotateBodyMovement;
     [SerializeField] Transform bodyRoot;
 
 
