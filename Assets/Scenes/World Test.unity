@@ -1859,11 +1859,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2120225910}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &1017920876 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5191953975586933929, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
-  m_PrefabInstance: {fileID: 1556772245}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1068266057
 GameObject:
   m_ObjectHideFlags: 0
@@ -2410,6 +2405,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22ddfeef596768942833900ffd127bd1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RelativeMovement
+--- !u!4 &1299058507 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8108289884553878273, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
+  m_PrefabInstance: {fileID: 1556772245}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1314626862
 Transform:
   m_ObjectHideFlags: 0
@@ -2990,45 +2990,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1121236148421467829, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
-      propertyPath: cameraTransform
+    - target: {fileID: 1289618009477772920, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
+      propertyPath: Transform_Bone_Body
       value: 
-      objectReference: {fileID: 1999918007}
-    - target: {fileID: 1121236148421467829, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
-      propertyPath: Transform_Camera
-      value: 
-      objectReference: {fileID: 1999918007}
-    - target: {fileID: 1121236148421467829, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
+      objectReference: {fileID: 1299058507}
+    - target: {fileID: 1289618009477772920, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
       propertyPath: Transform_Bone_Head
       value: 
-      objectReference: {fileID: 1017920876}
-    - target: {fileID: 1289618009477772920, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1289618009477772920, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
-      propertyPath: transformHeadBone
-      value: 
-      objectReference: {fileID: 1017920876}
-    - target: {fileID: 1289618009477772920, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
-      propertyPath: Transform_HeadBone
-      value: 
-      objectReference: {fileID: 1017920876}
-    - target: {fileID: 1289618009477772920, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
-      propertyPath: Transform_CameraFPS
-      value: 
-      objectReference: {fileID: 1999918007}
-    - target: {fileID: 1289618009477772920, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
-      propertyPath: Transform_FPSCamera
-      value: 
-      objectReference: {fileID: 1999918007}
+      objectReference: {fileID: 1299058507}
     - target: {fileID: 2798487353953319790, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
       propertyPath: m_Name
       value: 'Player_YBot(Move_Animated_Controller)[TEST]'
       objectReference: {fileID: 0}
     - target: {fileID: 6282661241852750495, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
-      propertyPath: jumpHeight
-      value: 2
+      propertyPath: AnimationToggle
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8108289884553878273, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3930,11 +3906,6 @@ MonoBehaviour:
   DEBUG_RotateBodyMovement: {fileID: 1299058502}
   DEBUG_RelativeMovement: {fileID: 1299058505}
   DEBUG_HeadBoneMovement: {fileID: 1299058504}
---- !u!4 &1999918007 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8627249509877282148, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
-  m_PrefabInstance: {fileID: 1556772245}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2050392718
 PrefabInstance:
   m_ObjectHideFlags: 0

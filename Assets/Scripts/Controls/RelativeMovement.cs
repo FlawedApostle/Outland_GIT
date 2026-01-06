@@ -89,15 +89,17 @@ public class RelativeMovement : MonoBehaviour
     }
 
 
+    [SerializeField , Tooltip("Toggle Animation on and off - Debugging")] bool AnimationToggle = true;
+
     private void Start()
     {
         ///characterController = GetComponent<CharacterController>();
         ///Debug_characterController(characterController);
         /// Set player controller movement speed
         currentSpeed = moveSpeed;
-        //anim.enabled = false;                   /// debugger - turn off animation for camera testing
+        anim.enabled = AnimationToggle;                   // debugger - turn off animation for camera testing
     }
-    
+
     void Update()
     {
 
