@@ -10,15 +10,16 @@ using UnityEngine.LowLevel;
 
 public class RotateBodyMovement : MonoBehaviour
 {
-    [Header("Rotate Body Reference Reference [Empty Player Root]")]
-    [SerializeField, Tooltip("Place 'Empty' Player Root")]
-    private Transform transformBodyRoot;
-
-
     [Header("FPS Camera inheritance")]
     [SerializeField, Tooltip("Place FPS camera")]
     private Transform MainCameraChild;
 
+    [Header("Rotate Body Reference Reference [Empty Player Root]")]
+    [SerializeField, Tooltip("Place 'Empty' Player Root")]
+    private Transform transformBodyRoot;
+
+    [SerializeField] private Transform transformHeadBone;
+    
     [Header("Movement Input Reference")]
     [SerializeField, Tooltip("Reference to the RelativeMovement script for movement direction")]
     private RelativeMovement relativeMovement;
@@ -53,13 +54,8 @@ public class RotateBodyMovement : MonoBehaviour
     void LateUpdate()
     {
 
-        /* 1. Get the movement direction from RelativeMovement
-         * This is the SAME vector used to move the character controller.
-         * It is already camera-relative, so we can use it directly.
-         */
         moveDir = relativeMovement.GetMoveDirection();
         //Debug.Log("MoveDir: " + moveDir + " | targetYaw: " + targetYaw);
-
 
         // If no movement input, smoothly return torso to neutral
         if (moveDir.sqrMagnitude < 0.01f)
@@ -69,35 +65,26 @@ public class RotateBodyMovement : MonoBehaviour
             return;
         }
 
-            Vector3 worldMove = transformBodyRoot.TransformDirection(moveDir);      // legit line to convert from local to world space.......
-            targetYaw = Mathf.Atan2(worldMove.x, worldMove.z) * Mathf.Rad2Deg;      // calling the converted coords to apply rotation correctly
+        Vector3 worldMove = transformBodyRoot.TransformDirection(moveDir);      // legit line to convert from local to world space.......
+        targetYaw = Mathf.Atan2(worldMove.x, worldMove.z) * Mathf.Rad2Deg;      // calling the converted coords to apply rotation correctly
 
-
-
-        ///* 3. Get the character body's current yaw
-        // * This is the root transform's Y rotation.
-        // */
-        bodyYaw = transformBodyRoot.eulerAngles.y;
-
-        float cameraYaw = MainCameraChild.eulerAngles.y;
+        bodyYaw = transformBodyRoot.eulerAngles.y;                  // empty controller that holds the player
+        float cameraYaw = MainCameraChild.eulerAngles.y;            // camera direction and where its facing on the y axis
 
         ///* 4. Compute the DELTA angle between body and movement direction
-        // * DeltaAngle converts wrapped Euler angles (0–360) into signed angles (-180 to 180)
-        // */
-        float deltaYaw = Mathf.DeltaAngle(bodyYaw, targetYaw);
-
-        ///* 5. Clamp the torso twist so it doesn't rotate unnaturally
-        // * Example: -45° to +45°
-        // */
+        float deltaYaw = Mathf.DeltaAngle(bodyYaw, cameraYaw);
+        
+        ///* 5. Clamp the torso twist so it doesn't rotate unnaturally Example: -45° to +45°
         clampedYaw = Mathf.Clamp(deltaYaw, -torsoYawLimit, torsoYawLimit);
 
         ///* 6. Apply rotation to the torso bone
         // * Only rotate around Y (twist). X and Z remain controlled by animations.
-        // */
-        Quaternion targetRotation = Quaternion.Euler(0f, cameraYaw, 0f);
+        Quaternion targetRotation = Quaternion.Euler(worldMove.x, cameraYaw, worldMove.z);
+        //Quaternion targetRotation = Quaternion.Euler(0f, cameraYaw, 0f);
 
-        //// Smooth rotation for realism
-        transformBodyRoot.localRotation = Quaternion.Slerp(transformBodyRoot.rotation, targetRotation, rotationSmooth * Time.deltaTime);
+        // Smooth rotation for realism
+        transformBodyRoot.rotation = Quaternion.Slerp(transformBodyRoot.rotation, targetRotation, rotationSmooth * Time.deltaTime);
+        //transformBodyRoot.localRotation = Quaternion.Slerp(transformBodyRoot.rotation, targetRotation, rotationSmooth * Time.deltaTime);
         //transformBodyRoot.rotation = Quaternion.Euler(0, cameraYaw, 0);
 
     }
