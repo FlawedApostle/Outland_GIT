@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Debuger : MonoBehaviour
 {
@@ -30,15 +31,33 @@ public class Debuger : MonoBehaviour
     }
     private void Update()
     {
-        
         if (Input.GetKeyDown(KeyCode.F9))
         {
-            //Debug.Log("F9 pressed!");
-            Debug.Log("HeadBone Rotation Direction: " + DEBUG_HeadBoneMovement.Get_HeadBone_Rotation() + " | HeadBone Rotation Yaw: " + DEBUG_HeadBoneMovement.Get_HeadBone_Yaw());
 
         }
+            // HEAD BONE
+            if (Input.GetKeyDown(KeyCode.F9))
+        {
+            //Debug.Log("F9 pressed!");
+            Debug.Log("HeadBone [model]  HeadBone Local Rotation [DIRECTION]: " + DEBUG_HeadBoneMovement.Get_HeadBone_LocalRotation());                          // bone local rot
+            Debug.Log("HeadBone [model]  Rotation y axis [YAW]: "               + DEBUG_HeadBoneMovement.Get_HeadBone_Yaw());                                   // bone angle float 
+            Debug.Log("HeadBone [Camera] Local Rotation: "                      + DEBUG_HeadBoneMovement.Get_CameraTransform_LocalRotation());                  // cam local rot
+            Debug.Log("HeadBone [Camera] Transform y axis [YAW]: "              + DEBUG_HeadBoneMovement.Get_CameraTransform_Yaw());                            // cam euler.y
 
-           
+               
+
+        }
+            // ROTATE BODY
+            if (Input.GetKeyDown(KeyCode.F10))
+        {
+            //Debug.Log("F10 pressed!");
+            Debug.Log("RotateBody Movement [Camera] local rotation: "   + DEBUG_RotateBodyMovement.Get_CameraFPS_LocalRotation());
+            Debug.Log("RotateBody Movement [Camera] y axis [YAW]: "     + DEBUG_RotateBodyMovement.Get_CameraFPS_Yaw());  
+            Debug.Log("RotateBody Rotation [model] [YAW]: "             + DEBUG_RotateBodyMovement.Get_HeadYaw());
+            Debug.Log("RotateBody Rotation [model] [PITCH]: "             + DEBUG_RotateBodyMovement.Get__headPitch());
+        }
+
+
         //Debug.Log("MoveDir: " + DEBUG_RotateBodyMovement.Get_moveDir() + " | targetYaw: " + DEBUG_RotateBodyMovement.Get_targetYaw());
         //Debug.Log("isWalking = " +  DEBUG_relativeMovement.Get_statusAnimator()); //+ " | magnitude = " + inputMovementMagnitude);       /// DEBUG
     }

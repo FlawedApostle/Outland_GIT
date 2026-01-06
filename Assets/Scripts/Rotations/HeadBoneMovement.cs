@@ -4,29 +4,32 @@ public class HeadBoneMovement : MonoBehaviour
 {
 
 
-    [SerializeField] Transform headBone;
-    [SerializeField] Transform cameraTransform;
+    [SerializeField] Transform Transform_Bone_Head;
+    [SerializeField] Transform Transform_Camera;
     [SerializeField] private float _cameraSmooth = 10;
 
-    public Quaternion RotateHeadBone()
-    {
-        return headBone.localRotation = cameraTransform.rotation;
+    public Quaternion RotateHeadBone() {
+        return Transform_Bone_Head.localRotation = Transform_Camera.rotation;
     }
-    public Quaternion RotateHeadBone_Slerp()
-    {
-        Quaternion headRotationSlerp = cameraTransform.rotation;
-        return headBone.rotation = Quaternion.Slerp(headBone.rotation, headRotationSlerp, _cameraSmooth * Time.deltaTime);
+    public Quaternion RotateHeadBone_Slerp() {
+        Quaternion headRotationSlerp = Transform_Camera.rotation;
+        return Transform_Bone_Head.rotation = Quaternion.Slerp(Transform_Bone_Head.rotation, headRotationSlerp, _cameraSmooth * Time.deltaTime);
     }
 
-    public Quaternion Get_HeadBone_Rotation()
-    {
-        return headBone.localRotation;
+    // GET HEADBONE ORIENTATION
+    public Quaternion Get_HeadBone_LocalRotation()  {
+        return Transform_Bone_Head.localRotation;
     }
-    public Vector3 Get_HeadBone_Yaw()
-    {
-        return headBone.eulerAngles;
+    public float Get_HeadBone_Yaw() {
+        return Transform_Bone_Head.eulerAngles.y;
     }
-
+    // GET CAMERA ORIENTATION
+    public Quaternion Get_CameraTransform_LocalRotation(){
+        return Transform_Camera.localRotation;  /// local rot
+    }
+    public float Get_CameraTransform_Yaw(){
+        return Transform_Camera.eulerAngles.y;  /// y axis is the yaw
+    }
 
     void LateUpdate()
     {
