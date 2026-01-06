@@ -14,7 +14,7 @@ public class RotateBodyMovement : MonoBehaviour
     [SerializeField, Tooltip("FPS camera inheritance")]
     private Transform Transform_CameraFPS;
 
-    [Header("Model - HeadBone [script]"), Tooltip("Headbone from model called from script")]
+    [Header("Model - HeadBone"), Tooltip("Put actual head bone here!")]
     [SerializeField]  Transform Transform_Bone_Head;
 
     [Header("Model Rotate"), Tooltip("Torso From Model")]
@@ -52,12 +52,13 @@ public class RotateBodyMovement : MonoBehaviour
     {
         return Transform_Bone_Head.localRotation;
     }
-
     public float Get_Transform_Bone_Head_Yaw() {
-        return _headYaw;    // Transform_Bone_Head.eulerAngles.y;
+        //return _headYaw;    
+        return Transform_Bone_Head.eulerAngles.y;
     }
     public float Get_Transform_Bone_Head_Pitch() {
-        return _headPitch;    // Transform_Bone_Head.eulerAngles.x
+        //return _headPitch;    // Transform_Bone_Head.eulerAngles.x
+        return Transform_Bone_Head.eulerAngles.x;
     }
 
 
@@ -68,8 +69,6 @@ public class RotateBodyMovement : MonoBehaviour
     {
         _bodyYaw = Transform_Bone_Body.eulerAngles.y;
     }
-
-
     public void Set_Transform_Bone_HeadYaw()
     {
         _headYaw = Transform_Bone_Head.eulerAngles.y;
@@ -79,22 +78,17 @@ public class RotateBodyMovement : MonoBehaviour
         _headPitch = Transform_Bone_Head.eulerAngles.x;
     }
 
-    private void Awake()
-    {
-        Set_Transform_Transform_Bone_HeadPitch();
-        Set_Transform_Bone_HeadYaw();
-        Set_Transform_Bone_BodyYaw();
-    }
 
 
     void LateUpdate()
     {
+        _headYaw = Transform_Bone_Head.eulerAngles.y;
+        _headPitch = Transform_Bone_Head.eulerAngles.x;
+        _bodyYaw = Transform_Bone_Body.eulerAngles.y;
 
 
         _moveDirection = relativeMovement.GetMoveDirection();
-        Set_Transform_Transform_Bone_HeadPitch();
-        Set_Transform_Bone_HeadYaw();
-        Set_Transform_Bone_BodyYaw();
+
 
 
 
