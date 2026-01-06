@@ -92,11 +92,11 @@ public class RotateBodyMovement : MonoBehaviour
         ///* 6. Apply rotation to the torso bone
         // * Only rotate around Y (twist). X and Z remain controlled by animations.
         // */
-        Quaternion targetRotation = Quaternion.Euler(0f, clampedYaw, 0f);
+        Quaternion targetRotation = Quaternion.Euler(0f, cameraYaw, 0f);
 
         //// Smooth rotation for realism
-        //transformBodyRoot.localRotation = Quaternion.Slerp(  transformBodyRoot.localRotation,  targetRotation,  rotationSmooth * Time.deltaTime );
-        transformBodyRoot.rotation = Quaternion.Euler(0, cameraYaw, 0);
+        transformBodyRoot.localRotation = Quaternion.Slerp(transformBodyRoot.rotation, targetRotation, rotationSmooth * Time.deltaTime);
+        //transformBodyRoot.rotation = Quaternion.Euler(0, cameraYaw, 0);
 
     }
 }
