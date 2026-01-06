@@ -39,13 +39,15 @@ public class RotateBodyMovement : MonoBehaviour
     private float targetYaw = 0f;
     public float Get_targetYaw()
     {
-        return targetYaw;
+        float temp = targetYaw;
+        return temp;
     }
 
-    private float moveDir;
-    public float Get_moveDir()
+    private Vector3 moveDir;
+    public Vector3 Get_moveDir()
     {
-        return moveDir;
+        Vector2 temp = moveDir;
+        return temp;
     }
 
     void LateUpdate()
@@ -55,7 +57,7 @@ public class RotateBodyMovement : MonoBehaviour
          * This is the SAME vector used to move the character controller.
          * It is already camera-relative, so we can use it directly.
          */
-        Vector3 moveDir = relativeMovement.GetMoveDirection();
+        moveDir = relativeMovement.GetMoveDirection();
         //Debug.Log("MoveDir: " + moveDir + " | targetYaw: " + targetYaw);
 
 
