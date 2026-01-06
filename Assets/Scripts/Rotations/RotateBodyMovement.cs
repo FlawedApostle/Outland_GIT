@@ -14,8 +14,11 @@ public class RotateBodyMovement : MonoBehaviour
     [SerializeField, Tooltip("FPS camera inheritance")]
     private Transform Transform_CameraFPS;
 
-    [Header("HeadBone"), Tooltip("Headbone from model")]
-    [SerializeField]  Transform Transform_HeadBone;
+    [Header("Model - HeadBone [script]"), Tooltip("Headbone from model called from script")]
+    [SerializeField]  Transform Transform_Bone_Head;
+
+    [Header("Model Rotate"), Tooltip("Torso From Model")]
+    [SerializeField]  Transform Transform_Bone_Body;
     
     [Header("SCRIPT: RelativeMovement")]
     [SerializeField, Tooltip("RelativeMovement Script Reference")]
@@ -30,13 +33,14 @@ public class RotateBodyMovement : MonoBehaviour
 
     float _headYaw;
     float _headPitch;
-    Vector3 moveDir;
+    float _bodyYaw;
+    Vector3 _moveDirection;
+   
     public Vector3 Get_moveDir()
     {
-        return moveDir;
+        return _moveDirection;
     }
-
-
+    
     public Quaternion Get_Transform_CameraFPS_LocalRotation() {
         return Transform_CameraFPS.localRotation;   /// local rot
     }
@@ -44,30 +48,55 @@ public class RotateBodyMovement : MonoBehaviour
         return Transform_CameraFPS.eulerAngles.y;
     }
    
-    public Quaternion Get_Transform_HeadBone_LocalRotation()
+    public Quaternion Get_Transform_Bone_Head_LocalRotation()
     {
-        return Transform_HeadBone.localRotation;
+        return Transform_Bone_Head.localRotation;
     }
-    public float Get_Transform_HeadBone_Yaw() {
-        return Transform_HeadBone.eulerAngles.y; //_headYaw;
+
+    public float Get_Transform_Bone_Head_Yaw() {
+        return _headYaw;    // Transform_Bone_Head.eulerAngles.y;
     }
-    public float Get_Transform_HeadBone_Pitch() {
-        return Transform_HeadBone.eulerAngles.x; //_headPitch;
+    public float Get_Transform_Bone_Head_Pitch() {
+        return _headPitch;    // Transform_Bone_Head.eulerAngles.x
     }
 
 
+    public float Get_Transform_Bone_Body_Yaw() {
+        return _bodyYaw;    // Transform_Bone_Head.eulerAngles.x
+    }
+    public void Set_Transform_Bone_BodyYaw()
+    {
+        _bodyYaw = Transform_Bone_Body.eulerAngles.y;
+    }
+
+
+    public void Set_Transform_Bone_HeadYaw()
+    {
+        _headYaw = Transform_Bone_Head.eulerAngles.y;
+    }
+    public void Set_Transform_Transform_Bone_HeadPitch()
+    {
+        _headPitch = Transform_Bone_Head.eulerAngles.x;
+    }
+
+    private void Awake()
+    {
+        Set_Transform_Transform_Bone_HeadPitch();
+        Set_Transform_Bone_HeadYaw();
+        Set_Transform_Bone_BodyYaw();
+    }
 
 
     void LateUpdate()
     {
 
-        moveDir = relativeMovement.GetMoveDirection();
 
-        _headYaw = Transform_HeadBone.eulerAngles.y;
-        _headPitch = Transform_HeadBone.eulerAngles.x;
+        _moveDirection = relativeMovement.GetMoveDirection();
+        Set_Transform_Transform_Bone_HeadPitch();
+        Set_Transform_Bone_HeadYaw();
+        Set_Transform_Bone_BodyYaw();
 
 
-       
 
         // If no movement input, smoothly return torso to neutral
         //if (moveDir.sqrMagnitude < 0.01f)
