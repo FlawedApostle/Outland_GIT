@@ -115,6 +115,7 @@ public class MouseCamera : MonoBehaviour
         ///Debug.Log("[MouseCamera DEBUG] Camera Rotation (Euler): " + transform.eulerAngles);
 
         // DEBUGGING CAM COORDS
+        /*
         if (UnityEngine.Input.GetKeyDown(KeyCode.F1))
         {
             // 4. DEBUG output to show current movement directions
@@ -122,6 +123,7 @@ public class MouseCamera : MonoBehaviour
             CamCoordinateLocation();
             //PrintClampAxisRotation_Y();
         }
+        */
     }
 
 

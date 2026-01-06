@@ -141,6 +141,7 @@ public class RelativeMovement : MonoBehaviour
 
         // Debug Yaw and Pitch coordinats
         // I need to get he faciing direction ofthe camera Yaw - debug and gather data on that
+        /*
         if(UnityEngine.Input.GetKeyDown(KeyCode.F2))
         {
             //Debug.Log("[Relative Movement DEBUG] horizontal coords: " + horizontal);            // input - 'when moving'
@@ -157,7 +158,7 @@ public class RelativeMovement : MonoBehaviour
 
             //Debug.Log("[Relative Movement DEBUG] mouseCamera eularAngle y: " + MouseCamera_CAMERA.transform.eulerAngles.y);
         }
-
+        */
         // Decide current speed: base moveSpeed or sprintSpeed
         float currentSpeed = moveSpeed; 
         if (isGrounded && inputMovementMagnitude > 0.01f )

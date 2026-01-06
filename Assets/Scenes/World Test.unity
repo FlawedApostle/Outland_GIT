@@ -451,6 +451,11 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!4 &232842900 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5191953975586933929, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
+  m_PrefabInstance: {fileID: 1556772245}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &248834678
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2997,7 +3002,7 @@ PrefabInstance:
     - target: {fileID: 1289618009477772920, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
       propertyPath: Transform_Bone_Head
       value: 
-      objectReference: {fileID: 1299058507}
+      objectReference: {fileID: 232842900}
     - target: {fileID: 2798487353953319790, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
       propertyPath: m_Name
       value: 'Player_YBot(Move_Animated_Controller)[TEST]'
