@@ -30,7 +30,7 @@ public class HeadBoneMovement : MonoBehaviour
 
 }
 
-
+/* THIS IS MY OLD HEADBONE SCRIPT - I WILL REMOVE IT EVENTUALLY
     //[SerializeField] Transform headBone; // Drag the head bone here in the Inspector
     //[SerializeField, Tooltip("Place FPS cam here")] Transform MainCameraChild; // Place the FPS camera in here
     //[SerializeField] float sensitivity = 2.0f;
@@ -70,4 +70,4 @@ public class HeadBoneMovement : MonoBehaviour
     //    // You may need to swap X, Y, or Z depending on your specific model rig.
     //    headBone.localRotation = Quaternion.Euler(camPitch, relativeYaw, 0f);
     // }
-
+*/
