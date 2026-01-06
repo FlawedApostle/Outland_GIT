@@ -2372,6 +2372,39 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2ad84c9c763318345bac41a4671a0bd6, type: 3}
+--- !u!114 &1299058502 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1289618009477772920, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
+  m_PrefabInstance: {fileID: 1556772245}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66843cb9606c69f4ca856db27bf7f195, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RotateBodyMovement
+--- !u!114 &1299058504 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1121236148421467829, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
+  m_PrefabInstance: {fileID: 1556772245}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 528c77f1261e31f4ca8ebdbff594a730, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BoneFollowMouse
+--- !u!114 &1299058505 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6282661241852750495, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
+  m_PrefabInstance: {fileID: 1556772245}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22ddfeef596768942833900ffd127bd1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RelativeMovement
 --- !u!4 &1314626862
 Transform:
   m_ObjectHideFlags: 0
@@ -3865,9 +3898,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bddd38e8228161547bfd4c04e9c1d6db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Debuger
-  DEBUG_RotateBodyMovement: {fileID: 0}
-  DEBUG_RelativeMovement: {fileID: 0}
-  DEBUG_HeadBoneMovement: {fileID: 0}
+  DEBUG_RotateBodyMovement: {fileID: 1299058502}
+  DEBUG_RelativeMovement: {fileID: 1299058505}
+  DEBUG_HeadBoneMovement: {fileID: 1299058504}
 --- !u!4 &1999918007 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8627249509877282148, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
