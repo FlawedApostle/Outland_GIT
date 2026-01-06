@@ -12,14 +12,10 @@ public class RotateBodyMovement : MonoBehaviour
 {
     [Header("FPS Camera")]
     [SerializeField, Tooltip("FPS camera inheritance")]
-    private Transform Transform_FPSCamera;
-
-    [Header("Player Root Empty")]
-    [SerializeField, Tooltip("Place Empty with all scripts")]
-    private Transform Transform_Empty;
+    private Transform Transform_CameraFPS;
 
     [Header("HeadBone"), Tooltip("Headbone from model")]
-    [SerializeField] private Transform transformHeadBone;
+    [SerializeField]  Transform Transform_HeadBone;
     
     [Header("SCRIPT: RelativeMovement")]
     [SerializeField, Tooltip("RelativeMovement Script Reference")]
@@ -33,14 +29,33 @@ public class RotateBodyMovement : MonoBehaviour
     private float rotationSmooth = 10f;
 
     float _headYaw;
-    float _bodyYaw;
+    float _headPitch;
+
+
+    public Quaternion Get_CameraFPS_LocalRotation() {
+        return Transform_CameraFPS.localRotation;   /// local rot
+    }
+    public float Get_CameraFPS_Yaw() {
+        return Transform_CameraFPS.eulerAngles.y;
+    }
+    public float Get_HeadYaw() {
+        return _headYaw;
+    }
+    public float Get__headPitch() {
+        return _headPitch;
+    }
+    public Quaternion Get_TransformHeadBone() {
+        return Transform_HeadBone.localRotation;
+    }
 
 
 
     void LateUpdate()
     {
 
-     
+        _headYaw = Transform_HeadBone.eulerAngles.y;
+        _headPitch = Transform_HeadBone.eulerAngles.x;
+
 
     }
 }
@@ -50,7 +65,9 @@ public class RotateBodyMovement : MonoBehaviour
 
 /*      OLD MOVEMENT DIRECTION SCRIPT - TORSO ROTATES TO DIRECTION OF MOVEMENT - WILL REMOVE EVENTUALLY
        
-
+    [Header("Player Root Empty")]
+    [SerializeField, Tooltip("Place Empty with all scripts")]
+    private Transform Transform_Empty;
     [SerializeField] private float rotationSpeed = 5f;
     // Internal variables
     private float clampedYaw = 0f;
