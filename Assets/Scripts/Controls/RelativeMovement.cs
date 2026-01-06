@@ -84,26 +84,18 @@ public class RelativeMovement : MonoBehaviour
     private bool isGrounded;
     private float verticalVelocity = 0f;
     private float currentSpeed;
-    public Vector3 GetMoveDirection()
-    {
+    public Vector3 GetMoveDirection() {
         return moveDirection;
-    }
-    public float GetMoveDirectionX()
-    {
-        return moveDirection.x;
-    }
-    public float GetMoveDirectionY()
-    {
-        return moveDirection.y;
     }
 
 
     private void Start()
     {
-        //characterController = GetComponent<CharacterController>();
-        //Debug_characterController(characterController);
-        // Set player controller movement speed
+        ///characterController = GetComponent<CharacterController>();
+        ///Debug_characterController(characterController);
+        /// Set player controller movement speed
         currentSpeed = moveSpeed;
+        //anim.enabled = false;                   /// debugger - turn off animation for camera testing
     }
     
     void Update()

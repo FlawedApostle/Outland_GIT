@@ -39,10 +39,12 @@ public class Debuger : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.F9))
         {
             //Debug.Log("F9 pressed!");
-            Debug.Log("HeadBone [model]  HeadBone Local Rotation [DIRECTION]: " + DEBUG_HeadBoneMovement.Get_HeadBone_LocalRotation());                          // bone local rot
-            Debug.Log("HeadBone [model]  Rotation y axis [YAW]: "               + DEBUG_HeadBoneMovement.Get_HeadBone_Yaw());                                   // bone angle float 
-            Debug.Log("HeadBone [Camera] Local Rotation: "                      + DEBUG_HeadBoneMovement.Get_CameraTransform_LocalRotation());                  // cam local rot
-            Debug.Log("HeadBone [Camera] Transform y axis [YAW]: "              + DEBUG_HeadBoneMovement.Get_CameraTransform_Yaw());                            // cam euler.y
+            Debug.Log("[HEADBONE] - HEAD");
+            Debug.Log("[HEADBONE] [model-head]  [LOCAL]: " + DEBUG_HeadBoneMovement.Get_Transform_Bone_Head_LocalRotation());                          // bone local rot
+            Debug.Log("[HEADBONE] [model-head]  [YAW]: "         + DEBUG_HeadBoneMovement.Get_Transform_Bone_Head_Yaw());                                   // bone angle float 
+            Debug.Log("[HEADBONE] - CAM");
+            Debug.Log("[HEADBONE] [Camera] [LOCAL]: "       + DEBUG_HeadBoneMovement.Get_Transform_Camera_LocalRotation());                  // cam local rot
+            Debug.Log("[HEADBONE] [Camera] [YAW]: "         + DEBUG_HeadBoneMovement.Get_Transform_Camera_Yaw());                            // cam euler.y
 
                
 
@@ -51,10 +53,15 @@ public class Debuger : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.F10))
         {
             //Debug.Log("F10 pressed!");
-            Debug.Log("RotateBody Movement [Camera] local rotation: "   + DEBUG_RotateBodyMovement.Get_CameraFPS_LocalRotation());
-            Debug.Log("RotateBody Movement [Camera] y axis [YAW]: "     + DEBUG_RotateBodyMovement.Get_CameraFPS_Yaw());  
-            Debug.Log("RotateBody Rotation [model] [YAW]: "             + DEBUG_RotateBodyMovement.Get_HeadYaw());
-            Debug.Log("RotateBody Rotation [model] [PITCH]: "             + DEBUG_RotateBodyMovement.Get__headPitch());
+            Debug.Log("[ROTATEBODY] - HEAD");
+            Debug.Log("[ROTATEBODY] [model-head] [LOCAL]: "      + DEBUG_RotateBodyMovement.Get_Transform_HeadBone_LocalRotation());
+            Debug.Log("[ROTATEBODY] [model-head] [YAW]: "        + DEBUG_RotateBodyMovement.Get_Transform_HeadBone_Yaw());
+            Debug.Log("[ROTATEBODY] [model-head] [PITCH]: "      + DEBUG_RotateBodyMovement.Get_Transform_HeadBone_Pitch());
+            Debug.Log("[ROTATEBODY] - CAM");
+            Debug.Log("[ROTATEBODY] [Camera] [LOCAL]: "     + DEBUG_RotateBodyMovement.Get_Transform_CameraFPS_LocalRotation());
+            Debug.Log("[ROTATEBODY] [Camera] [YAW]: "       + DEBUG_RotateBodyMovement.Get_Transform_CameraFPS_Yaw());
+            Debug.Log("[ROTATEBODY] - MOVE DIRECTION");
+            Debug.Log("[ROTATEBODY] MoveDir: "              + DEBUG_RotateBodyMovement.Get_moveDir());
         }
 
 
