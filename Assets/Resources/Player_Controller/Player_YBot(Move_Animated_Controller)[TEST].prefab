@@ -961,11 +961,10 @@ GameObject:
   - component: {fileID: 8108289884553878273}
   - component: {fileID: 6282661241852750495}
   - component: {fileID: 1121236148421467829}
-  - component: {fileID: 5467733653985241784}
   - component: {fileID: 627151225481836962}
-  - component: {fileID: 4484744655094715925}
+  - component: {fileID: 1289618009477772920}
   m_Layer: 0
-  m_Name: Player_YBot(RelativeCamera_RelativeMovement) - ANIMATION - TEST
+  m_Name: 'Player_YBot(Move_Animated_Controller)[TEST]'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -980,7 +979,7 @@ Transform:
   m_GameObject: {fileID: 2798487353953319790}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.19055752, y: 0, z: -3.344624}
+  m_LocalPosition: {x: 0, y: 0, z: -4.01}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1008,6 +1007,7 @@ MonoBehaviour:
   jumpHeight: 1.5
   gravity: 9.8
   airControl: 5
+  animatorSwitch: 0
 --- !u!114 &1121236148421467829
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1021,28 +1021,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoneFollowMouse
   headBone: {fileID: 5191953975586933929}
+  MainCameraChild: {fileID: 8627249509877282148}
   sensitivity: 2
   verticalLimit: 60
---- !u!114 &5467733653985241784
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2798487353953319790}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 970537485ae673841a12159cf25521cf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BodyLookFollowDelay
-  body: {fileID: 4266587066010801255}
-  controller: {fileID: 627151225481836962}
-  lookCamera: {fileID: 8627249509877282148}
-  movement: {fileID: 0}
-  rotationSpeed: 180
-  followDelay: 0.4
-  minAngleToTurn: 5
-  movementThreshold: 0.1
+  bodyRoot: {fileID: 8108289884553878273}
 --- !u!143 &627151225481836962
 CharacterController:
   m_ObjectHideFlags: 0
@@ -1068,22 +1050,24 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &4484744655094715925
+--- !u!114 &1289618009477772920
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2798487353953319790}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 88ebb7f5e4b34ef4e8a4c603eaf05188, type: 3}
+  m_Script: {fileID: 11500000, guid: 66843cb9606c69f4ca856db27bf7f195, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TorsoMovement
-  torsoBone: {fileID: 4266587066010801255}
-  headBoneYaw: {fileID: 5191953975586933929}
-  sensitivity: 2
-  verticalLimit: 60
+  m_EditorClassIdentifier: Assembly-CSharp::RotateBodyMovement
+  transformBodyRoot: {fileID: 8108289884553878273}
+  MainCameraChild: {fileID: 8627249509877282148}
+  relativeMovement: {fileID: 6282661241852750495}
+  torsoYawLimit: 360
+  rotationSmooth: 10
+  rotationSpeed: 5
 --- !u!1 &2897433945774373880
 GameObject:
   m_ObjectHideFlags: 0
