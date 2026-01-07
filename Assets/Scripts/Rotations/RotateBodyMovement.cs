@@ -44,8 +44,8 @@ public class RotateBodyMovement : MonoBehaviour
 
     void LateUpdate()
     {
-        _headYaw = _MouseCamera.Get_MouseXYQuat().eulerAngles.y;
-        _headPitch = Transform_Bone_Head.eulerAngles.x;
+        _headYaw = _MouseCamera.Get_MouseXYQuat().eulerAngles.y;    // camera script
+        _headPitch = Transform_Bone_Head.eulerAngles.x;             // bone 
         _bodyYaw = Transform_Bone_Body.eulerAngles.y;
 
         // test
