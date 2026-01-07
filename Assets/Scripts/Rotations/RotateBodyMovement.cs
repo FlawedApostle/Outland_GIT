@@ -54,7 +54,7 @@ public class RotateBodyMovement : MonoBehaviour
         _moveDirection = relativeMovement.GetMoveDirection();
         
         _MouseCamera_Forward = _MouseCamera.Get_MouseCamera().forward;              /// camera - get the forward z vector which is project from local to world space
-        Vector3 _MouseCamera_Forward_Flatten = new Vector3(_MouseCamera_Forward.x, 0, _MouseCamera_Forward.y).normalized;
+        Vector3 _MouseCamera_Forward_Flatten = new Vector3(_MouseCamera_Forward.x, 0, _MouseCamera_Forward.z).normalized;
         Vector3 _bodyYawFlatten = new Vector3(Transform_Bone_Body.forward.x, 0, Transform_Bone_Body.forward.z).normalized;
 
 
