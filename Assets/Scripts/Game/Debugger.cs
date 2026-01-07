@@ -1,61 +1,74 @@
 using UnityEngine;
 using UnityEngine.UIElements;
+using System;
+using Unity.VisualScripting;
 
 public class Debuger : MonoBehaviour
 {
-    [Header("SCRIPTS: Rotate Body Reference")]
-    [SerializeField]// Tooltip("Reference to the RelativeMovement script for movement direction")]
-    private RotateBodyMovement DEBUG_RotateBodyMovement;
+    [Header("SCRIPTS: MouseCamera")]
+    [SerializeField] private MouseCamera DEBUG_MouseCamera;
 
-    [Header("SCRIPTS: Relative Movement Reference")]
+    [Header("SCRIPTS: Relative Movement")]
     [SerializeField, Tooltip("Reference to the RelativeMovement script for movement direction")]
     private RelativeMovement DEBUG_RelativeMovement;
 
-
-    [Header("SCRIPTS: Head Bone Movement Reference")]
+    [Header("SCRIPTS: Rotate Body Movement")]
+    [SerializeField]// Tooltip("Reference to the RelativeMovement script for movement direction")]
+    private RotateBodyMovement DEBUG_RotateBodyMovement;
+    
+    [Header("SCRIPTS: Head Bone Movement")]
     [SerializeField, Tooltip("Reference to the RelativeMovement script for movement direction")]
     private HeadBoneMovement DEBUG_HeadBoneMovement;
-    public float NULLCHECK_HeadBoneMovement()      // DEBUG
-    {
+
+    [Header("SCRIPTS: Animator Script Reference")]
+    private Animator DEBUG_animator;
+
+
+    public float NULLCHECK_HeadBoneMovement(){
         if (DEBUG_HeadBoneMovement == null) { Debug.LogError("DEBUG_HeadBoneMovement is NULL!"); }
         return 0f;
     }
-
-    [Header("SCRIPTS: Animator Script Reference")]
-    //[SerializeField, Tooltip("Reference to the RelativeMovement script for movement direction")]
-    private Animator DEBUG_animator;
+    
+    public void MouseCam_Coords() { /// raw values multiplyed by sensitivity
+        Debug.Log("Mouse Cam Coords: (" 
+            + DEBUG_MouseCamera.Get_MouseXYQuat().x + " , " + DEBUG_MouseCamera.Get_MouseXYQuat().y + ")");    
+    }
+    public void MouseCam_Yaw() { /// raw values multiplyed by sensitivity
+        Debug.Log("Mouse Cam Coords Yaw: ("
+            + DEBUG_MouseCamera.Get_MouseXYQuat().eulerAngles.y);
+    }
 
 
     private void Start()
     {
         NULLCHECK_HeadBoneMovement();
     }
+
     private void Update()
     {
-            // HEAD BONE
-            if (Input.GetKeyDown(KeyCode.F9))
-        {
-            Debug.Log("[ROTATEBODY] MoveDir: " + DEBUG_RotateBodyMovement.Get_moveDir());
-            Debug.Log("[ROTATEBODY]:[Camera] " + DEBUG_RotateBodyMovement.Get_Transform_CameraFPS_LocalRotation());
-            Debug.Log("[ROTATEBODY] [Camera] [YAW] " + DEBUG_RotateBodyMovement.Get_Transform_CameraFPS_Yaw());
-            Debug.Log("[ROTATEBODY] [BONE] [YAW]: " + DEBUG_RotateBodyMovement.Get_Transform_Bone_Head_Yaw());
-            
-            //Debug.Log("[ROTATEBODY] [BONE] [PITCH]: " + DEBUG_RotateBodyMovement.Get_Transform_Bone_Head_Pitch());
-            //Debug.Log("[ROTATEBODY] [model-body] [YAW]: " + DEBUG_RotateBodyMovement.Get_Transform_Bone_Body_Yaw());
 
+        if (Input.GetKeyDown(KeyCode.F1))  {
+            Debug.Log("[HeadBoneMovement & RotateBodyMovement]");
+            Debug.Log("[Bone Yaw] " +
+            + DEBUG_HeadBoneMovement.Get_Transform_Bone_Head_YAW());
+            Debug.Log("[HeadYaw] " +
+              DEBUG_RotateBodyMovement.Get_HeadYaw());
 
         }
-            // ROTATE BODY
-            if (Input.GetKeyDown(KeyCode.F10))
-        {
-            Debug.Log("[HEADBONE] [BONE] [YAW] " + DEBUG_HeadBoneMovement.Get_Transform_Bone_Head_Yaw());                                   // bone angle float 
-            Debug.Log("[HEADBONE] [Camera] [YAW] " + DEBUG_HeadBoneMovement.Get_Transform_Camera_Yaw());
-            Debug.Log("[HEADBONE] [Camera] " + DEBUG_HeadBoneMovement.Get_Transform_Camera_LocalRotation());
+
+        if (Input.GetKeyDown(KeyCode.F2)){
+            Debug.Log("[MouseCamera]");
+            MouseCam_Coords();
+            MouseCam_Yaw();
+
         }
-        if (Input.GetKeyDown(KeyCode.F1))
-        {
-            Debug.Log("[ROTATEBODY] [BONE] [YAW]: " + DEBUG_RotateBodyMovement.Get_Transform_Bone_Head_Yaw());
-            Debug.Log("[HEADBONE] [BONE] [YAW] " + DEBUG_HeadBoneMovement.Get_Transform_Bone_Head_Yaw());
+        if (Input.GetKeyDown(KeyCode.F3)){
+            Debug.Log("[RotateBodyMovement]");
+            Debug.Log("Bone Pitch] " +
+            +DEBUG_RotateBodyMovement.Get_HeadPitch());
+            Debug.Log("[BodyYaw] " +
+              DEBUG_RotateBodyMovement.Get_BodyYaw());
+
         }
 
 

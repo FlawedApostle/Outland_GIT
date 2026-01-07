@@ -1533,6 +1533,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 97a575a0dd237994eb5915459698c0ac, type: 3}
   m_PrefabInstance: {fileID: 737728729}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &751772375 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4266587066010801255, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
+  m_PrefabInstance: {fileID: 1556772245}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &753313944
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2377,6 +2382,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2ad84c9c763318345bac41a4671a0bd6, type: 3}
+--- !u!114 &1269754461 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3992948224261657837, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
+  m_PrefabInstance: {fileID: 1556772245}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5669709a548958e42be92c0a258e754f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MouseCamera
 --- !u!114 &1299058502 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1289618009477772920, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
@@ -2410,11 +2426,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22ddfeef596768942833900ffd127bd1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RelativeMovement
---- !u!4 &1299058507 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8108289884553878273, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
-  m_PrefabInstance: {fileID: 1556772245}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1314626862
 Transform:
   m_ObjectHideFlags: 0
@@ -2995,10 +3006,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1121236148421467829, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
+      propertyPath: _MouseCamera
+      value: 
+      objectReference: {fileID: 1269754461}
+    - target: {fileID: 1289618009477772920, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
+      propertyPath: _MouseCamera
+      value: 
+      objectReference: {fileID: 1269754461}
     - target: {fileID: 1289618009477772920, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
       propertyPath: Transform_Bone_Body
       value: 
-      objectReference: {fileID: 1299058507}
+      objectReference: {fileID: 751772375}
     - target: {fileID: 1289618009477772920, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
       propertyPath: Transform_Bone_Head
       value: 
@@ -3908,8 +3927,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bddd38e8228161547bfd4c04e9c1d6db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Debuger
-  DEBUG_RotateBodyMovement: {fileID: 1299058502}
+  DEBUG_MouseCamera: {fileID: 1269754461}
   DEBUG_RelativeMovement: {fileID: 1299058505}
+  DEBUG_RotateBodyMovement: {fileID: 1299058502}
   DEBUG_HeadBoneMovement: {fileID: 1299058504}
 --- !u!1001 &2050392718
 PrefabInstance:
