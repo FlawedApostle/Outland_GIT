@@ -169,7 +169,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5669709a548958e42be92c0a258e754f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MouseCamera
-  MainCameraTransform: {fileID: 8627249509877282148}
+  Transform_MouseCamera: {fileID: 0}
   sensitivity: 2
   verticalLookLimit: 80
   horizontalLookLimit: -80
@@ -701,7 +701,7 @@ Transform:
   - {fileID: 9069032187020899600}
   - {fileID: 5123665934111883446}
   - {fileID: 4266587066010801255}
-  m_Father: {fileID: 8108289884553878273}
+  m_Father: {fileID: 7412110180126593578}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &1750961418994484719
 Animator:
@@ -984,7 +984,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8627249509877282148}
-  - {fileID: 7168828313173637152}
+  - {fileID: 7412110180126593578}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6282661241852750495
@@ -1021,7 +1021,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoneFollowMouse
   Transform_Bone_Head: {fileID: 5191953975586933929}
-  Transform_Camera: {fileID: 8627249509877282148}
+  _MouseCamera: {fileID: 0}
   _cameraSmooth: 10
 --- !u!114 &1289618009477772920
 MonoBehaviour:
@@ -1035,9 +1035,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66843cb9606c69f4ca856db27bf7f195, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RotateBodyMovement
-  Transform_CameraFPS: {fileID: 8627249509877282148}
-  Transform_HeadBone: {fileID: 5191953975586933929}
+  _MouseCamera: {fileID: 0}
   relativeMovement: {fileID: 6282661241852750495}
+  Transform_Bone_Head: {fileID: 0}
+  Transform_Bone_Body: {fileID: 0}
   torsoYawLimit: 360
   rotationSmooth: 10
 --- !u!143 &627151225481836962
@@ -2070,6 +2071,38 @@ Transform:
   - {fileID: 2419501527273759347}
   - {fileID: 4671058109201086828}
   m_Father: {fileID: 239285806250103186}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6895124744953720250
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7412110180126593578}
+  m_Layer: 0
+  m_Name: PlayerRoot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7412110180126593578
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6895124744953720250}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7168828313173637152}
+  m_Father: {fileID: 8108289884553878273}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6916677935806180166
 GameObject:

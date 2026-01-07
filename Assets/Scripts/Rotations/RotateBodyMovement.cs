@@ -22,13 +22,16 @@ public class RotateBodyMovement : MonoBehaviour
 
     [Header("Model - Body Bone"), Tooltip("Torso From Model")]
     [SerializeField]  Transform Transform_Bone_Body;
-    
+
+    [SerializeField] private Transform BodyRoot;
+
+
 
     [Header("Torso Rotation Settings")]
     [SerializeField, Tooltip("Maximum degrees the torso can twist left/right")]
-    private float torsoYawLimit = 45f;
+    private float torsoYawLimit;
     [SerializeField, Tooltip("Smoothing factor for torso rotation")]
-    private float rotationSmooth = 10f;
+    private float rotationSmooth;
 
     Vector3 _MouseCamera_Forward;
     public Vector3 Get_MouseCamera_Forward(){ return _MouseCamera_Forward; } 
@@ -39,38 +42,25 @@ public class RotateBodyMovement : MonoBehaviour
     float _bodyYaw;
     public float Get_BodyYaw() {  return _bodyYaw; }
     Vector3 _moveDirection;
-    public Vector3 Get_moveDir()
-    {
-        return _moveDirection;
-    }
+    public Vector3 Get_moveDir(){ return _moveDirection; }
 
+    // DUDE CHECK YOUR VECTORS TO ENSURE Z IS THE LAST COORD.... OMG .....
     void LateUpdate()
     {
-        _headYaw    = _MouseCamera.Get_MouseXYQuat().eulerAngles.y;                 /// camera - get the xy coords in quaternion format
-        _headPitch  = Transform_Bone_Head.eulerAngles.x;                            /// bone really the camera x 
-        _bodyYaw    = Transform_Bone_Body.eulerAngles.y;                            /// bone really the camera y 
+        Vector3 MouseCam_Forward = _MouseCamera.Get_MouseCamera().forward;
+        Vector3 MouseCam_Forward_Flat = new Vector3(MouseCam_Forward.x, 0, MouseCam_Forward.z);
 
-        
-        _moveDirection = relativeMovement.GetMoveDirection();
-        
-        _MouseCamera_Forward = _MouseCamera.Get_MouseCamera().forward;              /// camera - get the forward z vector which is project from local to world space
-        Vector3 _MouseCamera_Forward_Flatten = new Vector3(_MouseCamera_Forward.x, 0, _MouseCamera_Forward.z).normalized;
-        Vector3 _bodyYawFlatten = new Vector3(Transform_Bone_Body.forward.x, 0, Transform_Bone_Body.forward.z).normalized;
+        Vector3 Transform_Bone_Root_Flat = new Vector3(BodyRoot.forward.x, 0, BodyRoot.forward.z).normalized;
 
+        float DeltaAngle = Vector3.SignedAngle(Transform_Bone_Root_Flat, MouseCam_Forward_Flat, Vector3.up);
 
-        float angle_between_head_and_torso = Mathf.DeltaAngle(_bodyYaw, _headYaw);
+        if(Mathf.Abs(DeltaAngle)>25f)
+        {
+            Quaternion LookTarget = Quaternion.LookRotation(MouseCam_Forward_Flat);
+            BodyRoot.rotation =
+                Quaternion.Slerp(BodyRoot.rotation, LookTarget, rotationSmooth * Time.deltaTime);
 
-
-       // Static Debugger
-        PrintTools.Print("Mouse cam Forward" , _MouseCamera_Forward_Flatten , "green");  
-        PrintTools.Print("Body Bone Yaw" , _bodyYawFlatten, "orange");  
-        //PrintTools.Print("Angle Between Torso Yaw And Head Yaw" , angle_between_head_and_torso, "red");  
-        //PrintTools.Print("Move Direction" , _moveDirection, "yellow");  
-
-
-
-
-
+        }
 
 
         // If no movement input, smoothly return torso to neutral

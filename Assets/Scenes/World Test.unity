@@ -2448,9 +2448,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1269754461}
     - target: {fileID: 1289618009477772920, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
+      propertyPath: BodyRoot
+      value: 
+      objectReference: {fileID: 1930010423}
+    - target: {fileID: 1289618009477772920, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
       propertyPath: _MouseCamera
       value: 
       objectReference: {fileID: 1269754461}
+    - target: {fileID: 1289618009477772920, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
+      propertyPath: rotationSmooth
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 1289618009477772920, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
       propertyPath: Transform_Bone_Body
       value: 
@@ -3021,6 +3029,11 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 9068516755ade5447b63905306109aa4, type: 3}
   m_PrefabInstance: {fileID: 1916873262}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1930010423 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7412110180126593578, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
+  m_PrefabInstance: {fileID: 1556772245}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1937232609
 PrefabInstance:
