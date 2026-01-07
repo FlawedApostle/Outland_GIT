@@ -73,10 +73,10 @@ public class RelativeMovement : MonoBehaviour
     [SerializeField] float moveSpeed = 4;
     [SerializeField] float jumpHeight = 2f;
     [SerializeField] float gravity = 9.8f;
-    // Build a slider - The degree to which we can control our movement while in midair.
+    /// Build a slider - The degree to which we can control our movement while in midair.
     [Range(0, 10), SerializeField, Tooltip("The degree to which we can control our movement while in midair")] float airControl = 5;
 
-    // MOVEMENT DIRECTION
+    /// MOVEMENT DIRECTION
     Vector3 horizontalMove = Vector3.zero;
     Vector3 moveDirection = Vector3.zero;
     Vector3 finalMove = Vector3.zero;
@@ -93,17 +93,12 @@ public class RelativeMovement : MonoBehaviour
 
     private void Start()
     {
-        ///characterController = GetComponent<CharacterController>();
-        ///Debug_characterController(characterController);
-        /// Set player controller movement speed
         currentSpeed = moveSpeed;
         anim.enabled = AnimationToggle;                   // debugger - turn off animation for camera testing
     }
 
     void Update()
     {
-
-
         //////////////////////////////////////// GETTING CAMERA ORIENTATION \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
         /* NOTES - MouseCamera_CAMERA explained
         // IMPORTANT NOTE: This is using the TAG system, Camera Must have MainCamera Tag associated
@@ -207,51 +202,8 @@ public class RelativeMovement : MonoBehaviour
         {
               characterController.Move(finalMove * Time.deltaTime);
         }
-
-        /*
-        if (moveDirection.magnitude > 0.1f) // moveDirection.magnitude > 0.1f
-        {
-
-            characterController.Move(finalMove * moveSpeed  * Time.deltaTime);
-
-            // Slight negative to keep controller grounded
-            verticalVelocity = -1f;
-
-            //moveDirection = input;
-            // Move the object
-            //transform.position += moveDirection.normalized * speed * Time.deltaTime;      // OG
-        }
-
-        if (isGrounded && UnityEngine.Input.GetButtonDown("Jump"))
-        {
-            Debug.Log("Jump Pressed");
-            verticalVelocity = Mathf.Sqrt(2 * gravity * jumpHeight);
-        }
-
-
-         if (UnityEngine.Input.GetButton("Sprint"))
-        {
-            Debug.Log("Sprint Pressed");
-            moveDirection *= sprintSpeed;
-        }
-
-        else
-        {
-            moveDirection.y = 0;
-            input.y = moveDirection.y;
-            moveDirection = Vector3.Lerp(moveDirection, input, airControl * Time.deltaTime);
-        }
-        */
-
-        /* DEBUGGING
-        //// DEBUGGING RelativeMovement DIRECTION COORDS
-        //if (UnityEngine.Input.GetKeyDown(KeyCode.F2))
-        //{
-        //    RelativeCameraMovementDirection_Vector();
-        //}
-        // Debug the final direction vector
-        ///Debug.Log($"[RelativeMovement DEBUG] Moving in relative direction: {moveDirection.normalized}")
-        */
     }
 
-}       // !#END of Class RelativeMovement
+}
+
+/// !#END of Class RelativeMovement

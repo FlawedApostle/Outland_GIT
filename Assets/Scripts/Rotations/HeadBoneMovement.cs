@@ -9,16 +9,15 @@ public class HeadBoneMovement : MonoBehaviour
     [SerializeField] private float _cameraSmooth = 10;
 
     public Quaternion RotateHeadBone() {
-        ///return Transform_Bone_Head.localRotation = Transform_Camera.rotation; 
-        /// using the scrupt and calling a private function to get the came movement - this maintains a stable value for movement
-        return Transform_Bone_Head.localRotation = _MouseCamera.Get_MouseXYQuat();  
+       /// Using the scrupt and calling a private function to get the came movement - this maintains a stable value for movement
+        return Transform_Bone_Head.localRotation = _MouseCamera.Get_MouseXYQuat();
     }
     public Quaternion RotateHeadBone_Slerp() {
         Quaternion headRotationSlerp = _MouseCamera.Get_MouseXYQuat();
         return Transform_Bone_Head.rotation = Quaternion.Slerp(Transform_Bone_Head.rotation, headRotationSlerp, _cameraSmooth * Time.deltaTime);
     }
 
-    // GET HEADBONE ORIENTATION
+    public float Get_Transform_Bone_Head_YAW() {  return Transform_Bone_Head.eulerAngles.y; }       // returns the headbone, essentialy the camera yaw
 
 
     void LateUpdate()
@@ -31,10 +30,7 @@ public class HeadBoneMovement : MonoBehaviour
 
 
 
-    public float Get_Transform_Bone_Head_YAW()
-    {
-        return Transform_Bone_Head.eulerAngles.y;
-    }
+
 }
 
 /* THIS IS MY OLD HEADBONE SCRIPT - I WILL REMOVE IT EVENTUALLY
