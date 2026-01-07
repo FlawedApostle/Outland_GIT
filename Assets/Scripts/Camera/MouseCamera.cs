@@ -4,21 +4,22 @@ using UnityEngine;
 // This takes the camera with the tag MainCamera. - to have muiltiple cams, a serialized transform will directly take the chosen camera
 public class MouseCamera : MonoBehaviour
 {
-    public Transform MainCameraTransform;  // FPS cam in scene
+    public Transform Transform_MouseCamera;  // FPS cam in scene
     [SerializeField] float sensitivity = 2.0f;
     [SerializeField] float verticalLookLimit = 80f;
     [SerializeField] float horizontalLookLimit = -80f;          /// not using currently, may implement later as a layer for torso movemnt
 
-    // I am using my own set values for better control, frame to frame management
-    private float _rotationX = 0f; // (Yaw)    Left/Right 
-    private float _rotationY = 0f; // (Pitch)  Up/Down
+    /// I am using my own set values for better control, frame to frame management
+    private float _rotationX = 0f; /// (Yaw)    Left/Right 
+    private float _rotationY = 0f; /// (Pitch)  Up/Down
     private float mouseX = 0f;
     private float mouseY = 0f;
+    /// <summary>
+    // Getters for calling either XY coords in Quaternion Format || OR || able to call specific transforms [forward, right etc.....]
+    /// </summary>
     private Quaternion _mouseXYQuat;
-    public Quaternion Get_MouseXYQuat()
-    { return _mouseXYQuat;  }
-
-    public Transform Get_MainCameraTransform()  { return MainCameraTransform;  }
+    public Quaternion Get_MouseXYQuat() { return _mouseXYQuat;  }
+    public Transform Get_MouseCamera()  { return Transform_MouseCamera;  }
  
     ////////////////////////////////////////// Camera Euler Angles - can only use in awake, so dont call for now. It cannot call an instance when it is null at scene start
     //Vector3 _camEulerAngles = Camera.main.transform.eulerAngles;
@@ -30,14 +31,12 @@ public class MouseCamera : MonoBehaviour
     //////////////////////////////////////////////////////////
     private void Awake()
     {
-        if (MainCameraTransform == null)
-        MainCameraTransform = GetComponent<Transform>();
+        if (Transform_MouseCamera == null)
+            Transform_MouseCamera = GetComponent<Transform>();
     }
-
-    RelativeMovement relativeMovement;
     void Start()
     {   
-        // Static class CursorTools
+        /// Static class CursorTools
         CursorTools.Lock_Cursor();
     }
 
@@ -54,7 +53,7 @@ public class MouseCamera : MonoBehaviour
         _rotationY = Mathf.Clamp(_rotationY, -verticalLookLimit, verticalLookLimit); // Axis Y 
         // 4. Apply the rotation directly to the camera
         _mouseXYQuat = Quaternion.Euler(_rotationY, _rotationX, 0f);
-        MainCameraTransform.rotation = _mouseXYQuat;
+        Transform_MouseCamera.rotation = _mouseXYQuat;
         //MainCameraTransform.eulerAngles = new Vector3(_rotationY, _rotationX, 0f);  // Applying it to a set transform to ensure data integrety
 
 

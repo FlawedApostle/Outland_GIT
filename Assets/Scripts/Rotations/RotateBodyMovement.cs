@@ -30,6 +30,8 @@ public class RotateBodyMovement : MonoBehaviour
     [SerializeField, Tooltip("Smoothing factor for torso rotation")]
     private float rotationSmooth = 10f;
 
+    Vector3 _MouseCamera_Forward;
+    public Vector3 Get_MouseCamera_Forward(){ return _MouseCamera_Forward; } 
     float _headPitch;
     public float Get_HeadPitch() {  return _headPitch; }
     float _headYaw;
@@ -44,10 +46,11 @@ public class RotateBodyMovement : MonoBehaviour
 
     void LateUpdate()
     {
-        _headYaw = _MouseCamera.Get_MouseXYQuat().eulerAngles.y;    // camera script
-        _headPitch = Transform_Bone_Head.eulerAngles.x;             // bone 
-        _bodyYaw = Transform_Bone_Body.eulerAngles.y;
+        _headYaw    = _MouseCamera.Get_MouseXYQuat().eulerAngles.y;             // camera - get the xy coords in quaternion format
+        _headPitch  = Transform_Bone_Head.eulerAngles.x;                        // bone really the camera x 
+        _bodyYaw    = Transform_Bone_Body.eulerAngles.y;                        // bone really the camera y 
 
+        _MouseCamera_Forward = _MouseCamera.Get_MouseCamera().forward;      // camera - get the forward z vector
         // test
         if(_headYaw <= 25f)
         {

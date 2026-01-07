@@ -46,26 +46,62 @@ public class Debuger : MonoBehaviour
 
     private void Update()
     {
-
+        /// ROTATE BODY && HEADBONE
         if (Input.GetKeyDown(KeyCode.F1))  {
-            Debug.Log("[HeadBoneMovement & RotateBodyMovement]");
-            Debug.Log("[Bone Yaw] " + DEBUG_HeadBoneMovement.Get_Transform_Bone_Head_YAW());
-            Debug.Log("[HeadYaw] " + DEBUG_RotateBodyMovement.Get_HeadYaw());
+            
+            Debug.Log("[GET YAW - HeadBoneMovement & RotateBodyMovement]");
+            Debug.Log("[Yaw-BONE HEAD] " + DEBUG_HeadBoneMovement.Get_Transform_Bone_Head_YAW());
+            Debug.Log("[Yaw-HEAD] " + DEBUG_RotateBodyMovement.Get_HeadYaw());
+            Debug.Log("[Yaw-BODY] " + DEBUG_RotateBodyMovement.Get_BodyYaw());
 
         }
-
+        /// MOUSE CAM
+        //_MouseCamera_Forward = _MouseCamera.Get_MouseCamera().forward;
         if (Input.GetKeyDown(KeyCode.F2)){
-            Debug.Log("[MouseCamera]");
-            MouseCam_Coords();
-            MouseCam_Yaw();
+            Debug.Log("[Mouse Camera]");
+            Debug.Log("Mouse Cam Coords: ("     + DEBUG_MouseCamera.Get_MouseXYQuat().x + " , " + DEBUG_MouseCamera.Get_MouseXYQuat().y + ")" );
+            Debug.Log("Mouse Cam Coords Yaw: "  + DEBUG_MouseCamera.Get_MouseXYQuat().eulerAngles.y);
 
         }
+        /// ROTATE BODY 
         if (Input.GetKeyDown(KeyCode.F3)){
-            Debug.Log("[RotateBodyMovement]");
-            Debug.Log("Bone Pitch] " + DEBUG_RotateBodyMovement.Get_HeadPitch());
-            Debug.Log("[BodyYaw] " +  DEBUG_RotateBodyMovement.Get_BodyYaw());
+            Debug.Log("[RotateBody Movement]");
+            Debug.Log("[HeadYaw] "      + DEBUG_RotateBodyMovement.Get_HeadYaw());
+            Debug.Log("[BodyYaw] "      + DEBUG_RotateBodyMovement.Get_BodyYaw());
+            Debug.Log("Bone Pitch] "    + DEBUG_RotateBodyMovement.Get_HeadPitch());
+            Debug.Log("[Mouse Camera Forward Transform] "      + DEBUG_RotateBodyMovement.Get_MouseCamera_Forward());
 
         }
+        /// HEAD BONE
+        if (Input.GetKeyDown(KeyCode.F4)) {
+            Debug.Log("[HEAD BONE]");
+            Debug.Log("[Bone Yaw] " + DEBUG_HeadBoneMovement.Get_Transform_Bone_Head_YAW());        // shows the bone yaw from the model
+
+        }
+
+
+        /*
+        if (Input.GetKeyDown(KeyCode.F5))
+        {
+            Debug.Log("[HEAD BONE]");
+            Debug.Log("[Bone Yaw] " + DEBUG_HeadBoneMovement.Get_Transform_Bone_Head_YAW());        // shows the bone yaw from the model
+
+        }
+        if (Input.GetKeyDown(KeyCode.F6))
+        {
+            Debug.Log("[RotateBody Movement]");
+            Debug.Log("[HeadYaw] " + DEBUG_RotateBodyMovement.Get_HeadYaw());
+            Debug.Log("[BodyYaw] " + DEBUG_RotateBodyMovement.Get_BodyYaw());
+            Debug.Log("Bone Pitch] " + DEBUG_RotateBodyMovement.Get_HeadPitch());
+            Debug.Log("[Mouse Camera Forward Transform] " + DEBUG_RotateBodyMovement.Get_MouseCamera_Forward());
+        }
+        if (Input.GetKeyDown(KeyCode.F7))
+        {
+            Debug.Log("[Mouse Camera]");
+            Debug.Log("Mouse Cam Coords Yaw: " + DEBUG_MouseCamera.Get_MouseXYQuat().eulerAngles.y);
+            Debug.Log("Mouse Cam Coords: (" + DEBUG_MouseCamera.Get_MouseXYQuat().x + " , " + DEBUG_MouseCamera.Get_MouseXYQuat().y + ")");
+        }
+        */
 
 
         //Debug.Log("MoveDir: " + DEBUG_RotateBodyMovement.Get_moveDir() + " | targetYaw: " + DEBUG_RotateBodyMovement.Get_targetYaw());
