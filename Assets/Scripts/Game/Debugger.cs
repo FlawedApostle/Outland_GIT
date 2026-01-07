@@ -49,10 +49,8 @@ public class Debuger : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F1))  {
             Debug.Log("[HeadBoneMovement & RotateBodyMovement]");
-            Debug.Log("[Bone Yaw] " +
-            + DEBUG_HeadBoneMovement.Get_Transform_Bone_Head_YAW());
-            Debug.Log("[HeadYaw] " +
-              DEBUG_RotateBodyMovement.Get_HeadYaw());
+            Debug.Log("[Bone Yaw] " + DEBUG_HeadBoneMovement.Get_Transform_Bone_Head_YAW());
+            Debug.Log("[HeadYaw] " + DEBUG_RotateBodyMovement.Get_HeadYaw());
 
         }
 
@@ -64,10 +62,8 @@ public class Debuger : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.F3)){
             Debug.Log("[RotateBodyMovement]");
-            Debug.Log("Bone Pitch] " +
-            +DEBUG_RotateBodyMovement.Get_HeadPitch());
-            Debug.Log("[BodyYaw] " +
-              DEBUG_RotateBodyMovement.Get_BodyYaw());
+            Debug.Log("Bone Pitch] " + DEBUG_RotateBodyMovement.Get_HeadPitch());
+            Debug.Log("[BodyYaw] " +  DEBUG_RotateBodyMovement.Get_BodyYaw());
 
         }
 
