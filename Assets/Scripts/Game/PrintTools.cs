@@ -14,8 +14,10 @@ public static class PrintTools
 
     public static void Print(string label, object value , string color)
     {
-        UnityEngine.Debug.Log($"{label}: <color={color}>{value}</color>");
+        UnityEngine.Debug.Log($"<color={color}>{label}</color>: <color={color}>{value}</color>");
     }
+
+
 }
 
 // jess wed conditioning

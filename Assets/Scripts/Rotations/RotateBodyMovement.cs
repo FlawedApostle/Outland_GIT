@@ -50,18 +50,25 @@ public class RotateBodyMovement : MonoBehaviour
         _headPitch  = Transform_Bone_Head.eulerAngles.x;                            /// bone really the camera x 
         _bodyYaw    = Transform_Bone_Body.eulerAngles.y;                            /// bone really the camera y 
 
+        
+        _moveDirection = relativeMovement.GetMoveDirection();
+        
         _MouseCamera_Forward = _MouseCamera.Get_MouseCamera().forward;              /// camera - get the forward z vector which is project from local to world space
         Vector3 _MouseCamera_Forward_Flatten = new Vector3(_MouseCamera_Forward.x, 0, _MouseCamera_Forward.y).normalized;
+        Vector3 _bodyYawFlatten = new Vector3(Transform_Bone_Body.forward.x, 0, Transform_Bone_Body.forward.z).normalized;
+
+
         float angle_between_head_and_torso = Mathf.DeltaAngle(_bodyYaw, _headYaw);
 
 
        // Static Debugger
-        PrintTools.Print("Mosue Cam FOrward" , _MouseCamera_Forward_Flatten , "green");  
-        PrintTools.Print("Mosue Cam FOrward" , angle_between_head_and_torso, "red");  
+        PrintTools.Print("Mouse cam Forward" , _MouseCamera_Forward_Flatten , "green");  
+        PrintTools.Print("Body Bone Yaw" , _bodyYawFlatten, "orange");  
+        //PrintTools.Print("Angle Between Torso Yaw And Head Yaw" , angle_between_head_and_torso, "red");  
+        //PrintTools.Print("Move Direction" , _moveDirection, "yellow");  
 
 
 
-        _moveDirection = relativeMovement.GetMoveDirection();
 
 
 
