@@ -46,19 +46,21 @@ public class RotateBodyMovement : MonoBehaviour
 
     void LateUpdate()
     {
-        _headYaw    = _MouseCamera.Get_MouseXYQuat().eulerAngles.y;             // camera - get the xy coords in quaternion format
-        _headPitch  = Transform_Bone_Head.eulerAngles.x;                        // bone really the camera x 
-        _bodyYaw    = Transform_Bone_Body.eulerAngles.y;                        // bone really the camera y 
+        _headYaw    = _MouseCamera.Get_MouseXYQuat().eulerAngles.y;                 /// camera - get the xy coords in quaternion format
+        _headPitch  = Transform_Bone_Head.eulerAngles.x;                            /// bone really the camera x 
+        _bodyYaw    = Transform_Bone_Body.eulerAngles.y;                            /// bone really the camera y 
 
-        _MouseCamera_Forward = _MouseCamera.Get_MouseCamera().forward;      // camera - get the forward z vector
-        // test
-        if(_headYaw <= 25f)
-        {
-            Debug.Log("_HeadYaw is 25 !");
-            _bodyYaw = _headYaw;
-        }
+        _MouseCamera_Forward = _MouseCamera.Get_MouseCamera().forward;              /// camera - get the forward z vector which is project from local to world space
+        Vector3 _MouseCamera_Forward_Flatten = new Vector3(_MouseCamera_Forward.x, 0, _MouseCamera_Forward.y).normalized;
+        float angle_between_head_and_torso = Mathf.DeltaAngle(_bodyYaw, _headYaw);
 
-        
+
+       // Static Debugger
+        PrintTools.Print("Mosue Cam FOrward" , _MouseCamera_Forward_Flatten , "green");  
+        PrintTools.Print("Mosue Cam FOrward" , angle_between_head_and_torso, "red");  
+
+
+
         _moveDirection = relativeMovement.GetMoveDirection();
 
 
