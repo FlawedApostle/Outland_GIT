@@ -10,20 +10,19 @@ using UnityEngine.LowLevel;
 
 public class RotateBodyMovement : MonoBehaviour
 {
-    [Header("FPS Camera")]
-    [SerializeField, Tooltip("FPS camera inheritance")]
-    private Transform Transform_CameraFPS;
+    [Header("SCRIPT: MouseCamera")]
+    [SerializeField] private MouseCamera _MouseCamera;
 
-    [Header("Model - HeadBone"), Tooltip("Put actual head bone here!")]
-    [SerializeField]  Transform Transform_Bone_Head;
-
-    [Header("Model Rotate"), Tooltip("Torso From Model")]
-    [SerializeField]  Transform Transform_Bone_Body;
-    
     [Header("SCRIPT: RelativeMovement")]
     [SerializeField, Tooltip("RelativeMovement Script Reference")]
     private RelativeMovement relativeMovement;
 
+    [Header("Model - Head Bone"), Tooltip("Put actual head bone here!")]
+    [SerializeField]  Transform Transform_Bone_Head;
+
+    [Header("Model - Body Bone"), Tooltip("Torso From Model")]
+    [SerializeField]  Transform Transform_Bone_Body;
+    
 
     [Header("Torso Rotation Settings")]
     [SerializeField, Tooltip("Maximum degrees the torso can twist left/right")]
@@ -31,62 +30,32 @@ public class RotateBodyMovement : MonoBehaviour
     [SerializeField, Tooltip("Smoothing factor for torso rotation")]
     private float rotationSmooth = 10f;
 
-    float _headYaw;
     float _headPitch;
+    public float Get_HeadPitch() {  return _headPitch; }
+    float _headYaw;
+    public float Get_HeadYaw() {  return  _headYaw; }
     float _bodyYaw;
+    public float Get_BodyYaw() {  return _bodyYaw; }
     Vector3 _moveDirection;
-   
     public Vector3 Get_moveDir()
     {
         return _moveDirection;
     }
-    
-    public Quaternion Get_Transform_CameraFPS_LocalRotation() {
-        return Transform_CameraFPS.localRotation;   /// local rot
-    }
-    public float Get_Transform_CameraFPS_Yaw() {
-        return Transform_CameraFPS.eulerAngles.y;
-    }
-   
-    public Quaternion Get_Transform_Bone_Head_LocalRotation()
-    {
-        return Transform_Bone_Head.localRotation;
-    }
-    public float Get_Transform_Bone_Head_Yaw() {
-        //return _headYaw;    
-        return Transform_Bone_Head.eulerAngles.y;
-    }
-    public float Get_Transform_Bone_Head_Pitch() {
-        //return _headPitch;    // Transform_Bone_Head.eulerAngles.x
-        return Transform_Bone_Head.eulerAngles.x;
-    }
-
-
-    public float Get_Transform_Bone_Body_Yaw() {
-        return _bodyYaw;    // Transform_Bone_Head.eulerAngles.x
-    }
-    public void Set_Transform_Bone_BodyYaw()
-    {
-        _bodyYaw = Transform_Bone_Body.eulerAngles.y;
-    }
-    public void Set_Transform_Bone_HeadYaw()
-    {
-        _headYaw = Transform_Bone_Head.eulerAngles.y;
-    }
-    public void Set_Transform_Transform_Bone_HeadPitch()
-    {
-        _headPitch = Transform_Bone_Head.eulerAngles.x;
-    }
-
-
 
     void LateUpdate()
     {
-        _headYaw = Transform_Bone_Head.eulerAngles.y;
+        _headYaw = _MouseCamera.Get_MouseXYQuat().eulerAngles.y;
         _headPitch = Transform_Bone_Head.eulerAngles.x;
         _bodyYaw = Transform_Bone_Body.eulerAngles.y;
 
+        // test
+        if(_headYaw <= 25f)
+        {
+            Debug.Log("_HeadYaw is 25 !");
+            _bodyYaw = _headYaw;
+        }
 
+        
         _moveDirection = relativeMovement.GetMoveDirection();
 
 
@@ -107,7 +76,9 @@ public class RotateBodyMovement : MonoBehaviour
 
 
 /*      OLD MOVEMENT DIRECTION SCRIPT - TORSO ROTATES TO DIRECTION OF MOVEMENT - WILL REMOVE EVENTUALLY
-       
+           [Header("FPS Camera")]
+    [SerializeField, Tooltip("FPS camera inheritance")]
+    private Transform Transform_CameraFPS;
     [Header("Player Root Empty")]
     [SerializeField, Tooltip("Place Empty with all scripts")]
     private Transform Transform_Empty;

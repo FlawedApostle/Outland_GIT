@@ -3,42 +3,38 @@ using UnityEngine;
 public class HeadBoneMovement : MonoBehaviour
 {
 
+    [SerializeField] Transform Transform_Bone_Head;     /// input the models bone from the hierchy
+    [SerializeField] MouseCamera _MouseCamera;          /// input the mouse cam script 
 
-    [SerializeField] Transform Transform_Bone_Head;
-    [SerializeField] Transform Transform_Camera;
     [SerializeField] private float _cameraSmooth = 10;
 
     public Quaternion RotateHeadBone() {
-        return Transform_Bone_Head.localRotation = Transform_Camera.rotation;
+        ///return Transform_Bone_Head.localRotation = Transform_Camera.rotation; 
+        /// using the scrupt and calling a private function to get the came movement - this maintains a stable value for movement
+        return Transform_Bone_Head.localRotation = _MouseCamera.Get_MouseXYQuat();  
     }
     public Quaternion RotateHeadBone_Slerp() {
-        Quaternion headRotationSlerp = Transform_Camera.rotation;
+        Quaternion headRotationSlerp = _MouseCamera.Get_MouseXYQuat();
         return Transform_Bone_Head.rotation = Quaternion.Slerp(Transform_Bone_Head.rotation, headRotationSlerp, _cameraSmooth * Time.deltaTime);
     }
 
     // GET HEADBONE ORIENTATION
-    public Quaternion Get_Transform_Bone_Head_LocalRotation()  {
-        return Transform_Bone_Head.localRotation;
-    }
-    public float Get_Transform_Bone_Head_Yaw() {
-        return Transform_Bone_Head.eulerAngles.y;
-    }
-    // GET CAMERA ORIENTATION
-    public Quaternion Get_Transform_Camera_LocalRotation(){
-        return Transform_Camera.localRotation;  /// local rot
-    }
-    public float Get_Transform_Camera_Yaw(){
-        return Transform_Camera.eulerAngles.y;  /// y axis is the yaw
-    }
+
 
     void LateUpdate()
     {
         // Make the head bone match the camera's rotation
         RotateHeadBone();
-
-
     }
 
+
+
+
+
+    public float Get_Transform_Bone_Head_YAW()
+    {
+        return Transform_Bone_Head.eulerAngles.y;
+    }
 }
 
 /* THIS IS MY OLD HEADBONE SCRIPT - I WILL REMOVE IT EVENTUALLY
