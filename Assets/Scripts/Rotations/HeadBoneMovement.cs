@@ -28,8 +28,18 @@ public class HeadBoneMovement : MonoBehaviour
 
     public Quaternion HeadBone_LocalSpace()
     {
-        float yaw = MouseCamera.Get_MouseXYQuat().eulerAngles.y;
-        return Transform_Bone_Head.localRotation = Quaternion.Euler(0, yaw, 0);
+        // 1. Get camera pitch (X rotation)
+        float pitch = MouseCamera.Get_MouseCamera().eulerAngles.x;
+
+        // 2. Get camera yaw (Y rotation)
+        float CamYaw = MouseCamera.Get_MouseCamera().eulerAngles.y;
+
+        // 3. Apply BOTH to the head bone
+       return Transform_Bone_Head.rotation = Quaternion.Euler(pitch, CamYaw, 0f);
+
+
+        //float yaw = MouseCamera.Get_MouseXYQuat().eulerAngles.y;
+        //return Transform_Bone_Head.localRotation = Quaternion.Euler(0, yaw, 0);
     }
 
 

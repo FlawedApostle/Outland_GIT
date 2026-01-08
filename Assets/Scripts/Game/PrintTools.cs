@@ -7,6 +7,11 @@ public static class PrintTools
         UnityEngine.Debug.Log(value);
     }
 
+    public static void Print(object value , string color)
+    {
+        UnityEngine.Debug.Log($"<color={color}>{value}</color>");
+    }
+
     public static void Print(string label, object value) 
     { 
         UnityEngine.Debug.Log($"{label}: <color=red>{value}</color>");
