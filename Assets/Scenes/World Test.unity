@@ -2460,6 +2460,14 @@ PrefabInstance:
       value: 'Player_YBot(Move_Animated_Controller)[TEST]'
       objectReference: {fileID: 0}
     - target: {fileID: 3992948224261657837, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
+      propertyPath: verticalLookLimit
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 3992948224261657837, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
+      propertyPath: horizontalLookLimit
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 3992948224261657837, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
       propertyPath: Transform_MouseCamera
       value: 
       objectReference: {fileID: 1269754464}

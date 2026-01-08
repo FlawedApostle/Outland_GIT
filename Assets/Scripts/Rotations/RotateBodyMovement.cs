@@ -25,13 +25,6 @@ public class RotateBodyMovement : MonoBehaviour
 
     [Header("Player Root"), Tooltip("Rotate the player")]
     [SerializeField] private Transform BodyRoot;
-    /// <summary>
-    ///  Rotational 'Slowing' for 'realism'
-    ///  affects the start , end , and middle of rotation on y axis for turning
-    /// </summary>
-    //[SerializeField] private float turnStart = 10f;   // start rotating
-    //[SerializeField] private float turnStop = 5f;     // stop rotating
-    //[SerializeField] private float turnSpeed = 5f;    // slower, smoother
 
     /// <summary>
     ///  Rotational Smoothing for 'realism'
@@ -40,13 +33,15 @@ public class RotateBodyMovement : MonoBehaviour
     [Header("Torso Rotation Settings")]
     [SerializeField, Tooltip("Maximum degrees the torso can twist left/right")]
     private float torsoYawLimit;
-    [SerializeField, Tooltip("Smoothing factor for torso rotation")]
-    private float rotationSmooth = 4f;
 
     /// <summary>
     /// Head Follow SPeed
     /// </summary>
     [SerializeField] private float headFollowSpeed = 6f;
+    [SerializeField] float headTurnThreshold = 45f;
+    [SerializeField, Tooltip("Smoothing factor for torso rotation")]
+    private float rotationSmooth = 4f;
+
 
 
     Vector3 _MouseCamera_Forward;
@@ -63,36 +58,42 @@ public class RotateBodyMovement : MonoBehaviour
     // DUDE CHECK YOUR VECTORS TO ENSURE Z IS THE LAST COORD.... OMG .....
     void LateUpdate()
     {
-        float yaw = _MouseCamera.Get_MouseXYQuat().eulerAngles.y;
-        //float yaw = Transform_Bone_Head.rotation.eulerAngles.y;
-        BodyRoot.rotation = Quaternion.Euler(0, yaw, 0);
+        bool isMoving = _RelativeMovement.GetMoveDirection().sqrMagnitude > 0.01f;
+
+        //float Camyaw = _MouseCamera.Get_MouseXYQuat().eulerAngles.y;
+        float Camyaw = _MouseCamera.Get_MouseCamera().eulerAngles.y;
+        _bodyYaw = BodyRoot.eulerAngles.y;
+
+        float headOffset = Mathf.DeltaAngle(_bodyYaw, Camyaw);
+        PrintTools.Print(headOffset, "green");
+        if (isMoving)
+        {
+            Vector3 moveDir = _RelativeMovement.GetMoveDirection();
+            moveDir.y = 0;
+            Quaternion moveRot = Quaternion.LookRotation(moveDir);
+            BodyRoot.rotation =
+                    Quaternion.Slerp(BodyRoot.rotation, moveRot, rotationSmooth * Time.deltaTime); return;
+        }
+
+        // RULE 2: If head turns too far → rotate body toward camera yaw
+        if (Mathf.Abs(headOffset) > headTurnThreshold) { 
+            Quaternion targetRot = Quaternion.Euler(0, Camyaw, 0); 
+            BodyRoot.rotation = 
+                Quaternion.Slerp(BodyRoot.rotation, targetRot, rotationSmooth * Time.deltaTime); 
+        }
 
 
+
+        //float yaw = _MouseCamera.Get_MouseXYQuat().eulerAngles.y;
+        //BodyRoot.rotation = Quaternion.Euler(0, yaw, 0);
 
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
+
+
+
+
 
 
 
