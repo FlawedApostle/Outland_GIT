@@ -39,7 +39,7 @@ public class Debuger : MonoBehaviour
     }
 
 
-    private void Start()
+    private void Awake()
     {
         NULLCHECK_HeadBoneMovement();
     }
@@ -50,7 +50,7 @@ public class Debuger : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F1))  {
             
             Debug.Log("[GET YAW - HeadBoneMovement & RotateBodyMovement]");
-            Debug.Log("[Yaw-BONE HEAD] " + DEBUG_HeadBoneMovement.Get_Transform_Bone_Head_YAW());
+            Debug.Log("[Yaw-BONE HEAD] " + DEBUG_HeadBoneMovement.Get_BoneHead_Yaw());
             Debug.Log("[Yaw-HEAD] " + DEBUG_RotateBodyMovement.Get_HeadYaw());
             Debug.Log("[Yaw-BODY] " + DEBUG_RotateBodyMovement.Get_BodyYaw());
 
@@ -75,7 +75,7 @@ public class Debuger : MonoBehaviour
         /// HEAD BONE
         if (Input.GetKeyDown(KeyCode.F4)) {
             Debug.Log("[HEAD BONE]");
-            Debug.Log("[Bone Yaw] " + DEBUG_HeadBoneMovement.Get_Transform_Bone_Head_YAW());        // shows the bone yaw from the model
+            Debug.Log("[Bone Yaw] " + DEBUG_HeadBoneMovement.Get_BoneHead_Yaw());        // shows the bone yaw from the model
 
         }
 

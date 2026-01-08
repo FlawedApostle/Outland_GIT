@@ -15,23 +15,39 @@ public class RotateBodyMovement : MonoBehaviour
 
     [Header("SCRIPT: RelativeMovement")]
     [SerializeField, Tooltip("RelativeMovement Script Reference")]
-    private RelativeMovement relativeMovement;
+    private RelativeMovement _RelativeMovement;
 
     [Header("Model - Head Bone"), Tooltip("Put actual head bone here!")]
     [SerializeField]  Transform Transform_Bone_Head;
 
-    [Header("Model - Body Bone"), Tooltip("Torso From Model")]
-    [SerializeField]  Transform Transform_Bone_Body;
+    //[Header("Model - Body Bone"), Tooltip("Torso From Model")]
+    //[SerializeField]  Transform Transform_Bone_Body;
 
+    [Header("Player Root"), Tooltip("Rotate the player")]
     [SerializeField] private Transform BodyRoot;
+    /// <summary>
+    ///  Rotational 'Slowing' for 'realism'
+    ///  affects the start , end , and middle of rotation on y axis for turning
+    /// </summary>
+    //[SerializeField] private float turnStart = 10f;   // start rotating
+    //[SerializeField] private float turnStop = 5f;     // stop rotating
+    //[SerializeField] private float turnSpeed = 5f;    // slower, smoother
 
-
-
+    /// <summary>
+    ///  Rotational Smoothing for 'realism'
+    ///  I chose this one for now as there is no floating when rotating in third person - like above in 'Rotationl slowing'
+    /// </summary>
     [Header("Torso Rotation Settings")]
     [SerializeField, Tooltip("Maximum degrees the torso can twist left/right")]
     private float torsoYawLimit;
     [SerializeField, Tooltip("Smoothing factor for torso rotation")]
-    private float rotationSmooth;
+    private float rotationSmooth = 4f;
+
+    /// <summary>
+    /// Head Follow SPeed
+    /// </summary>
+    [SerializeField] private float headFollowSpeed = 6f;
+
 
     Vector3 _MouseCamera_Forward;
     public Vector3 Get_MouseCamera_Forward(){ return _MouseCamera_Forward; } 
@@ -47,35 +63,46 @@ public class RotateBodyMovement : MonoBehaviour
     // DUDE CHECK YOUR VECTORS TO ENSURE Z IS THE LAST COORD.... OMG .....
     void LateUpdate()
     {
-        Vector3 MouseCam_Forward = _MouseCamera.Get_MouseCamera().forward;
-        Vector3 MouseCam_Forward_Flat = new Vector3(MouseCam_Forward.x, 0, MouseCam_Forward.z);
-
-        Vector3 Transform_Bone_Root_Flat = new Vector3(BodyRoot.forward.x, 0, BodyRoot.forward.z).normalized;
-
-        float DeltaAngle = Vector3.SignedAngle(Transform_Bone_Root_Flat, MouseCam_Forward_Flat, Vector3.up);
-
-        if(Mathf.Abs(DeltaAngle)>25f)
-        {
-            Quaternion LookTarget = Quaternion.LookRotation(MouseCam_Forward_Flat);
-            BodyRoot.rotation =
-                Quaternion.Slerp(BodyRoot.rotation, LookTarget, rotationSmooth * Time.deltaTime);
-
-        }
+        float yaw = _MouseCamera.Get_MouseXYQuat().eulerAngles.y;
+        //float yaw = Transform_Bone_Head.rotation.eulerAngles.y;
+        BodyRoot.rotation = Quaternion.Euler(0, yaw, 0);
 
 
-        // If no movement input, smoothly return torso to neutral
-        //if (moveDir.sqrMagnitude < 0.01f)
-        //{
-        //float clampedYaw = Mathf.Lerp(0f, 0f, rotationSmooth * Time.deltaTime);
-        //transformBodyRoot.rotation = Quaternion.Euler(0, MainCameraChild.eulerAngles.y, 0);       // face the came even when not moving
-        //return;
-        //}
 
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 
 
 
+// If no movement input, smoothly return torso to neutral
+//if (moveDir.sqrMagnitude < 0.01f)
+//{
+//float clampedYaw = Mathf.Lerp(0f, 0f, rotationSmooth * Time.deltaTime);
+//transformBodyRoot.rotation = Quaternion.Euler(0, MainCameraChild.eulerAngles.y, 0);       // face the came even when not moving
+//return;
+//}
 
 /*      OLD MOVEMENT DIRECTION SCRIPT - TORSO ROTATES TO DIRECTION OF MOVEMENT - WILL REMOVE EVENTUALLY
            [Header("FPS Camera")]

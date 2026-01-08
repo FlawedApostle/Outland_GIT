@@ -2007,39 +2007,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5669709a548958e42be92c0a258e754f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MouseCamera
---- !u!114 &1299058502 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1289618009477772920, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
+--- !u!4 &1269754464 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8627249509877282148, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
   m_PrefabInstance: {fileID: 1556772245}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 66843cb9606c69f4ca856db27bf7f195, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RotateBodyMovement
---- !u!114 &1299058504 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1121236148421467829, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
-  m_PrefabInstance: {fileID: 1556772245}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 528c77f1261e31f4ca8ebdbff594a730, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BoneFollowMouse
---- !u!114 &1299058505 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6282661241852750495, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
-  m_PrefabInstance: {fileID: 1556772245}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 22ddfeef596768942833900ffd127bd1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RelativeMovement
 --- !u!1 &1309449283
 GameObject:
   m_ObjectHideFlags: 0
@@ -2443,6 +2415,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 412105936542542806, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
+      propertyPath: BodyRoot
+      value: 
+      objectReference: {fileID: 1746718741}
+    - target: {fileID: 412105936542542806, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
+      propertyPath: MouseCamera
+      value: 
+      objectReference: {fileID: 1269754461}
+    - target: {fileID: 1121236148421467829, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1121236148421467829, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
       propertyPath: _MouseCamera
       value: 
@@ -2450,7 +2434,7 @@ PrefabInstance:
     - target: {fileID: 1289618009477772920, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
       propertyPath: BodyRoot
       value: 
-      objectReference: {fileID: 1930010423}
+      objectReference: {fileID: 1746718741}
     - target: {fileID: 1289618009477772920, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
       propertyPath: _MouseCamera
       value: 
@@ -2458,6 +2442,10 @@ PrefabInstance:
     - target: {fileID: 1289618009477772920, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
       propertyPath: rotationSmooth
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1289618009477772920, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
+      propertyPath: _RelativeMovement
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 1289618009477772920, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
       propertyPath: Transform_Bone_Body
@@ -2471,10 +2459,38 @@ PrefabInstance:
       propertyPath: m_Name
       value: 'Player_YBot(Move_Animated_Controller)[TEST]'
       objectReference: {fileID: 0}
+    - target: {fileID: 3992948224261657837, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
+      propertyPath: Transform_MouseCamera
+      value: 
+      objectReference: {fileID: 1269754464}
     - target: {fileID: 6282661241852750495, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
       propertyPath: AnimationToggle
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6282661241852750495, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
+      propertyPath: characterController
+      value: 
+      objectReference: {fileID: 1930010424}
+    - target: {fileID: 6999544538157709352, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
+      propertyPath: BodyRoot
+      value: 
+      objectReference: {fileID: 1746718741}
+    - target: {fileID: 6999544538157709352, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6999544538157709352, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
+      propertyPath: rotationSmooth
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6999544538157709352, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
+      propertyPath: headFollowSpeed
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6999544538157709352, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
+      propertyPath: Transform_Bone_Head
+      value: 
+      objectReference: {fileID: 232842900}
     - target: {fileID: 8108289884553878273, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -15
@@ -2515,7 +2531,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1121236148421467829, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -2690,6 +2707,22 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 9068516755ade5447b63905306109aa4, type: 3}
   m_PrefabInstance: {fileID: 1696359566}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &1746718741 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6563026373484473877, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
+  m_PrefabInstance: {fileID: 1556772245}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1746718742 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2952773743750247103, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
+  m_PrefabInstance: {fileID: 1556772245}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66843cb9606c69f4ca856db27bf7f195, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RotateBodyMovement
 --- !u!1 &1786341870
 GameObject:
   m_ObjectHideFlags: 0
@@ -3030,11 +3063,33 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 9068516755ade5447b63905306109aa4, type: 3}
   m_PrefabInstance: {fileID: 1916873262}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1930010423 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7412110180126593578, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
+--- !u!143 &1930010424 stripped
+CharacterController:
+  m_CorrespondingSourceObject: {fileID: 3275474202566722541, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
   m_PrefabInstance: {fileID: 1556772245}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1930010425 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9052604976143532088, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
+  m_PrefabInstance: {fileID: 1556772245}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22ddfeef596768942833900ffd127bd1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RelativeMovement
+--- !u!114 &1930010428 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 412105936542542806, guid: 8b9c62903608c8d4baeb075ef6ffc71f, type: 3}
+  m_PrefabInstance: {fileID: 1556772245}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 528c77f1261e31f4ca8ebdbff594a730, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BoneFollowMouse
 --- !u!1001 &1937232609
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3278,9 +3333,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Debuger
   DEBUG_MouseCamera: {fileID: 1269754461}
-  DEBUG_RelativeMovement: {fileID: 1299058505}
-  DEBUG_RotateBodyMovement: {fileID: 1299058502}
-  DEBUG_HeadBoneMovement: {fileID: 1299058504}
+  DEBUG_RelativeMovement: {fileID: 1930010425}
+  DEBUG_RotateBodyMovement: {fileID: 1746718742}
+  DEBUG_HeadBoneMovement: {fileID: 1930010428}
 --- !u!1 &2034968766
 GameObject:
   m_ObjectHideFlags: 0
