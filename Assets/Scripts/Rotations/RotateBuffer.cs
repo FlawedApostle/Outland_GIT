@@ -5,12 +5,12 @@ public class RotateBuffer : MonoBehaviour
     [Header("Script-Relative Movement")][SerializeField] private RelativeMovement relativeMovement;
     [SerializeField] private Transform Bone_Torso;
     [SerializeField] private Transform Bone_Head;
-    [SerializeField] private Transform mainCamera;
-    [SerializeField] private Animator animator;
+    [SerializeField] private Transform MainCamera;
+    [SerializeField] private Animator Animator;
     [SerializeField] private float rotationSmooth = 10f;
 
     // Camera
-    //Vector3 MaincamFwd;
+    Vector3 MainCamera_Forward;
 
     Quaternion targetRotation;
     Quaternion HeadRotation;        // switch head
@@ -23,13 +23,13 @@ public class RotateBuffer : MonoBehaviour
     void LateUpdate()
     {
         // 1. DIRECTION: Get Camera direction (Flattened to ignore pitch)
-        Vector3 camForward = mainCamera.forward;
-        camForward.y = 0;
-        camForward.Normalize();
+        MainCamera_Forward = MainCamera.forward;
+        MainCamera_Forward.y = 0;
+        MainCamera_Forward.Normalize();
 
         // 2. BODY ROTATION: Force body to face the camera direction ALWAYS
         // This solves the flipping problem because the body never looks at moveDir
-        targetRotation = Quaternion.LookRotation(camForward);
+        targetRotation = Quaternion.LookRotation(MainCamera_Forward);
         //Rotation_Head();
         Rotation_Torso();
 
@@ -39,14 +39,14 @@ public class RotateBuffer : MonoBehaviour
         Vector3 moveDir = relativeMovement.GetMoveDirection();
 
         // The Dot Product tells us if we are moving Forward (1) or Backward (-1) relative to Cam
-        float forwardBack = Vector3.Dot(camForward, moveDir);
+        float forwardBack = Vector3.Dot(MainCamera_Forward, moveDir);
         // The Cross Product tells us if we are moving Right (1) or Left (-1) relative to Cam
-        float leftRight = Vector3.Cross(camForward, moveDir).y;
+        float leftRight = Vector3.Cross(MainCamera_Forward, moveDir).y;
 
         // 4. FEED THE ANIMATOR: 
         // Create two Floats in your Animator Controller: "Vertical" and "Horizontal"
-        //animator.SetFloat("Vertical", forwardBack, 0.1f, Time.deltaTime);
-        //animator.SetFloat("Horizontal", leftRight, 0.1f, Time.deltaTime);
+        //Animator.SetFloat("Vertical", forwardBack, 0.1f, Time.deltaTime);
+        //Animator.SetFloat("Horizontal", leftRight, 0.1f, Time.deltaTime);
     }
 
 
