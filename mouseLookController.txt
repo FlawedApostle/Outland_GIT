@@ -1,0 +1,38 @@
+Transform Head;
+
+float turnSpeed=90f;
+float headUpperAngleLimit= 85f
+float headLowerAnglelimit = -85;
+flaot yaw = 0f;
+flaot pitch = 0f;
+
+void Start()
+{
+	bodyStartOriention = trasnform.localRotation;
+	headStartOrientation = head.transform.localRotation;
+}
+
+void FixedUpodate()
+{
+
+
+Quaternion bodyStartOriention;
+Quaterion headStartOrientation;
+
+var horizontal = input.GetAxis("Mouse X") * Time.deltaTime * turnspeed;
+var vertical = input.GetAxis("Mouse Y") * Time.deltaTime * turnspeed;
+
+yaw += horizontal;
+pitch += vertical;
+
+pitch = Mathf.Clamp(pitch, headLowerAngleLimit, headUpperAngleLimit);
+
+// seperate the body, and head rotation
+var bodyRotation = Quaternion.AngleAxis(yaw, Vector3.up)
+var headRotation = Quaternion.AngleAxis(pitch, Vector3.right);
+
+// create new rotation for the body and head by combining them with their start rotations
+trasnform.localRRotaion = bodyRotation * bodyStartOriention;
+head.localRotation = headRoatation * headStartOrientation;
+
+}
