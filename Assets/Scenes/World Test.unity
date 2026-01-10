@@ -4073,7 +4073,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 8668673746414878134}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 528c77f1261e31f4ca8ebdbff594a730, type: 3}
   m_Name: 
@@ -4859,6 +4859,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2820898513839664293, guid: a8b3bd84f27588c40969be19e6454e39, type: 3}
   m_PrefabInstance: {fileID: 8668673746414878134}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &6563026372087094144 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8217370229980869505, guid: a8b3bd84f27588c40969be19e6454e39, type: 3}
+  m_PrefabInstance: {fileID: 8668673746414878134}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8668673746414878134
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4867,6 +4872,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2921592464200459391, guid: a8b3bd84f27588c40969be19e6454e39, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3398700110602170043, guid: a8b3bd84f27588c40969be19e6454e39, type: 3}
       propertyPath: m_Name
       value: 'Player_YBot(Move_Animated_Controller)[TEST]'
@@ -4915,6 +4924,22 @@ PrefabInstance:
       propertyPath: HeadBone
       value: 
       objectReference: {fileID: 5191953974324050236}
+    - target: {fileID: 8403966217661819537, guid: a8b3bd84f27588c40969be19e6454e39, type: 3}
+      propertyPath: Bone_Head
+      value: 
+      objectReference: {fileID: 5191953974324050236}
+    - target: {fileID: 8403966217661819537, guid: a8b3bd84f27588c40969be19e6454e39, type: 3}
+      propertyPath: Bone_Torso
+      value: 
+      objectReference: {fileID: 6563026372087094144}
+    - target: {fileID: 8403966217661819537, guid: a8b3bd84f27588c40969be19e6454e39, type: 3}
+      propertyPath: Head_Switch
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8403966217661819537, guid: a8b3bd84f27588c40969be19e6454e39, type: 3}
+      propertyPath: Torso_Switch
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

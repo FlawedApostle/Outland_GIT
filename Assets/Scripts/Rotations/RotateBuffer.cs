@@ -10,7 +10,7 @@ public class RotateBuffer : MonoBehaviour
     [SerializeField] private float rotationSmooth = 10f;
 
     // Camera
-    Vector3 MaincamFwd
+    //Vector3 MaincamFwd;
 
     Quaternion targetRotation;
     Quaternion HeadRotation;        // switch head
