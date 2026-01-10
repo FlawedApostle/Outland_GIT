@@ -1,4 +1,5 @@
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class RotateBuffer : MonoBehaviour
 {
@@ -37,7 +38,10 @@ public class RotateBuffer : MonoBehaviour
         // This solves the flipping problem because the body never looks at moveDir
         targetRotation_Torso = Quaternion.LookRotation(MainCamera_Forward);                     // can i use my own Quaterion
         //targetRotation_Head = MainCamera.rotation;                                            // can i use my own Quaterion
-        targetRotation_Head = Quaternion.Inverse(Bone_Torso.rotation) * MainCamera.rotation;
+        //targetRotation_Head = Quaternion.Inverse(Bone_Torso.rotation) * MainCamera.rotation;
+        targetRotation_Head =   MainCamera.rotation;
+
+       PrintTools.Print(targetRotation_Head , "red" , "Target Rotation");
 
 
 
