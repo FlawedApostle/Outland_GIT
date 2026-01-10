@@ -41,7 +41,7 @@ public class Debuger : MonoBehaviour
 
     private void Awake()
     {
-        NULLCHECK_HeadBoneMovement();
+        //NULLCHECK_HeadBoneMovement();
     }
 
     private void Update()
