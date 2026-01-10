@@ -3,6 +3,7 @@ using UnityEngine;
 public class RotateBuffer : MonoBehaviour
 {
     [Header("Script-Relative Movement")][SerializeField] private RelativeMovement relativeMovement;
+    [Header("Script-Mouse Camera")][SerializeField] private MouseCamera mouseCamera;
     [SerializeField] private Transform Bone_Torso;
     [SerializeField] private Transform Bone_Head;
     [SerializeField] private Transform MainCamera;
@@ -11,27 +12,39 @@ public class RotateBuffer : MonoBehaviour
 
     // Camera
     Vector3 MainCamera_Forward;
+    Vector3 MainCamera_Head;
 
-    Quaternion targetRotation;
+    Quaternion targetRotation_Torso;
+    Quaternion targetRotation_Head;
     Quaternion HeadRotation;        // switch head
     Quaternion TorsoRotation;       // switch torso
 
     // Rotate Switch
-    public bool Head_Switch = true;
-    public bool Torso_Switch = false;
+    public bool Switch_Head = true;
+    public bool Switch_Torso = false;
+ 
 
     void LateUpdate()
     {
         // 1. DIRECTION: Get Camera direction (Flattened to ignore pitch)
-        MainCamera_Forward = MainCamera.forward;
+        MainCamera_Forward = MainCamera.forward;             // changed from transform MainCamera - to Script inhereitance from mouseCamera
         MainCamera_Forward.y = 0;
         MainCamera_Forward.Normalize();
 
+
+
         // 2. BODY ROTATION: Force body to face the camera direction ALWAYS
         // This solves the flipping problem because the body never looks at moveDir
-        targetRotation = Quaternion.LookRotation(MainCamera_Forward);
-        //Rotation_Head();
-        Rotation_Torso();
+        targetRotation_Torso = Quaternion.LookRotation(MainCamera_Forward);                     // can i use my own Quaterion
+        //targetRotation_Head = MainCamera.rotation;                                            // can i use my own Quaterion
+        targetRotation_Head = Quaternion.Inverse(Bone_Torso.rotation) * MainCamera.rotation;
+
+
+
+        //
+
+        if (Switch_Head) Rotation_Head();
+        if (Switch_Torso) Rotation_Torso();
 
 
 
@@ -53,20 +66,27 @@ public class RotateBuffer : MonoBehaviour
 
 
 
-    public Quaternion Rotation_Head()
+public void Rotation_Head()
+{
+    if (!Switch_Head) return;
+
+    // Convert camera rotation into local space relative to torso
+    Quaternion localHeadTarget = Quaternion.Inverse(Bone_Torso.rotation) * targetRotation_Head;
+
+    Bone_Head.localRotation = Quaternion.Slerp(targetRotation_Head, localHeadTarget, rotationSmooth * Time.deltaTime );
+}
+
+
+    public void Rotation_Torso()
     {
-        if (Head_Switch != false)
-        {
-            return Bone_Torso.rotation = Quaternion.Slerp(Bone_Torso.rotation, targetRotation, rotationSmooth * Time.deltaTime);
-        } return Bone_Torso.rotation = TorsoRotation;
-    }
-    public Quaternion Rotation_Torso()
-    {
-        if (Torso_Switch != false){
-            HeadRotation = Quaternion.Slerp(Bone_Torso.rotation, targetRotation, rotationSmooth * Time.deltaTime);
-        } return Bone_Torso.rotation = HeadRotation;
+        if (!Switch_Torso) return;
+
+        Bone_Torso.rotation = Quaternion.Slerp( Bone_Torso.rotation, targetRotation_Torso, rotationSmooth * Time.deltaTime );
     }
 
+
+    /// Convert World To local Space
+    ///   Quaternion localHeadTarget = Quaternion.Inverse(parentWorld.rotation) * childWorld.rotation;
 
 
 
