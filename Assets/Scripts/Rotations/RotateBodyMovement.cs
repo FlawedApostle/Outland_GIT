@@ -18,7 +18,7 @@ public class RotateBodyMovement : MonoBehaviour
     private RelativeMovement _RelativeMovement;
 
     [Header("Model - Head Bone"), Tooltip("Put actual head bone here!")]
-    [SerializeField]  Transform Transform_Bone_Head;
+    [SerializeField] Transform Transform_Bone_Head;
 
     //[Header("Model - Body Bone"), Tooltip("Torso From Model")]
     //[SerializeField]  Transform Transform_Bone_Body;
@@ -45,15 +45,15 @@ public class RotateBodyMovement : MonoBehaviour
 
 
     Vector3 _MouseCamera_Forward;
-    public Vector3 Get_MouseCamera_Forward(){ return _MouseCamera_Forward; } 
+    public Vector3 Get_MouseCamera_Forward() { return _MouseCamera_Forward; }
     float _headPitch;
-    public float Get_HeadPitch() {  return _headPitch; }
+    public float Get_HeadPitch() { return _headPitch; }
     float _headYaw;
-    public float Get_HeadYaw() {  return  _headYaw; }
+    public float Get_HeadYaw() { return _headYaw; }
     float _bodyYaw;
-    public float Get_BodyYaw() {  return _bodyYaw; }
+    public float Get_BodyYaw() { return _bodyYaw; }
     Vector3 _moveDirection;
-    public Vector3 Get_moveDir(){ return _moveDirection; }
+    public Vector3 Get_moveDir() { return _moveDirection; }
 
     // DUDE CHECK YOUR VECTORS TO ENSURE Z IS THE LAST COORD.... OMG .....
     void LateUpdate()
@@ -63,6 +63,12 @@ public class RotateBodyMovement : MonoBehaviour
         //float Camyaw = _MouseCamera.Get_MouseXYQuat().eulerAngles.y;
         float Camyaw = _MouseCamera.Get_MouseCamera().eulerAngles.y;
         _bodyYaw = BodyRoot.eulerAngles.y;
+
+        // Keep the body facing the camera forward, even though we move back -QUICK HACK TO GET THE BODY TO FACE THE CAM DIRECTION
+        //Vector3 MouseCam_Forward = _MouseCamera.Get_MouseCamera().forward;
+        //MouseCam_Forward.y = 0;
+        //Quaternion MouseCam_ForwardQ = Quaternion.LookRotation(MouseCam_Forward);
+        //BodyRoot.rotation = Quaternion.Slerp(BodyRoot.rotation, MouseCam_ForwardQ, rotationSmooth * Time.deltaTime);
 
         float headOffset = Mathf.DeltaAngle(_bodyYaw, Camyaw);
         PrintTools.Print(headOffset, "green");
@@ -76,10 +82,11 @@ public class RotateBodyMovement : MonoBehaviour
         }
 
         // RULE 2: If head turns too far → rotate body toward camera yaw
-        if (Mathf.Abs(headOffset) > headTurnThreshold) { 
-            Quaternion targetRot = Quaternion.Euler(0, Camyaw, 0); 
-            BodyRoot.rotation = 
-                Quaternion.Slerp(BodyRoot.rotation, targetRot, rotationSmooth * Time.deltaTime); 
+        if (Mathf.Abs(headOffset) > headTurnThreshold)
+        {
+            Quaternion targetRot = Quaternion.Euler(0, Camyaw, 0);
+            BodyRoot.rotation =
+                Quaternion.Slerp(BodyRoot.rotation, targetRot, rotationSmooth * Time.deltaTime);
         }
 
 

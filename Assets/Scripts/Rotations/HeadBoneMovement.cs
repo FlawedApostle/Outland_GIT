@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class HeadBoneMovement : MonoBehaviour
 {
-
     [SerializeField] Transform Transform_Bone_Head;     /// input the models bone from the hierchy
     [SerializeField] MouseCamera MouseCamera;          /// input the mouse cam script 
     [SerializeField] Transform BodyRoot;
@@ -17,7 +16,6 @@ public class HeadBoneMovement : MonoBehaviour
         return Transform_Bone_Head.rotation = Quaternion.Slerp(Transform_Bone_Head.rotation, headRotationSlerp, _cameraSmooth * Time.deltaTime);
     }
 
-
     public Quaternion HeadBone_WorldSpace()
     {
         float headWorldYaw = Transform_Bone_Head.rotation.eulerAngles.y;
@@ -30,14 +28,10 @@ public class HeadBoneMovement : MonoBehaviour
     {
         // 1. Get camera pitch (X rotation)
         float pitch = MouseCamera.Get_MouseCamera().eulerAngles.x;
-
         // 2. Get camera yaw (Y rotation)
         float CamYaw = MouseCamera.Get_MouseCamera().eulerAngles.y;
-
         // 3. Apply BOTH to the head bone
        return Transform_Bone_Head.rotation = Quaternion.Euler(pitch, CamYaw, 0f);
-
-
         //float yaw = MouseCamera.Get_MouseXYQuat().eulerAngles.y;
         //return Transform_Bone_Head.localRotation = Quaternion.Euler(0, yaw, 0);
     }
@@ -47,49 +41,6 @@ public class HeadBoneMovement : MonoBehaviour
     {
         // Make the head bone match the camera's rotation
         HeadBone_LocalSpace();
-
     }
 
 }
-
-/* THIS IS MY OLD HEADBONE SCRIPT - I WILL REMOVE IT EVENTUALLY
-    //[SerializeField] Transform headBone; // Drag the head bone here in the Inspector
-    //[SerializeField, Tooltip("Place FPS cam here")] Transform MainCameraChild; // Place the FPS camera in here
-    //[SerializeField] float sensitivity = 2.0f;
-    //[SerializeField] float verticalLimit = 80;
-
-    //private float _rotationX = 0f;
-    //private float _rotationY = 0f;
-
-    ////[SerializeField] RelativeMovement _relativeMovementDir; 
-    ////[SerializeField] RotateBodyMovement _rotateBodyMovement;
-    //[SerializeField] Transform bodyRoot;
-
-
-    //void LateUpdate() // Use LateUpdate to override standard animations
-    //{
-    //    // get cam absolute rotation
-    //    Vector3 camChildAbsoluteRotation = MainCameraChild.eulerAngles;
-
-    //    // Camera coords - world Space
-    //    float camYaw = MainCameraChild.eulerAngles.y;
-    //    float camPitch = MainCameraChild.eulerAngles.x;
-
-    //    // body coords Yaw in world space converted to local space
-    //    float bodyYaw = bodyRoot.eulerAngles.y; 
-    //    bodyYaw = Mathf.DeltaAngle(0, bodyYaw);
-
-    //    float relativeYaw = Mathf.DeltaAngle(bodyYaw, camYaw);
-
-    //    // Clamp pitch
-    //    //camPitch = Mathf.Clamp(camPitch, -verticalLimit, verticalLimit);
-
-    //    // 2. Clamp looking up/down so the head doesn't snap backward
-    //    //_rotationY = Mathf.Clamp(pitch, -verticalLimit, verticalLimit);
-
-    //    // 3. Apply to bone
-    //    // Note: Bones often have different "forward" directions. 
-    //    // You may need to swap X, Y, or Z depending on your specific model rig.
-    //    headBone.localRotation = Quaternion.Euler(camPitch, relativeYaw, 0f);
-    // }
-*/
