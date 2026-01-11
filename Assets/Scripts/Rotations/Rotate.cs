@@ -3,9 +3,9 @@ using static UnityEngine.GraphicsBuffer;
 
 public class Rotate : MonoBehaviour
 {
-    [Header("Script-Relative Movement")][SerializeField] private RelativeMovement relativeMovement;
-    [Header("Script-Mouse Camera")][SerializeField] private MouseCamera mouseCamera;
-    
+    //[Header("Script-Relative Movement")][SerializeField] private RelativeMovement relativeMovement;
+    //[Header("Script-Mouse Camera")][SerializeField] private MouseCamera mouseCamera;
+
     [SerializeField] private Transform Bone_Torso;
     [SerializeField] private Transform Bone_Head;
     [SerializeField] private Transform MainCamera;
@@ -15,6 +15,10 @@ public class Rotate : MonoBehaviour
     // Camera
     Vector3 MainCamera_Forward;
     Vector3 MainCamera_Head;
+
+    // Space local = inverse(parentWorld) * childWorld
+    Quaternion Space_Local;
+
 
     // Get initial rot
     Quaternion bodyStartOriention;
@@ -39,21 +43,21 @@ public class Rotate : MonoBehaviour
         MainCamera_Forward.Normalize();
 
         // 2. BODY ROTATION: Force body to face the camera direction ALWAYS
-        targetRotation_Torso = Quaternion.LookRotation(MainCamera_Forward);                     // can i use my own Quaterion
-        //targetRotation_Head = MainCamera.rotation;                                            // can i use my own Quaterion
-        //targetRotation_Head = Quaternion.Inverse(Bone_Torso.rotation) * MainCamera.rotation;
-        targetRotation_Head =   MainCamera.rotation;
+        targetRotation_Torso = Quaternion.LookRotation(MainCamera_Forward);
+        targetRotation_Head = MainCamera.rotation;
 
-       PrintTools.Print(targetRotation_Head , "red" , "Target Rotation");
+
+        PrintTools.Print(targetRotation_Head , "red" , "Target Rotation");
+       PrintTools.Print(targetRotation_Head.eulerAngles.y , "red" , "Target Rotation");
         if (Switch_Head) Rotation_Head();
         if (Switch_Torso) Rotation_Torso();
 
         // 3. ANIMATION: Calculate relative movement for the Animator - RelativeMovement Script
-        Vector3 moveDir = relativeMovement.GetMoveDirection();
+        //Vector3 moveDir = relativeMovement.GetMoveDirection();
         // The Dot Product tells us if we are moving Forward (1) or Backward (-1) relative to Cam
-        float forwardBack = Vector3.Dot(MainCamera_Forward, moveDir);
+        //float forwardBack = Vector3.Dot(MainCamera_Forward, moveDir);
         // The Cross Product tells us if we are moving Right (1) or Left (-1) relative to Cam
-        float leftRight = Vector3.Cross(MainCamera_Forward, moveDir).y;
+        //float leftRight = Vector3.Cross(MainCamera_Forward, moveDir).y;
 
         // 4. FEED THE ANIMATOR: 
         // Create two Floats in your Animator Controller: "Vertical" and "Horizontal"
@@ -65,28 +69,21 @@ public class Rotate : MonoBehaviour
 
 
 
-public void Rotation_Head()
-{
-    if (!Switch_Head) return;
-
-    // Convert camera rotation into local space relative to torso
-    Quaternion localHeadTarget = Quaternion.Inverse(Bone_Torso.rotation) * targetRotation_Head;
-
-        //Bone_Head.localRotation = Quaternion.Slerp(targetRotation_Head, localHeadTarget, rotationSmooth * Time.deltaTime );
-        Bone_Head.rotation = Quaternion.Slerp(targetRotation_Head, localHeadTarget, rotationSmooth * Time.deltaTime);
+    public void Rotation_Head()
+    {
+        // convert cam from world to head local
+        Space_Local = Quaternion.Inverse(Bone_Torso.rotation) * targetRotation_Head;
+        if (!Switch_Head) return;
+        //Bone_Head.rotation = Quaternion.Slerp(targetRotation_Head, Space_Local, rotationSmooth * Time.deltaTime);
+        Bone_Head.localRotation = Quaternion.Slerp(Bone_Head.localRotation, Space_Local, rotationSmooth * Time.deltaTime);
     }
 
 
     public void Rotation_Torso()
     {
         if (!Switch_Torso) return;
-
         Bone_Torso.rotation = Quaternion.Slerp( Bone_Torso.rotation, targetRotation_Torso, rotationSmooth * Time.deltaTime );
     }
-
-
-    /// Convert World To local Space
-    ///   Quaternion localHeadTarget = Quaternion.Inverse(parentWorld.rotation) * childWorld.rotation;
 
 
 
