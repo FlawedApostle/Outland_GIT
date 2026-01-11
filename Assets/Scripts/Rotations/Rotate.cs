@@ -73,7 +73,7 @@ public void Rotation_Head()
     Quaternion localHeadTarget = Quaternion.Inverse(Bone_Torso.rotation) * targetRotation_Head;
 
         //Bone_Head.localRotation = Quaternion.Slerp(targetRotation_Head, localHeadTarget, rotationSmooth * Time.deltaTime );
-        Bone_Head.transform.LookAt(Bone_Head, mouseCamera.Get_MouseCamera().eulerAngles);// = Quaternion.Slerp(targetRotation_Head, localHeadTarget, rotationSmooth * Time.deltaTime);
+        Bone_Head.rotation = Quaternion.Slerp(targetRotation_Head, localHeadTarget, rotationSmooth * Time.deltaTime);
     }
 
 
