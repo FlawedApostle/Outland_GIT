@@ -15,7 +15,7 @@ public class HeadBoneMovement : MonoBehaviour
         Quaternion headRotationSlerp = MouseCamera.Get_MouseXYQuat();
         return Transform_Bone_Head.rotation = Quaternion.Slerp(Transform_Bone_Head.rotation, headRotationSlerp, _cameraSmooth * Time.deltaTime);
     }
-
+    
     public Quaternion HeadBone_WorldSpace()
     {
         float headWorldYaw = Transform_Bone_Head.rotation.eulerAngles.y;
