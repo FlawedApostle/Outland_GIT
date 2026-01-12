@@ -45,9 +45,7 @@ public class RelativeMovement : MonoBehaviour
     /// Relative direction will take the coordinates of the Camera direction in relation
     public void RelativeCameraMovementDirection_Vector()
     {
-
         Debug.Log($"[RelativeMovement DEBUG] Cam Relative Forward: {camForward} | Cam Relative Right: {camRight}");
-
     }
     public void RelativeCameraMovementDirection_Quaternion()
     {
@@ -55,16 +53,7 @@ public class RelativeMovement : MonoBehaviour
     }
     /// Character Controller
     [SerializeField][Tooltip("Character Controller is Needed for Movement Input")] CharacterController characterController;
-    public void Debug_characterController(CharacterController charactercontroller)
-    {
-        charactercontroller = characterController;
-        if (characterController == null)
-        {
-            Debug.Log("No Character Controller , One has now been set");
-            characterController = GetComponent<CharacterController>();
-        }
-        Debug.Log("Character Controller set");
-    }
+
     // Input Controlls
     private float horizontal;
     private float vertical;
@@ -127,12 +116,14 @@ public class RelativeMovement : MonoBehaviour
         // 2. Apply horizontal movement (camera‑relative)
         moveDirection = (camForward * vertical) + (camRight * horizontal);  /// yaw * input axis + pitch * input axis 
         isGrounded = characterController.isGrounded;      
-        moveDirection *= moveSpeed;         //test line
-
+        //moveDirection *= moveSpeed;         //test line
+        
         //////////////////////////////////////// MOVEMENT BLOCK \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
         // 4. movement vector  [left, right , up , down]
-        Vector2 inputMovementVector = new Vector2(horizontal, vertical); 
+        Vector2 inputMovementVector = new Vector2(horizontal, vertical);
+
         float inputMovementMagnitude = inputMovementVector.magnitude;                    // getting the length of the vector
+
 
         // Debug Yaw and Pitch coordinats
         // I need to get he faciing direction ofthe camera Yaw - debug and gather data on that
@@ -155,18 +146,35 @@ public class RelativeMovement : MonoBehaviour
         }
         */
         // Decide current speed: base moveSpeed or sprintSpeed
-        float currentSpeed = moveSpeed; 
-        if (isGrounded && inputMovementMagnitude > 0.01f )
+        currentSpeed = moveSpeed;
+        bool isMoving = inputMovementMagnitude > 0.01f && isGrounded;
+        bool isSprinting = isMoving && UnityEngine.Input.GetButton("Sprint");
+        if (isGrounded && inputMovementMagnitude > 0.01f)
         {
-            if(UnityEngine.Input.GetButton("Sprint")) {
-            Debug.Log("Sprint Pressed");
-            currentSpeed = sprintSpeed;
+            if (UnityEngine.Input.GetButton("Sprint"))
+            {
+                isSprinting = true;
+                Debug.Log("Sprint Pressed");
+                currentSpeed = sprintSpeed;
             }
         }
 
-        // Animate walking - its sticking a bit look into  it
+
+
+        anim.SetBool("isWalking", isMoving);
+        anim.SetFloat("speed", currentSpeed);
+        //anim.SetBool("isSprinting", isSprinting);
+
+
+        PrintTools.Print(currentSpeed, "blue", "Current Speed");
+
+        //currentSpeed = new Vector3(characterController.velocity.x, 0, characterController.velocity.z).magnitude;
+        //anim.SetFloat("speed", currentSpeed);
+
+
+        // Animate walking
         //anim.enabled = false;                                       /// TURNED OFF ANIMATION
-        anim.SetBool("isWalking", inputMovementMagnitude > 0.01f && isGrounded);            // animate
+        //anim.SetBool("isWalking", inputMovementMagnitude > 0.01f && isGrounded);            // animate
         //Debug.Log("isWalking = " + anim.GetBool("isWalking") + " | magnitude = " + inputMovementMagnitude);       /// DEBUG
 
         // Handle jump and gravity
@@ -204,6 +212,19 @@ public class RelativeMovement : MonoBehaviour
         }
     }
 
-}
+    public void Debug_characterController(CharacterController charactercontroller)
+    {
+        charactercontroller = characterController;
+        if (characterController == null)
+        {
+            Debug.Log("No Character Controller , One has now been set");
+            characterController = GetComponent<CharacterController>();
+        }
+        Debug.Log("Character Controller set");
+    }
 
-/// !#END of Class RelativeMovement
+
+
+
+}       //!#END 
+

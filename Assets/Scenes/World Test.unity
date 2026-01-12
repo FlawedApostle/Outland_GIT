@@ -2216,12 +2216,20 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 2787194484754673320, guid: a8f3159bd694df8409393593f1b5263c, type: 3}
+      propertyPath: Switch_Head
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2787194484754673320, guid: a8f3159bd694df8409393593f1b5263c, type: 3}
       propertyPath: Switch_Torso
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5687491465311365397, guid: a8f3159bd694df8409393593f1b5263c, type: 3}
       propertyPath: m_Name
       value: Player_YBot(Move_Animated_Controller)[TEST] 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7076776144843065151, guid: a8f3159bd694df8409393593f1b5263c, type: 3}
+      propertyPath: moveSpeed
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7400933003143270531, guid: a8f3159bd694df8409393593f1b5263c, type: 3}
       propertyPath: m_LocalPosition.x
