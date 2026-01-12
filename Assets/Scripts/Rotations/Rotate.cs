@@ -47,8 +47,8 @@ public class Rotate : MonoBehaviour
         targetRotation_Head = MainCamera.rotation;
 
 
-        PrintTools.Print(targetRotation_Head , "red" , "Target Rotation");
-       PrintTools.Print(targetRotation_Head.eulerAngles.y , "red" , "Target Rotation");
+        //PrintTools.Print(targetRotation_Head , "red" , "Target Rotation");
+       //PrintTools.Print(targetRotation_Head.eulerAngles.y , "red" , "Target Rotation");
         if (Switch_Head) Rotation_Head();
         if (Switch_Torso) Rotation_Torso();
 
