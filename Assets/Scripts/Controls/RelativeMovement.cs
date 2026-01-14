@@ -124,9 +124,6 @@ public class RelativeMovement : MonoBehaviour
 
         float inputMovementMagnitude = inputMovementVector.magnitude;                    // getting the length of the vector
 
-
-        // Debug Yaw and Pitch coordinats
-        // I need to get he faciing direction ofthe camera Yaw - debug and gather data on that
         /*
         if(UnityEngine.Input.GetKeyDown(KeyCode.F2))
         {
