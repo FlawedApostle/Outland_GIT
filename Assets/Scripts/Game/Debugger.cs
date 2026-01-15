@@ -50,7 +50,7 @@ public class Debuger : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F1))  {
             
             Debug.Log("[GET YAW - HeadBoneMovement & RotateBodyMovement]");
-            Debug.Log("[Yaw-BONE HEAD] " + DEBUG_HeadBoneMovement.Get_BoneHead_Yaw());
+            //Debug.Log("[Yaw-BONE HEAD] " + DEBUG_HeadBoneMovement.Get_BoneHead_Yaw());
             Debug.Log("[Yaw-HEAD] " + DEBUG_RotateBodyMovement.Get_HeadYaw());
             Debug.Log("[Yaw-BODY] " + DEBUG_RotateBodyMovement.Get_BodyYaw());
 
