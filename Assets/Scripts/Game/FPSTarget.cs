@@ -10,13 +10,27 @@ using UnityEngine;
  */
 public class FPSTarget : MonoBehaviour
 {
-    public int targetFrameRate = 30;
+    private int targetFrameRate30 = 30;
+    private int targetFrameRate60 = 60;
+    public bool switch_60 = false;
+    public bool switch_30 = false;
     private void Start()
     {
         ///  If QualitySettings.vSyncCount is set to 0, 
         ///  then Application.targetFrameRate chooses a target frame rate for the game
         ///  vSyncCount != 0, then targetFrameRate is ignored.
         QualitySettings.vSyncCount = 0;
-        Application.targetFrameRate = targetFrameRate;
+
+        if(switch_30)
+        {
+            Application.targetFrameRate = targetFrameRate30;
+        }
+
+        if (switch_60)
+        {
+            Application.targetFrameRate = targetFrameRate60;
+        }
+
+
     }
 }
