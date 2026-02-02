@@ -23,8 +23,11 @@ using UnityEngine.InputSystem.XR;
 
 public class RelativeMovement : MonoBehaviour
 {
-    /// Animation Player Controller calling it from inspector
+   
+    [Header("Animator Controller")]
+    [Tooltip("Place Animator Controller Script Here")]
     [SerializeField] private Animator anim;
+    
     /* NOTES: MOUSECAM
     // I am calling an object of the MouseCamera script , Which has a [Serialized Field] Transform of the INTENDED FPS camera
     // Inside RelativeMovement I am using a public [Serialized Field] Transform of which the user places the SAME INTENDED FPS camera into
@@ -33,7 +36,8 @@ public class RelativeMovement : MonoBehaviour
     // I do not want to be able to change the value here in RelativeMovement, rather I want A COPY of all values to which I can compare against other values
     */
     [Header("Camera - FPS")]
-    [SerializeField][Tooltip("Ensure MATCHING FPS CAMERAS - Taking a refernce of the Camera from MouseCamera Script")] 
+    [Tooltip("Ensure MATCHING FPS CAMERAS - Taking a refernce of the Camera from MouseCamera Script")] 
+    [SerializeField]
     Transform MouseCamera_CAMERA;
     /* NOTES: MOUSECAM
     // Taking the transform directly from MouseCamera, and then creating a copy (Safe)
@@ -42,17 +46,11 @@ public class RelativeMovement : MonoBehaviour
     */
     Vector3 camForward, camRight;
     Quaternion camOrientation;
-    /// Relative direction will take the coordinates of the Camera direction in relation
-    public void RelativeCameraMovementDirection_Vector()
-    {
-        Debug.Log($"[RelativeMovement DEBUG] Cam Relative Forward: {camForward} | Cam Relative Right: {camRight}");
-    }
-    public void RelativeCameraMovementDirection_Quaternion()
-    {
-        Debug.Log($"[RelativeMovement DEBUG] Full Camera Orientation (Quaternion): {camOrientation}");
-    }
-    /// Character Controller
-    [SerializeField][Tooltip("Character Controller is Needed for Movement Input")] CharacterController characterController;
+
+    [Header("Character Controller")]
+    [SerializeField]
+    [Tooltip("Character Controller is Needed for Movement Input")] 
+    CharacterController characterController;
 
     // Input Controlls
     private float horizontal;
@@ -62,8 +60,13 @@ public class RelativeMovement : MonoBehaviour
     [SerializeField] float moveSpeed = 4;
     [SerializeField] float jumpHeight = 2f;
     [SerializeField] float gravity = 9.8f;
-    /// Build a slider - The degree to which we can control our movement while in midair.
-    [Range(0, 10), SerializeField, Tooltip("The degree to which we can control our movement while in midair")] float airControl = 5;
+    
+    // Build a slider - The degree to which we can control our movement while in midair.
+    [Header("Physics Settings")]
+    [SerializeField]
+    [Range(0f, 10f)]
+    [Tooltip("The degree to which we can control our movement while in midair.")]
+    private float airControl = 5f;
 
     /// MOVEMENT DIRECTION
     Vector3 horizontalMove = Vector3.zero;
@@ -163,7 +166,7 @@ public class RelativeMovement : MonoBehaviour
         //anim.SetBool("isSprinting", isSprinting);
 
 
-        PrintTools.Print(currentSpeed, "blue", "Current Speed");
+        PrintTools.Print("Current Speed" , currentSpeed, "blue");
 
         //currentSpeed = new Vector3(characterController.velocity.x, 0, characterController.velocity.z).magnitude;
         //anim.SetFloat("speed", currentSpeed);
@@ -222,6 +225,16 @@ public class RelativeMovement : MonoBehaviour
 
 
 
+
+    /// Relative direction will take the coordinates of the Camera direction in relation
+    public void RelativeCameraMovementDirection_Vector()
+    {
+        Debug.Log($"[RelativeMovement DEBUG] Cam Relative Forward: {camForward} | Cam Relative Right: {camRight}");
+    }
+    public void RelativeCameraMovementDirection_Quaternion()
+    {
+        Debug.Log($"[RelativeMovement DEBUG] Full Camera Orientation (Quaternion): {camOrientation}");
+    }
 
 }       //!#END 
 
