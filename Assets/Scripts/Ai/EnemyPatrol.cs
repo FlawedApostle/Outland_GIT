@@ -38,16 +38,25 @@ public class EnemyPatrol : MonoBehaviour
         anim.SetBool("isMoving", isPhysicallyMoving);
     }
 
+
     void GoToRandomPoint()
     {
-        // Pick a point within the radius
+        // 1. We use the big patrolRadius (50) to pick a spot far away
         Vector3 randomPoint = transform.position + Random.insideUnitSphere * patrolRadius;
 
         NavMeshHit hit;
-        // This 'snaps' the random point to the nearest valid spot on the blue NavMesh
-        if (NavMesh.SamplePosition(randomPoint, out hit, patrolRadius, NavMesh.AllAreas))
+
+        // 2. We use a SMALL number (5.0f) here just to find the floor.
+        // If we use patrolRadius here, the AI gets "analysis paralysis" and stands still.
+        if (NavMesh.SamplePosition(randomPoint, out hit, patrolRadius, NavMesh.AllAreas)) // change to 2.0f as it needs to be 'kissing' the ground. atm 50.0f wtf is that - so im re doing the floors cause i fkd up on the mpty parents !! omfg they need to best to 0,0,0 and because i didnt do that all the floors got fkd up !! so now im re-doing it in unity once done itll be replaced to its original and PROPER VALUE. yes i swore... cause this is an annoying avoidable mistake !!
         {
+            Debug.DrawLine(transform.position, hit.position, Color.red, 5f);
             agent.SetDestination(hit.position);
+        }
+        else
+        {
+            // If it fails to find a point, this tells the AI: "Try again immediately"
+            timer = waitTime;
         }
     }
 }

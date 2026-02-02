@@ -1,3 +1,4 @@
+using System.Threading;
 using UnityEngine;
 
 public class LightFlicker : MonoBehaviour
@@ -6,6 +7,8 @@ public class LightFlicker : MonoBehaviour
     public float minIntensity = 0.2f; // Dimness
     public float maxIntensity = 1.2f; // Brightness
     public float flickerSpeed = 0.05f; // How fast it stutters
+
+
 
     void Start()
     {
