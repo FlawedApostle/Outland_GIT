@@ -4,6 +4,9 @@ using UnityEngine.AI;
 public class EnemyPatrol : MonoBehaviour
 {
     [Header ("DEBBUGGING TOOLS FOR INSPECTOR")]
+    [Tooltip("The calculated size of the NavMesh. Read-only in Play Mode.")]
+    public float calculatedMapRadius;
+
     [Tooltip("How far should the random point look for. - The larger the number the greater the search radius - Using 2d insideUnitCircle to ENSURE y axis is zereod out")]
     public float patrolRadius = 15f;
     [Tooltip("Floor Distance - testing the distance from the baked nav Mesh and the random Point selection")]
@@ -11,14 +14,32 @@ public class EnemyPatrol : MonoBehaviour
     [Tooltip("How long will the enemy 'look' at the random point selection")]
     public float waitTime = 3f;
 
+
     private NavMeshAgent agent;
     private Animator anim;
     private float timer;
+    private Vector3 mapCenter; // stores the center of the map world
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
+
+        PrintTools.ReportWorldSize();
+
+        // 1. SNAP to NavMesh to prevent errors
+        agent.Warp(transform.position);
+
+        // 2. GET MAP DATA (The logic you asked for)
+        calculatedMapRadius = NavHelper.GetWorldRadius();
+        mapCenter = NavHelper.GetWorldCenter();
+
+        // 3. PRINT IT
+        // Using your PrintTools format: "Value", "Title", "Color"
+        PrintTools.Print("NAVMESH RADIUS FOUND", calculatedMapRadius.ToString("F2"), "cyan");
+
+        // Optional: If you want the enemy to use the WHOLE map by default:
+        // patrolRadius = calculatedMapRadius;
     }
 
     void Update()
@@ -53,7 +74,17 @@ public class EnemyPatrol : MonoBehaviour
         // 1. generate a random point in world space. 
         // Use insideUnitCircle so the 'Y' is always 0 relative to the enemy - insideUnitCirlce is 2D ! so its flat against the plane of the baked nav Mesh
         Vector2 randomCircle = Random.insideUnitCircle * patrolRadius;
-        Vector3 randomPoint = new Vector3(transform.position.x + randomCircle.x, 0f, transform.position.z + randomCircle.y);// i zeroed out the y axis FOR NOW  transform.position.y
+
+        // 2. IMPORTANT: Decide if this is "Global" or "Local"
+        // If patrolRadius is HUGE (like the whole map), we add it to mapCenter.
+        // If patrolRadius is SMALL (like 15), we add it to transform.position (Local Patrol).
+
+        Vector3 targetOrigin = (patrolRadius >= calculatedMapRadius * 0.5f) ? mapCenter : transform.position;
+
+
+        //Vector3 randomPoint = new Vector3(transform.position.x + randomCircle.x, 0f, transform.position.z + randomCircle.y);// i zeroed out the y axis FOR NOW  transform.position.y
+        Vector3 randomPoint = new Vector3(targetOrigin.x + randomCircle.x , targetOrigin.y , targetOrigin.z + randomCircle.y);// i zeroed out the y axis FOR NOW  transform.position.y
+       
         NavMeshHit hit; 
         bool randomPointTrue;
         randomPointTrue = NavMesh.SamplePosition(randomPoint, out hit, floorDistance, NavMesh.AllAreas);

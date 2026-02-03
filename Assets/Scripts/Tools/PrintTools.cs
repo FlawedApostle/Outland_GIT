@@ -30,12 +30,24 @@ public static class PrintTools
         UnityEngine.Debug.Log($"<color={color}>{label}</color>: <color={color}>{value}</color>");
     }
 
+   // Using unity debugging logs
     public static void PrintLog(object value, string log, string color)
     {
 
         UnityEngine.Debug.Log(log + "\n" + $"<color={color}>{value}</color>");
     }
 
+
+    // Get World Nav Mesh Radius - relying on NavMesh script placed in world
+    public static void ReportWorldSize()
+    {
+        float radius = NavHelper.GetWorldRadius();
+        Vector3 center = NavHelper.GetWorldCenter();
+
+        // Using your 3-parameter print style: Value, Title, Color
+        Print(radius.ToString("F2"), "--- NAVMESH RADIUS ---", "cyan");
+        Print(center.ToString(), "--- NAVMESH CENTER ---", "yellow");
+    }
 
 }
 
