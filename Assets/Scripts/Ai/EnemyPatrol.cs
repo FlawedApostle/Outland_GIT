@@ -46,10 +46,14 @@ public class EnemyPatrol : MonoBehaviour
 
     void GoToRandomPoint()
     {
+
+        // 1. Safety Gate: Don't do ANYTHING if the agent isn't ready or on the floor
+        if (!agent.isOnNavMesh || !agent.isActiveAndEnabled) return;
+
         // 1. generate a random point in world space. 
         // Use insideUnitCircle so the 'Y' is always 0 relative to the enemy - insideUnitCirlce is 2D ! so its flat against the plane of the baked nav Mesh
         Vector2 randomCircle = Random.insideUnitCircle * patrolRadius;
-        Vector3 randomPoint = new Vector3(transform.position.x + randomCircle.x, transform.position.y, transform.position.z + randomCircle.y);
+        Vector3 randomPoint = new Vector3(transform.position.x + randomCircle.x, 0f, transform.position.z + randomCircle.y);// i zeroed out the y axis FOR NOW  transform.position.y
         NavMeshHit hit; 
         bool randomPointTrue;
         randomPointTrue = NavMesh.SamplePosition(randomPoint, out hit, floorDistance, NavMesh.AllAreas);
@@ -59,6 +63,7 @@ public class EnemyPatrol : MonoBehaviour
         if (randomPointTrue) // this will break navMesh Ai controll if messed with change to 2.0f  this is fixed, however I have a PUBLIC GLOBAL variable set in inspector. its mainly for debugging purposes. REMOVE IN RELEASE VERSION
         {
             Debug.DrawLine(transform.position, hit.position, Color.red, 5f);
+            PrintTools.Print("random point pos" , hit.position, "Green");
             agent.SetDestination(hit.position);
         }
         else
@@ -67,7 +72,7 @@ public class EnemyPatrol : MonoBehaviour
             PrintTools.Print("False", "--- NAVMESH SEARCH FAILED ---", "red");
 
             // Extracting the attempted vertical position
-            PrintTools.Print("Attempted Y Height", randomPoint.y, "yellow");
+            PrintTools.Print("Attempted Y Height", hit.position, "yellow");
             // If it fails to find a point, this tells the AI: "Try again immediately"
             timer = waitTime;
         }
