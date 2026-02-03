@@ -1,0 +1,33 @@
+MouseLook script:
+This is how/what makes the head turn on the Y-Bot model
+
+attached to; 
+Y-Bot -> Hips -> Spine -> Spine 2 -> Neck -> Head
+The camera is attached to the HEAD_TOP
+
+SHADERS:
+Shader(s) is set to standard NOT UNLIT
+Shader now set to LIT - Check Unity Notes
+Triplaner Shader Being used to keep material scale
+
+CAMERA: [add in layers one by one]
+FOV effect
+LENS distortion effect
+adding a bit of velocity on the camera rotation/orietation when moving dependatnt on the characters velocity mag/speed
+
+
+A.I ENEMY STALKER:
+-The "Hunter/Stalker" AI Logic
+-Enemy A (The All-Knowing): This guy doesn't chase. He just "pings" your area.
+-Enemy B (The Hunter): He receives the "ping" and chooses a random NavMesh point near you.
+-The "Safe" Timer: Use a float playerSafeTimer. If the player stays in one spot, the "Director" lowers the distance of the random points, forcing the enemy closer and closer until they "discover" you.
+
+
+
+
+Library Files missing 
+
+PackageCache - last file to add ! its 1.27 GB have to use GLF
+
+Directional Lighting: - DONT REMOVE (IN HIERCHY SUNLIGHT)
+Acts as the SUN. Shading angles can be manipulated with such, HOWEVER SHOULD NEVER BE USED AS A CRUTCH !
