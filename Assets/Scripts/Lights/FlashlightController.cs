@@ -1,36 +1,43 @@
 using UnityEngine;
 
-public partial class FlashlightController : MonoBehaviour
+public class FlashlightController : MonoBehaviour
 {
-    [Header("Settings")]
-    public Light flashlightLight; // Drag your Spot Light here
-    public float brightness = 2.0f; // This is 'Intensity'
-    public float distance = 20.0f;  // This is 'Range'
+    // These will show up in your Inspector for easy tweaking
+    [Header("Light Settings")]
+    public Light mySpotlight;
+    public float maxBrightness = 2.0f;
+    public float lightRange = 20.0f;
+    public float fieldOfView = 45.0f; // This is 'Spot Angle'
 
-    private bool isOn = true;
+    private bool isLightOn = true;
 
     void Start()
     {
-        // Set the initial values from your floats
-        flashlightLight.intensity = brightness;
-        flashlightLight.range = distance;
-        flashlightLight.enabled = isOn;
+        // Automatically find the light if you forgot to drag it in
+        if (mySpotlight == null)
+        {
+            mySpotlight = GetComponentInChildren<Light>();
+        }
+
+        // Apply your float settings
+        UpdateLightSettings();
     }
 
     void Update()
     {
-        // Use 'F' key to toggle
+        // Toggle with F key
         if (Input.GetKeyDown(KeyCode.F))
         {
-            ToggleFlashlight();
+            isLightOn = !isLightOn;
+            mySpotlight.enabled = isLightOn;
         }
     }
 
-    void ToggleFlashlight()
+    // Call this to update the light values from the floats
+    void UpdateLightSettings()
     {
-        isOn = !isOn;
-        flashlightLight.enabled = isOn;
-
-        // Optional: Add a click sound here later!
+        mySpotlight.intensity = maxBrightness;
+        mySpotlight.range = lightRange;
+        mySpotlight.spotAngle = fieldOfView;
     }
 }
