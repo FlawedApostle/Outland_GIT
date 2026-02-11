@@ -12,6 +12,11 @@
 /[Uu]ser[Ss]ettings/
 *.log
 
+#Baked Lights Files
+/[Aa]ssets/**/*.bakery
+**/[Ss]cenes/*/*.exr 
+**/[Ss]cenes/*/*.asset
+
 # By default unity supports Blender asset imports, *.blend1 blender files do not need to be commited to version control.
 *.blend1
 *.blend1.meta
