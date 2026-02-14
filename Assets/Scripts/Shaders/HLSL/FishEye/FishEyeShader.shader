@@ -13,6 +13,7 @@ Shader "Hidden/FisheyeCode"
         _ScanlineIntensity("Scanline Strength", Range(0, 0.1)) = 0.04
 
         [Header (VHS Glitch)]
+        [Toggle(_USE_GLITCH_ON)] _UseGlitch("Enable Jitter Glitch", Float) = 1
         _GlitchStrength("Glitch Intensity", Range(0, 0.1)) = 0.02
         _GlitchSpeed("Glitch Speed", Float) = 10.0
     }
@@ -54,25 +55,22 @@ Shader "Hidden/FisheyeCode"
             {
                 // 1. Get the UVs of the screen
                 float2 uv = input.texcoord;
-
                 // 2. Center the UVs (so 0,0 is the middle of the screen)
                 float2 centeredUV = uv - 0.5;
-
                 // 3. Get the distance from the center
                 float dist = length(centeredUV);
 
                 // 4. Warp + Zoom
                 float2 distortedUV = 0.5 + (centeredUV * _Zoom) * (1.0 + _DistortionStrength * dist * dist);
 
-                // #ifdef _USE_VHS_GLITCH_ON
+                #ifdef _USE_VHS_GLITCH_ON
                 // 4b. The Horizontal Glitch
                 // We use a high-frequency sine wave mixed with time to create "random" jumps
                 float glitchLine = sin(_Time.y * _GlitchSpeed + uv.y * 100.0);
                 float glitchSqueeze = max(0, glitchLine - 0.9); // Only triggers when the wave is at its peak
-                // #endif
-
                 // Apply the "kick" to the horizontal (x) coordinate
                 distortedUV.x += glitchSqueeze * _GlitchStrength;
+                #endif
 
                 // 5. The Edge Blur
                 float blurAmount = dist * _BlurStrength * 0.005;
