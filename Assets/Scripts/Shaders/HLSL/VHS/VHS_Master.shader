@@ -5,10 +5,10 @@ Shader "Hidden/VHS_Final_Master"
     {
         _MainTex("Texture", 2D) = "white" {}
         
-        [Header(1. Fisheye and Lens Blur)]
-        [Toggle(_USE_FISHEYE_ON)] _UseFisheye("Enable FishEye", Float) = 1
+        [Header(1. Lens Distortion and Edge Blur)]
+        [Toggle(_USE_FISHEYE_ON)] _UseFisheye("Enable Lens FX", Float) = 1
         _DistortionStrength("Lens Bulge", Float) = 0.5
-        _BlurStrength("Blur Strength", Float) = 1.0
+        _BlurStrength("Edge Blur Intensity", Range(0, 5)) = 1.0
         _Zoom("Zoom", Float) = 0.9
 
         [Header(2. Chromatic Aberration)]
@@ -31,9 +31,9 @@ Shader "Hidden/VHS_Final_Master"
         [Header(5. Color Bleeding)]
         [Toggle(_USE_BLEED)] _UseBleed("Enable Color Bleed", Float) = 0
         _BleedAmount("Bleed Range", Range(0, 0.1)) = 0.02
-        _BleedR("Red Bleed Intensity", Range(0, 1)) = 1.0
-        _BleedG("Green Bleed Intensity", Range(0, 1)) = 0.0
-        _BleedB("Blue Bleed Intensity", Range(0, 1)) = 0.5
+        _BleedR("Red Intensity", Range(0, 1)) = 1.0
+        _BleedG("Green Intensity", Range(0, 1)) = 0.0
+        _BleedB("Blue Intensity", Range(0, 1)) = 0.5
 
         [Header(6. Static and Lines)]
         [Toggle(_USE_GRAIN_ON)] _UseGrain("Enable BW Grain", Float) = 1
@@ -89,16 +89,19 @@ Shader "Hidden/VHS_Final_Master"
                 float2 uv = input.texcoord;
                 float2 distortedUV = uv;
 
+                // 1. BLACKOUT
                 #ifdef _USE_BLACKOUT
                     if(Noise(float2(_Time.y, 0)) > _CutoutThreshold) return half4(0,0,0,1);
                 #endif
 
+                // 2. FISHEYE
                 #ifdef _USE_FISHEYE_ON
                     float2 centeredUV = uv - 0.5;
                     float dist = length(centeredUV);
                     distortedUV = 0.5 + (centeredUV * _Zoom) * (1.0 + _DistortionStrength * dist * dist);
                 #endif
 
+                // 3. TRACKING
                 #ifdef _USE_GLITCH_ON
                     float t = _Time.y * _TrackingSpeed;
                     float trackingBar = sin(uv.y * _TrackingSize - t);
@@ -106,6 +109,7 @@ Shader "Hidden/VHS_Final_Master"
                     distortedUV.x += trackingBar * 0.02 * Noise(float2(t, uv.y));
                 #endif
 
+                // 4. CHANNELS
                 float2 r_uv = distortedUV;
                 float2 g_uv = distortedUV;
                 float2 b_uv = distortedUV;
@@ -122,11 +126,13 @@ Shader "Hidden/VHS_Final_Master"
                     b_uv.x += _B_Offset;
                 #endif
 
+                // 5. SAMPLING & RADIAL BLUR
                 half4 color = 0;
                 #ifdef _USE_FISHEYE_ON
                     float distForBlur = length(uv - 0.5);
                     float blur = distForBlur * _BlurStrength * 0.005;
-                    float2 offsets[4] = { float2(blur, 0), float2(-blur, 0), float2(0, blur), float2(0, -blur) };
+                    float2 offsets[4] = { float2(blur, blur), float2(-blur, blur), float2(blur, -blur), float2(-blur, -blur) };
+                    
                     for(int i = 0; i < 4; i++) {
                         color.r += SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, r_uv + offsets[i]).r;
                         color.g += SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, g_uv + offsets[i]).g;
@@ -140,6 +146,7 @@ Shader "Hidden/VHS_Final_Master"
                 #endif
                 color.a = 1.0;
 
+                // 6. BLEED
                 #ifdef _USE_BLEED
                     float2 bleedUV = distortedUV + float2(_BleedAmount, 0);
                     half4 smearCol = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, bleedUV);
@@ -148,8 +155,8 @@ Shader "Hidden/VHS_Final_Master"
                     color.b = lerp(color.b, max(color.b, smearCol.b), _BleedB);
                 #endif
 
+                // 7. COLOR GRAIN
                 #ifdef _USE_COLOR_GRAIN
-                    // CHUNKY MATH: We floor the UVs based on chunkiness to create big blocks
                     float2 chunkyUV = floor(uv * _Chunkiness) / _Chunkiness;
                     float rN = Noise(chunkyUV + _Time.y);
                     float gN = Noise(chunkyUV + _Time.y + 0.5);
@@ -158,10 +165,12 @@ Shader "Hidden/VHS_Final_Master"
                     color.rgb += fuzzyNoise * _ColorGrainRGB.rgb;
                 #endif
 
+                // 8. BW GRAIN
                 #ifdef _USE_GRAIN_ON
                     color.rgb += (Noise(uv * _Time.y) - 0.5) * _GrainIntensity;
                 #endif
 
+                // 9. SCANLINES
                 #ifdef _USE_LINES_ON
                     float lines = sin(uv.y * _LineDensity - _Time.y * _LineSpeed);
                     color.rgb -= smoothstep(0.8, 1.0, lines) * 0.1;
