@@ -63,15 +63,16 @@ Shader "Hidden/VHS_Final_Master"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.core/Runtime/Utilities/Blit.hlsl"
 
-            #pragma shader_feature _USE_FISHEYE_ON
-            #pragma shader_feature _USE_CHROMA_ABB
-            #pragma shader_feature _USE_GLITCH_ON
-            #pragma shader_feature _USE_BLACKOUT
-            #pragma shader_feature _USE_CHROMA
-            #pragma shader_feature _USE_BLEED
-            #pragma shader_feature _USE_GRAIN_ON
-            #pragma shader_feature _USE_LINES_ON
-            #pragma shader_feature _USE_COLOR_GRAIN
+            // Switched to _local to prevent keyword clashing (stops the glitches)
+            #pragma shader_feature_local _USE_FISHEYE_ON
+            #pragma shader_feature_local _USE_CHROMA_ABB
+            #pragma shader_feature_local _USE_GLITCH_ON
+            #pragma shader_feature_local _USE_BLACKOUT
+            #pragma shader_feature_local _USE_CHROMA
+            #pragma shader_feature_local _USE_BLEED
+            #pragma shader_feature_local _USE_GRAIN_ON
+            #pragma shader_feature_local _USE_LINES_ON
+            #pragma shader_feature_local _USE_COLOR_GRAIN
 
             float _DistortionStrength, _BlurStrength, _Zoom, _AbbIntensity;
             float _TrackingSpeed, _TrackingSize, _CutoutThreshold;
@@ -88,10 +89,15 @@ Shader "Hidden/VHS_Final_Master"
             half4 Frag(Varyings input) : SV_Target {
                 float2 uv = input.texcoord;
                 float2 distortedUV = uv;
+                
+                // --- THE STABILIZER ---
+                // We use frac to keep the time value between 0 and 1. 
+                // This stops the noise from stuttering when Unity has been open for hours.
+                float t_stable = frac(_Time.y);
 
                 // 1. BLACKOUT
                 #ifdef _USE_BLACKOUT
-                    if(Noise(float2(_Time.y, 0)) > _CutoutThreshold) return half4(0,0,0,1);
+                    if(Noise(float2(t_stable, 0)) > _CutoutThreshold) return half4(0,0,0,1);
                 #endif
 
                 // 2. FISHEYE
@@ -103,10 +109,11 @@ Shader "Hidden/VHS_Final_Master"
 
                 // 3. TRACKING
                 #ifdef _USE_GLITCH_ON
-                    float t = _Time.y * _TrackingSpeed;
-                    float trackingBar = sin(uv.y * _TrackingSize - t);
+                    // Tracking speed still uses raw time for the scroll, but Noise uses t_stable
+                    float t_scroll = _Time.y * _TrackingSpeed;
+                    float trackingBar = sin(uv.y * _TrackingSize - t_scroll);
                     trackingBar = smoothstep(0.9, 1.0, trackingBar); 
-                    distortedUV.x += trackingBar * 0.02 * Noise(float2(t, uv.y));
+                    distortedUV.x += trackingBar * 0.02 * Noise(float2(t_stable, uv.y));
                 #endif
 
                 // 4. CHANNELS
@@ -155,19 +162,20 @@ Shader "Hidden/VHS_Final_Master"
                     color.b = lerp(color.b, max(color.b, smearCol.b), _BleedB);
                 #endif
 
-                // 7. COLOR GRAIN
+                // 7. CHUNKY COLOR GRAIN (Stabilized seeds)
                 #ifdef _USE_COLOR_GRAIN
                     float2 chunkyUV = floor(uv * _Chunkiness) / _Chunkiness;
-                    float rN = Noise(chunkyUV + _Time.y);
-                    float gN = Noise(chunkyUV + _Time.y + 0.5);
-                    float bN = Noise(chunkyUV + _Time.y + 1.0);
+                    // Adding different offsets to t_stable so R, G, and B don't flicker in unison
+                    float rN = Noise(chunkyUV + t_stable + 0.11);
+                    float gN = Noise(chunkyUV + t_stable + 0.33);
+                    float bN = Noise(chunkyUV + t_stable + 0.55);
                     float3 fuzzyNoise = (float3(rN, gN, bN) - 0.5) * _ColorGrainIntensity;
                     color.rgb += fuzzyNoise * _ColorGrainRGB.rgb;
                 #endif
 
-                // 8. BW GRAIN
+                // 8. BW GRAIN (Stabilized)
                 #ifdef _USE_GRAIN_ON
-                    color.rgb += (Noise(uv * _Time.y) - 0.5) * _GrainIntensity;
+                    color.rgb += (Noise(uv + t_stable) - 0.5) * _GrainIntensity;
                 #endif
 
                 // 9. SCANLINES
