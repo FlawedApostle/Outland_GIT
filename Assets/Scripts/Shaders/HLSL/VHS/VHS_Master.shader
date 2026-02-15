@@ -46,6 +46,7 @@ Shader "Hidden/VHS_Final_Master"
         [Toggle(_USE_COLOR_GRAIN)] _UseColorGrain("Enable RGB Fuzzy Grain", Float) = 0
         _ColorGrainIntensity("Overall Fuzzy Strength", Range(0, 0.5)) = 0.1
         _ColorGrainRGB("RGB Balance (R, G, B)", Vector) = (1, 1, 1, 0)
+        _Chunkiness("Grain Chunkiness", Range(1, 1000)) = 500
     }
 
     SubShader
@@ -77,19 +78,11 @@ Shader "Hidden/VHS_Final_Master"
             float _R_Offset, _G_Offset, _B_Offset;
             float _BleedAmount, _BleedR, _BleedG, _BleedB;
             float _GrainIntensity, _LineDensity, _LineSpeed;
-            float _ColorGrainIntensity;
-            float4 _ColorGrainRGB; // X=R, Y=G, Z=B
+            float _ColorGrainIntensity, _Chunkiness;
+            float4 _ColorGrainRGB;
 
             float Noise(float2 uv) {
                 return frac(sin(dot(uv, float2(12.9898, 78.233))) * 43758.5453);
-            }
-
-            // A slightly different noise for the color grain to make it look "fuzzier"
-            float3 ColorNoise(float2 uv, float t) {
-                float r = Noise(uv + t);
-                float g = Noise(uv + t + 0.5);
-                float b = Noise(uv + t + 1.0);
-                return float3(r, g, b);
             }
 
             half4 Frag(Varyings input) : SV_Target {
@@ -155,16 +148,16 @@ Shader "Hidden/VHS_Final_Master"
                     color.b = lerp(color.b, max(color.b, smearCol.b), _BleedB);
                 #endif
 
-                // --- NEW: COLOR GRAIN (Section 7) ---
                 #ifdef _USE_COLOR_GRAIN
-                    float3 fuzzyNoise = ColorNoise(uv, _Time.y);
-                    // This subtracts 0.5 so it can either lighten or darken the pixel (fuzz look)
-                    fuzzyNoise = (fuzzyNoise - 0.5) * _ColorGrainIntensity;
-                    // Apply individual RGB weights from the Vector slider
+                    // CHUNKY MATH: We floor the UVs based on chunkiness to create big blocks
+                    float2 chunkyUV = floor(uv * _Chunkiness) / _Chunkiness;
+                    float rN = Noise(chunkyUV + _Time.y);
+                    float gN = Noise(chunkyUV + _Time.y + 0.5);
+                    float bN = Noise(chunkyUV + _Time.y + 1.0);
+                    float3 fuzzyNoise = (float3(rN, gN, bN) - 0.5) * _ColorGrainIntensity;
                     color.rgb += fuzzyNoise * _ColorGrainRGB.rgb;
                 #endif
 
-                // --- ORIGINAL: BW GRAIN ---
                 #ifdef _USE_GRAIN_ON
                     color.rgb += (Noise(uv * _Time.y) - 0.5) * _GrainIntensity;
                 #endif

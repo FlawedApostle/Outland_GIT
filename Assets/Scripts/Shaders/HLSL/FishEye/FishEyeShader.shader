@@ -1,3 +1,4 @@
+// this is my old fisheye code. im keeping it for now more as a reference
 Shader "Hidden/FisheyeCode"
 {
     Properties
