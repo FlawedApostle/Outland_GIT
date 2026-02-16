@@ -83,24 +83,24 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _AbbIntensity: 0.013
+    - _AbbIntensity: 0.001
     - _AddPrecomputedVelocity: 0
     - _AlphaClip: 0
     - _AlphaToMask: 0
-    - _B_Offset: 0.0152
+    - _B_Offset: 0.005
     - _BleedAmount: 0.005
-    - _BleedB: 0.4
-    - _BleedG: 0.2
-    - _BleedR: 1
+    - _BleedB: 0.5
+    - _BleedG: 0.5
+    - _BleedR: 0.5
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _BlurStrength: 0.39
     - _BumpScale: 1
     - _ChromaAmount: 0.0073
-    - _Chunkiness: 425
+    - _Chunkiness: 600
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
-    - _ColorGrainIntensity: 0.02
+    - _ColorGrainIntensity: 0.008
     - _Cull: 2
     - _Cutoff: 0.5
     - _CutoutThreshold: 0.98
@@ -111,18 +111,20 @@ Material:
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
-    - _G_Offset: 0.008
+    - _FlickerStrength: 0.0262
+    - _G_Offset: 0.005
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
     - _GrainIntensity: 0.02
-    - _LineDensity: 0
-    - _LineSpeed: 0.5
+    - _LineDensity: 250
+    - _LineSpeed: 5
+    - _LineStrength: 0.02
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueOffset: 0
-    - _R_Offset: 0.0065
+    - _R_Offset: 0.005
     - _ReceiveShadows: 1
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
@@ -139,13 +141,17 @@ Material:
     - _UseChromaAbb: 0
     - _UseColorGrain: 0
     - _UseFisheye: 0
+    - _UseFlicker: 0
     - _UseGlitch: 0
     - _UseGrain: 0
     - _UseLines: 0
     - _UseScanlines: 0
     - _UseTracking: 0
+    - _UseVerticalJump: 0
     - _UseWarp: 0
+    - _VerticalJumpStrength: 0.003
     - _WarpSpeed: 0
+    - _WarpStrength: 0.0332
     - _WorkflowMode: 1
     - _XRMotionVectorsPass: 1
     - _ZWrite: 1
@@ -153,7 +159,7 @@ Material:
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _ColorGrainRGB: {r: 1, g: 1, b: 1, a: 0}
+    - _ColorGrainRGB: {r: 5, g: 5, b: 5, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
