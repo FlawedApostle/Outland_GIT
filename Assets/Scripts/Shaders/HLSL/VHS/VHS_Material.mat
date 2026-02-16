@@ -96,11 +96,14 @@ Material:
     - _BlendModePreserveSpecular: 1
     - _BlurStrength: 0.39
     - _BumpScale: 1
+    - _BurstBrightness: 1.428
+    - _BurstInterval: 0.9
+    - _BurstSize: 0
     - _ChromaAmount: 0.0073
-    - _Chunkiness: 600
+    - _Chunkiness: 700
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
-    - _ColorGrainIntensity: 0.008
+    - _ColorGrainIntensity: 0.01
     - _Cull: 2
     - _Cutoff: 0.5
     - _CutoutThreshold: 0.98
@@ -113,11 +116,14 @@ Material:
     - _EnvironmentReflections: 1
     - _FlickerStrength: 0.0262
     - _G_Offset: 0.005
+    - _GlitchBurstIntensity: 0.141
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _GrainIntensity: 0.02
-    - _LineDensity: 250
+    - _GrainIntensity: 0.0294
+    - _LineDensity: 2225
+    - _LineRotate: 1.89
+    - _LineSineWarp: 0.015
     - _LineSpeed: 5
     - _LineStrength: 0.02
     - _Metallic: 0
@@ -133,7 +139,7 @@ Material:
     - _SrcBlendAlpha: 1
     - _Surface: 0
     - _TrackingJitter: 0.0249
-    - _TrackingSize: 10
+    - _TrackingSize: 10.97
     - _TrackingSpeed: 0.5
     - _UseBlackout: 0
     - _UseBleed: 0
@@ -145,6 +151,8 @@ Material:
     - _UseGlitch: 0
     - _UseGrain: 0
     - _UseLines: 0
+    - _UseRGBBurst: 0
+    - _UseRGBGlitch: 0
     - _UseScanlines: 0
     - _UseTracking: 0
     - _UseVerticalJump: 0
@@ -152,6 +160,9 @@ Material:
     - _VerticalJumpStrength: 0.003
     - _WarpSpeed: 0
     - _WarpStrength: 0.0332
+    - _WaveIntensity: 0.61
+    - _WaveSize: 25.01
+    - _WaveSpeed: 6.28
     - _WorkflowMode: 1
     - _XRMotionVectorsPass: 1
     - _ZWrite: 1

@@ -21,6 +21,12 @@ Shader "Hidden/VHS_Final_Master"
         _TrackingSize("Glitch Band Size", Range(0, 20)) = 10.0
         [Toggle(_USE_BLACKOUT)] _UseBlackout("Enable Random Blackout", Float) = 1
         _CutoutThreshold("Blackout Chance", Range(0.9, 1.0)) = 0.98
+        
+        // NEW FEATURE: RGB GLITCH BURSTS (Child of Glitch)
+        [Toggle(_USE_RGB_BURST)] _UseRGBBurst("Enable Color Bursts", Float) = 0
+        _BurstSize("Burst Height", Range(0, 1)) = 0.1
+        _BurstInterval("Burst Frequency", Range(0, 1)) = 0.95
+        _BurstBrightness("Burst Intensity", Range(0, 2)) = 1.0
 
         [Header(4. Constant RGB Split)]
         [Toggle(_USE_CHROMA)] _UseChroma("Enable Constant Split", Float) = 0
@@ -41,18 +47,19 @@ Shader "Hidden/VHS_Final_Master"
         [Toggle(_USE_LINES_ON)] _UseLines("Enable Scanlines", Float) = 1
         _LineDensity("Line Density", Float) = 200
         _LineSpeed("Line Speed", Float) = 0.5
-        // SCANLINE SETTINGS
         _LineStrength("Scanline Strength", Range(0, 1)) = 0.1
+        
+        // NEW FEATURE: SCANLINE ROTATION & BEND
+        _LineRotate("Line Rotation", Range(0, 6.28)) = 0 
+        _LineSineWarp("Line Sine Bend", Range(0, 0.1)) = 0
+
         [Toggle(_USE_WARP_ON)] _UseWarp("Enable Line Warp", Float) = 0
         _WarpStrength("Warp Strength", Range(0, 0.05)) = 0.01
         _WarpSpeed("Warp Speed", Float) = 1.0
-        // FLICKER SETTINGS
         [Toggle(_USE_FLICKER_ON)] _UseFlicker("Enable Flicker", Float) = 0
         _FlickerStrength("Flicker Strength", Range(0, 0.2)) = 0.05
-        // VERTICAL JUMP SETTINGS
         [Toggle(_USE_VERTICAL_JUMP)] _UseVerticalJump("Enable Vertical Jump", Float) = 0
         _VerticalJumpStrength("Vertical Jump Strength", Range(0, 0.1)) = 0.02
-
 
         [Header(7. Chromatic Color Grain)]
         [Toggle(_USE_COLOR_GRAIN)] _UseColorGrain("Enable RGB Fuzzy Grain", Float) = 0
@@ -75,161 +82,152 @@ Shader "Hidden/VHS_Final_Master"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.core/Runtime/Utilities/Blit.hlsl"
 
-            // Switched to _local to prevent keyword clashing (stops the glitches)
             #pragma shader_feature_local _USE_FISHEYE_ON
             #pragma shader_feature_local _USE_CHROMA_ABB
             #pragma shader_feature_local _USE_GLITCH_ON
+            #pragma shader_feature_local _USE_RGB_BURST
             #pragma shader_feature_local _USE_BLACKOUT
             #pragma shader_feature_local _USE_CHROMA
             #pragma shader_feature_local _USE_BLEED
             #pragma shader_feature_local _USE_GRAIN_ON
             #pragma shader_feature_local _USE_LINES_ON
-            #pragma shader_feature_local _USE_COLOR_GRAIN
             #pragma shader_feature_local _USE_WARP_ON
             #pragma shader_feature_local _USE_FLICKER_ON
             #pragma shader_feature_local _USE_VERTICAL_JUMP
+            #pragma shader_feature_local _USE_COLOR_GRAIN
 
-
-            float _DistortionStrength, _BlurStrength, _Zoom, _AbbIntensity;         // FISHEYE
-            float _TrackingSpeed, _TrackingSize, _CutoutThreshold;                  // TRACKING GLITCH
-            float _R_Offset, _G_Offset, _B_Offset;                                  // CHANNELS
-            float _BleedAmount, _BleedR, _BleedG, _BleedB;                          // BLEEDING
-            float _GrainIntensity, _LineDensity, _LineSpeed;                        // GRAIN
-            float _ColorGrainIntensity, _Chunkiness;                                // COLOR GRAIN SIZE
-            float4 _ColorGrainRGB;                                                  // COLOR GRAIN RGB
-            float _LineStrength;
-            float _WarpStrength, _WarpSpeed;
-            float _FlickerStrength;
-            float _VerticalJumpStrength;
-
+            float _DistortionStrength, _BlurStrength, _Zoom, _AbbIntensity;
+            float _TrackingSpeed, _TrackingSize, _CutoutThreshold;
+            float _BurstSize, _BurstInterval, _BurstBrightness;
+            float _R_Offset, _G_Offset, _B_Offset;
+            float _BleedAmount, _BleedR, _BleedG, _BleedB;
+            float _GrainIntensity, _LineDensity, _LineSpeed, _LineStrength;
+            float _LineRotate, _LineSineWarp;
+            float _ColorGrainIntensity, _Chunkiness;
+            float4 _ColorGrainRGB;
+            float _WarpStrength, _WarpSpeed, _FlickerStrength, _VerticalJumpStrength;
 
             float Noise(float2 uv) {
                 return frac(sin(dot(uv, float2(12.9898, 78.233))) * 43758.5453);
             }
-          half4 Frag(Varyings input) : SV_Target
-{
-    float2 uv = input.texcoord;
-    float2 distortedUV = uv;
 
-    // --- Stabilized time for noise ---
-    float t_stable = frac(_Time.y);
+            half4 Frag(Varyings input) : SV_Target
+            {
+                float2 uv = input.texcoord;
+                float2 distortedUV = uv;
+                float t_stable = frac(_Time.y);
 
-    // 1. BLACKOUT (highest priority)
-    #ifdef _USE_BLACKOUT
-    if(Noise(float2(t_stable, 0)) > _CutoutThreshold)
-        return half4(0,0,0,1);
-    #endif
+                // 1. BLACKOUT
+                #ifdef _USE_BLACKOUT
+                if(Noise(float2(t_stable, 0)) > _CutoutThreshold) return half4(0,0,0,1);
+                #endif
 
-    // 2. FISHEYE (lens distortion) – ORIGINAL CODE KEPT
-    #ifdef _USE_FISHEYE_ON
-    float2 centeredUV = uv - 0.5;
-    float dist = dot(centeredUV, centeredUV); // <-- your original dot method
-    distortedUV = 0.5 + (centeredUV * _Zoom) * (1.0 + _DistortionStrength * dist);
-    #endif
+                // 2. FISHEYE
+                #ifdef _USE_FISHEYE_ON
+                float2 centeredUV = uv - 0.5;
+                float dist = dot(centeredUV, centeredUV);
+                distortedUV = 0.5 + (centeredUV * _Zoom) * (1.0 + _DistortionStrength * dist);
+                #endif
 
-    // 3. VERTICAL JUMP (rides on fisheye) – NEW ADDITION
-    #ifdef _USE_VERTICAL_JUMP
-    float jump = step(0.95, Noise(float2(t_stable * 0.5, 0))) * _VerticalJumpStrength;
-    distortedUV.y += jump;
-    #endif
+                // 3. VERTICAL JUMP
+                #ifdef _USE_VERTICAL_JUMP
+                float jump = step(0.95, Noise(float2(t_stable * 0.5, 0))) * _VerticalJumpStrength;
+                distortedUV.y += jump;
+                #endif
 
+                // 4. TRACKING GLITCH
+                #ifdef _USE_GLITCH_ON
+                float t_scroll = _Time.y * _TrackingSpeed;
+                float trackingBar = sin(uv.y * _TrackingSize - t_scroll);
+                trackingBar = smoothstep(0.9, 1.0, trackingBar);
+                distortedUV.x += trackingBar * 0.02 * Noise(float2(t_stable, uv.y));
+                #endif
 
-    // 4. TRACKING GLITCH (scrolling bands)
-    #ifdef _USE_GLITCH_ON
-    float t_scroll = _Time.y * _TrackingSpeed;
-    float trackingBar = sin(uv.y * _TrackingSize - t_scroll);
-    trackingBar = smoothstep(0.9, 1.0, trackingBar);
-    distortedUV.x += trackingBar * 0.02 * Noise(float2(t_stable, uv.y));
-    #endif
+                // 5. CHANNELS
+                float2 r_uv = distortedUV; float2 g_uv = distortedUV; float2 b_uv = distortedUV;
+                #ifdef _USE_CHROMA_ABB
+                float2 abbDir = distortedUV - 0.5;
+                r_uv += abbDir * _AbbIntensity; b_uv -= abbDir * _AbbIntensity;
+                #endif
+                #ifdef _USE_CHROMA
+                r_uv.x += _R_Offset; g_uv.x += _G_Offset; b_uv.x += _B_Offset;
+                #endif
 
-    // 5. CHANNELS (RGB offsets) – ORIGINAL + NEW
-    float2 r_uv = distortedUV;
-    float2 g_uv = distortedUV;
-    float2 b_uv = distortedUV;
+                // 6. SAMPLE
+                half4 color = 0;
+                #ifdef _USE_FISHEYE_ON
+                float distForBlur = length(uv - 0.5);
+                float blur = distForBlur * _BlurStrength * 0.005;
+                float2 offsets[4] = { float2(blur, blur), float2(-blur, blur), float2(blur, -blur), float2(-blur, -blur) };
+                for(int i = 0; i < 4; i++) {
+                    color.r += SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, r_uv + offsets[i]).r;
+                    color.g += SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, g_uv + offsets[i]).g;
+                    color.b += SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, b_uv + offsets[i]).b;
+                }
+                color /= 4.0;
+                #else
+                color.r = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, r_uv).r;
+                color.g = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, g_uv).g;
+                color.b = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, b_uv).b;
+                #endif
+                color.a = 1.0;
 
-    // Radial chromatic aberration – new, added after fisheye + jump
-    #ifdef _USE_CHROMA_ABB
-    float2 abbDir = distortedUV - 0.5;
-    r_uv += abbDir * _AbbIntensity;
-    b_uv -= abbDir * _AbbIntensity;
-    #endif
+                // --- NEW CHILD OF GLITCH: RGB BURST ---
+                #ifdef _USE_RGB_BURST
+                float burstChance = Noise(float2(floor(_Time.y * 2.0), 0));
+                if(burstChance > _BurstInterval) {
+                    float burstY = Noise(float2(floor(_Time.y * 5.0), 1.1));
+                    float burstMask = smoothstep(_BurstSize, 0.0, abs(uv.y - burstY));
+                    float3 bCol = float3(Noise(uv + t_stable), Noise(uv + t_stable + 0.3), Noise(uv + t_stable + 0.6));
+                    color.rgb += bCol * burstMask * _BurstBrightness;
+                }
+                #endif
 
-    // Constant RGB offset – new, additive
-    #ifdef _USE_CHROMA
-    r_uv.x += _R_Offset;
-    g_uv.x += _G_Offset;
-    b_uv.x += _B_Offset;
-    #endif
+                // 7. COLOR BLEED
+                #ifdef _USE_BLEED
+                float2 bleedUV = distortedUV + float2(_BleedAmount, 0);
+                half4 smearCol = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, bleedUV);
+                color.r = lerp(color.r, max(color.r, smearCol.r), _BleedR);
+                color.g = lerp(color.g, max(color.g, smearCol.g), _BleedG);
+                color.b = lerp(color.b, max(color.b, smearCol.b), _BleedB);
+                #endif
 
+                // 8. CHROMATIC COLOR GRAIN (Your original logic) 
+                #ifdef _USE_COLOR_GRAIN
+                float2 chunkyUV = floor(uv * _Chunkiness) / _Chunkiness;
+                float rN = Noise(chunkyUV + t_stable + 0.11);
+                float gN = Noise(chunkyUV + t_stable + 0.33);
+                float bN = Noise(chunkyUV + t_stable + 0.55);
+                float3 fuzzyNoise = (float3(rN, gN, bN) - 0.5) * _ColorGrainIntensity;
+                color.rgb += fuzzyNoise * _ColorGrainRGB.rgb;
+                #endif
 
-    // 6. SAMPLE & RADIAL BLUR
-    half4 color = 0;
-    #ifdef _USE_FISHEYE_ON
-    float distForBlur = length(uv - 0.5);
-    float blur = distForBlur * _BlurStrength * 0.005;
-    float2 offsets[4] = { float2(blur, blur), float2(-blur, blur), float2(blur, -blur), float2(-blur, -blur) };
-    for(int i = 0; i < 4; i++)
-    {
-        color.r += SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, r_uv + offsets[i]).r;
-        color.g += SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, g_uv + offsets[i]).g;
-        color.b += SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, b_uv + offsets[i]).b;
-    }
-    color /= 4.0;
-    #else
-    color.r = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, r_uv).r;
-    color.g = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, g_uv).g;
-    color.b = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, b_uv).b;
-    #endif
-    color.a = 1.0;
+                // 9. BW GRAIN
+                #ifdef _USE_GRAIN_ON
+                color.rgb += (Noise(uv + t_stable) - 0.5) * _GrainIntensity;
+                #endif
 
-    // 7. COLOR BLEED
-    #ifdef _USE_BLEED
-    float2 bleedUV = distortedUV + float2(_BleedAmount, 0);
-    half4 smearCol = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, bleedUV);
-    color.r = lerp(color.r, max(color.r, smearCol.r), _BleedR);
-    color.g = lerp(color.g, max(color.g, smearCol.g), _BleedG);
-    color.b = lerp(color.b, max(color.b, smearCol.b), _BleedB);
-    #endif
+                // 10. SCANLINES (Updated with Rotation/Sine Bend)
+                #ifdef _USE_LINES_ON
+                float cosR = cos(_LineRotate); float sinR = sin(_LineRotate);
+                float2 rotatedUV = float2(uv.x * cosR - uv.y * sinR, uv.x * sinR + uv.y * cosR);
+                float lineWarp = sin(uv.x * 10.0 + _Time.y) * _LineSineWarp;
+                float lines = sin((rotatedUV.y + lineWarp) * _LineDensity - _Time.y * _LineSpeed);
+                #ifdef _USE_WARP_ON
+                lines += sin(uv.y * 10 + _Time.y * _WarpSpeed) * _WarpStrength;
+                #endif
+                color.rgb -= smoothstep(0.8, 1.0, lines) * _LineStrength;
+                #endif
 
-    // 8. CHROMATIC COLOR GRAIN
-    #ifdef _USE_COLOR_GRAIN
-    float2 chunkyUV = floor(uv * _Chunkiness) / _Chunkiness;
-    float rN = Noise(chunkyUV + t_stable + 0.11);
-    float gN = Noise(chunkyUV + t_stable + 0.33);
-    float bN = Noise(chunkyUV + t_stable + 0.55);
-    float3 fuzzyNoise = (float3(rN, gN, bN) - 0.5) * _ColorGrainIntensity;
-    color.rgb += fuzzyNoise * _ColorGrainRGB.rgb;
-    #endif
+                // 11. FLICKER
+                #ifdef _USE_FLICKER_ON
+                color.rgb += (Noise(float2(t_stable * 10, 0)) - 0.5) * _FlickerStrength;
+                #endif
 
-    // 9. BW GRAIN
-    #ifdef _USE_GRAIN_ON
-    color.rgb += (Noise(uv + t_stable) - 0.5) * _GrainIntensity;
-    #endif
-
-    // 10. SCANLINES (warp only affects scanlines)
-    #ifdef _USE_LINES_ON
-    float lines = sin(uv.y * _LineDensity - _Time.y * _LineSpeed);
-    #ifdef _USE_WARP_ON
-    float warp = sin(uv.y * 10 + _Time.y * _WarpSpeed) * _WarpStrength;
-    lines += warp; // only affects scanlines
-    #endif
-    color.rgb -= smoothstep(0.8, 1.0, lines) * _LineStrength;
-    #endif
-
-
-    // 11. FLICKER
-    #ifdef _USE_FLICKER_ON
-    float flicker = (Noise(float2(t_stable * 10, 0)) - 0.5) * _FlickerStrength;
-    color.rgb += flicker;
-    #endif
-
-    return color;
-}
-
+                return color;
+            }
             ENDHLSL
         }
     }
-
-    // Scirptable Renderer Feature
     CustomEditor "VHSInspector"
 }
