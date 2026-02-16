@@ -1,5 +1,11 @@
-// THIS SCRIPT CONTAINS IMPORTANT NOTES DENOTED AT THE START IN CAPS - THEY ARE NOT TO REMOVED
-Shader "Hidden/VHS_Final_Master"
+// ================================================================================
+// COPYRIGHT (C) 2026 [YOUR NAME/BRAND]. ALL RIGHTS RESERVED.
+// This shader is provided for use in projects but may not be resold or 
+// redistributed as source code without express permission.
+// ================================================================================
+
+// Shader "Hidden/VHS_Final_Master"
+Shader "VHS_Effects/VHS_Final_Master" // CHANGED FROM HIDDEN
 {
     Properties
     {
