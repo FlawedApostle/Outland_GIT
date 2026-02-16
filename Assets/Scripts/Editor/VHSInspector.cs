@@ -4,7 +4,7 @@ using UnityEditor;
 public class VHSInspector : ShaderGUI
 {
     bool showLens = true; bool showChroma = true; bool showGlitch = true;
-    bool showConstant = true; bool showBleed = true; bool showGrain = true; bool showFuzzy = true;
+    bool showConstant = true; bool showBleed = true; bool showGrain = true; bool showFuzzy = true; bool showJitter;
 
     public override void OnGUI(MaterialEditor materialEditor, MaterialProperty[] properties)
     {
@@ -81,6 +81,16 @@ public class VHSInspector : ShaderGUI
             materialEditor.ShaderProperty(FindProperty("_ColorGrainRGB", properties), "RGB Balance");
             materialEditor.ShaderProperty(FindProperty("_Chunkiness", properties), "Grain Chunkiness");
         });
+
+
+        // 8. FRAME JITTER
+        // 8. JITTER (NEW)
+        DrawSection("8. Frame Jitter", ref showJitter, () => {
+            materialEditor.ShaderProperty(FindProperty("_UseJitter", properties), "Enable Frame Jitter");
+            materialEditor.ShaderProperty(FindProperty("_JitterAmount", properties), "Jitter Intensity");
+            materialEditor.ShaderProperty(FindProperty("_JitterSpeed", properties), "Jitter Speed");
+        });
+
 
         materialEditor.RenderQueueField();
     }

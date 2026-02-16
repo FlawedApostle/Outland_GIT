@@ -78,6 +78,11 @@ Shader "VHS_Effects/VHS_Final_Master" // CHANGED FROM HIDDEN
         _ColorGrainIntensity("Overall Fuzzy Strength", Range(0, 0.5)) = 0.1
         _ColorGrainRGB("RGB Balance (R, G, B)", Vector) = (1, 1, 1, 0)
         _Chunkiness("Grain Chunkiness", Range(1, 1000)) = 500
+
+        [Header(8. Frame Jitter)]
+        [Toggle(_USE_JITTER)] _UseJitter("Enable Frame Jitter", Float) = 0
+        _JitterAmount("Jitter Intensity", Range(0, 0.01)) = 0.001
+        _JitterSpeed("Jitter Speed", Float) = 20.0
     }
 
     SubShader
@@ -109,6 +114,7 @@ Shader "VHS_Effects/VHS_Final_Master" // CHANGED FROM HIDDEN
             #pragma shader_feature_local _USE_FLICKER_ON
             #pragma shader_feature_local _USE_VERTICAL_JUMP
             #pragma shader_feature_local _USE_COLOR_GRAIN
+            #pragma shader_feature_local _USE_JITTER
 
             float _DistortionStrength, _BlurStrength, _Zoom, _AbbIntensity;
             float _TrackingSpeed, _TrackingSize, _TrackingAmount, _TrackingSpacing, _CutoutThreshold;
@@ -121,7 +127,8 @@ Shader "VHS_Effects/VHS_Final_Master" // CHANGED FROM HIDDEN
             float _LineRotate, _LineSineWarp;
             float _ColorGrainIntensity, _Chunkiness;
             float4 _ColorGrainRGB;
-            float _WarpStrength, _WarpSpeed, _FlickerStrength, _FlickerSpeed, _VerticalJumpStrength;
+            float _WarpStrength, _WarpSpeed, _FlickerStrength, _FlickerSpeed, _VerticalJumpStrength , _JitterSpeed;
+            float _JitterAmount;
 
             float Noise(float2 uv) {
                 return frac(sin(dot(uv, float2(12.9898, 78.233))) * 43758.5453);
@@ -164,6 +171,13 @@ Shader "VHS_Effects/VHS_Final_Master" // CHANGED FROM HIDDEN
                 float pNoise = Noise(distortedUV + t_stable);
                 glitchAddColor = trackingBar * pNoise * _GlitchRGB.rgb;
                 #endif
+                #endif
+
+                // 13. FRAME JITTER (Vertical/Horizontal micro-shake) - has to be above SAMPLE because SAMPLE is updating distortedUV .. aka uv
+                #ifdef _USE_JITTER
+                float jitterTime = floor(_Time.y * _JitterSpeed);
+                distortedUV.x += (Noise(float2(jitterTime, 0)) - 0.5) * _JitterAmount;
+                distortedUV.y += (Noise(float2(0, jitterTime)) - 0.5) * _JitterAmount;
                 #endif
 
                 // 5. CHANNELS (Restored CA and Constant Split)
