@@ -189,4 +189,7 @@ Shader "Hidden/VHS_Final_Master"
             ENDHLSL
         }
     }
+
+    // Scirptable Renderer Feature
+    CustomEditor "VHSInspector"
 }

@@ -1,5 +1,21 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-7593835967904025843
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d6229947dbfe424c9b596c0d08192e0, type: 3}
+  m_Name: VHSFeature
+  m_EditorClassIdentifier: Assembly-CSharp::VHSFeature
+  m_Active: 1
+  settings:
+    vhsMaterial: {fileID: 2100000, guid: f57eff8991de1694384749283b51f22a, type: 2}
+    renderPassEvent: 600
 --- !u!114 &-2303187256246467638
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12,7 +28,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b00045f12942b46c698459096c89274e, type: 3}
   m_Name: FullScreenPassRendererFeatureOldGUID
   m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::FullScreenPassRendererFeature_OldGUID
-  m_Active: 1
+  m_Active: 0
   injectionPoint: 600
   fetchColorBuffer: 1
   requirements: 0
@@ -46,7 +62,8 @@ MonoBehaviour:
     probeVolumeBlendStatesCS: {fileID: 0}
   m_RendererFeatures:
   - {fileID: -2303187256246467638}
-  m_RendererFeatureMap: ca0339ac646f09e0
+  - {fileID: -7593835967904025843}
+  m_RendererFeatureMap: ca0339ac646f09e00df37eca6b469d96
   m_UseNativeRenderPass: 0
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
