@@ -96,9 +96,10 @@ Material:
     - _BlendModePreserveSpecular: 1
     - _BlurStrength: 0.39
     - _BumpScale: 1
-    - _BurstBrightness: 1.428
-    - _BurstInterval: 0.9
-    - _BurstSize: 0
+    - _BurstBrightness: 0.035
+    - _BurstInterval: 0.629
+    - _BurstScroll: 0
+    - _BurstSize: 0.601
     - _ChromaAmount: 0.0073
     - _Chunkiness: 700
     - _ClearCoatMask: 0
@@ -114,9 +115,11 @@ Material:
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
+    - _FlickerSpeed: 10
     - _FlickerStrength: 0.0262
     - _G_Offset: 0.005
     - _GlitchBurstIntensity: 0.141
+    - _GlitchTimer: 1
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
@@ -138,8 +141,10 @@ Material:
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
+    - _TrackingAmount: 1.82
     - _TrackingJitter: 0.0249
-    - _TrackingSize: 10.97
+    - _TrackingSize: 20
+    - _TrackingSpacing: 8.06
     - _TrackingSpeed: 0.5
     - _UseBlackout: 0
     - _UseBleed: 0
@@ -149,6 +154,7 @@ Material:
     - _UseFisheye: 0
     - _UseFlicker: 0
     - _UseGlitch: 0
+    - _UseGlitchColor: 0
     - _UseGrain: 0
     - _UseLines: 0
     - _UseRGBBurst: 0
@@ -169,9 +175,11 @@ Material:
     - _Zoom: 0.75
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _BurstColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _ColorGrainRGB: {r: 5, g: 5, b: 5, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _GlitchRGB: {r: 0.2, g: 0.3, b: 0.5, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

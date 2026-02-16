@@ -17,16 +17,23 @@ Shader "Hidden/VHS_Final_Master"
 
         [Header(3. Tracking Glitch and Damage)]
         [Toggle(_USE_GLITCH_ON)] _UseGlitch("Enable Damage", Float) = 1
-        _TrackingSpeed("Glitch Scroll Speed", Float) = 1.0
-        _TrackingSize("Glitch Band Size", Range(0, 20)) = 10.0
+        _TrackingSpeed("Band Scroll Speed", Float) = 1.0
+        _TrackingSize("Band Thickness", Range(0, 20)) = 10.0
+        _TrackingAmount("Number of Bands", Range(1, 10)) = 1.0
+        _TrackingSpacing("Band Spacing (Loop)", Range(0, 10)) = 1.0
+        [Toggle(_USE_GLITCH_COLOR)] _UseGlitchColor("Colorize Glitch Band", Float) = 0
+        _GlitchRGB("Glitch Band RGB", Vector) = (1,1,1,1)
+
         [Toggle(_USE_BLACKOUT)] _UseBlackout("Enable Random Blackout", Float) = 1
         _CutoutThreshold("Blackout Chance", Range(0.9, 1.0)) = 0.98
         
         // NEW FEATURE: RGB GLITCH BURSTS (Child of Glitch)
         [Toggle(_USE_RGB_BURST)] _UseRGBBurst("Enable Color Bursts", Float) = 0
+        [Toggle(_USE_BURST_SCROLL)] _BurstScroll("Make Burst Scroll", Float) = 0
         _BurstSize("Burst Height", Range(0, 1)) = 0.1
         _BurstInterval("Burst Frequency", Range(0, 1)) = 0.95
         _BurstBrightness("Burst Intensity", Range(0, 2)) = 1.0
+        _BurstColor("Burst RGB Color", Vector) = (1,1,1,1)
 
         [Header(4. Constant RGB Split)]
         [Toggle(_USE_CHROMA)] _UseChroma("Enable Constant Split", Float) = 0
@@ -48,8 +55,6 @@ Shader "Hidden/VHS_Final_Master"
         _LineDensity("Line Density", Float) = 200
         _LineSpeed("Line Speed", Float) = 0.5
         _LineStrength("Scanline Strength", Range(0, 1)) = 0.1
-        
-        // NEW FEATURE: SCANLINE ROTATION & BEND
         _LineRotate("Line Rotation", Range(0, 6.28)) = 0 
         _LineSineWarp("Line Sine Bend", Range(0, 0.1)) = 0
 
@@ -58,6 +63,7 @@ Shader "Hidden/VHS_Final_Master"
         _WarpSpeed("Warp Speed", Float) = 1.0
         [Toggle(_USE_FLICKER_ON)] _UseFlicker("Enable Flicker", Float) = 0
         _FlickerStrength("Flicker Strength", Range(0, 0.2)) = 0.05
+        _FlickerSpeed("Flicker Speed", Float) = 10.0
         [Toggle(_USE_VERTICAL_JUMP)] _UseVerticalJump("Enable Vertical Jump", Float) = 0
         _VerticalJumpStrength("Vertical Jump Strength", Range(0, 0.1)) = 0.02
 
@@ -85,7 +91,9 @@ Shader "Hidden/VHS_Final_Master"
             #pragma shader_feature_local _USE_FISHEYE_ON
             #pragma shader_feature_local _USE_CHROMA_ABB
             #pragma shader_feature_local _USE_GLITCH_ON
+            #pragma shader_feature_local _USE_GLITCH_COLOR
             #pragma shader_feature_local _USE_RGB_BURST
+            #pragma shader_feature_local _USE_BURST_SCROLL
             #pragma shader_feature_local _USE_BLACKOUT
             #pragma shader_feature_local _USE_CHROMA
             #pragma shader_feature_local _USE_BLEED
@@ -97,15 +105,17 @@ Shader "Hidden/VHS_Final_Master"
             #pragma shader_feature_local _USE_COLOR_GRAIN
 
             float _DistortionStrength, _BlurStrength, _Zoom, _AbbIntensity;
-            float _TrackingSpeed, _TrackingSize, _CutoutThreshold;
+            float _TrackingSpeed, _TrackingSize, _TrackingAmount, _TrackingSpacing, _CutoutThreshold;
+            float4 _GlitchRGB;
             float _BurstSize, _BurstInterval, _BurstBrightness;
+            float4 _BurstColor;
             float _R_Offset, _G_Offset, _B_Offset;
             float _BleedAmount, _BleedR, _BleedG, _BleedB;
             float _GrainIntensity, _LineDensity, _LineSpeed, _LineStrength;
             float _LineRotate, _LineSineWarp;
             float _ColorGrainIntensity, _Chunkiness;
             float4 _ColorGrainRGB;
-            float _WarpStrength, _WarpSpeed, _FlickerStrength, _VerticalJumpStrength;
+            float _WarpStrength, _WarpSpeed, _FlickerStrength, _FlickerSpeed, _VerticalJumpStrength;
 
             float Noise(float2 uv) {
                 return frac(sin(dot(uv, float2(12.9898, 78.233))) * 43758.5453);
@@ -135,15 +145,22 @@ Shader "Hidden/VHS_Final_Master"
                 distortedUV.y += jump;
                 #endif
 
-                // 4. TRACKING GLITCH
+                // 4. TRACKING GLITCH (LOOPING BANDS)
+                float3 glitchAddColor = 0;
                 #ifdef _USE_GLITCH_ON
-                float t_scroll = _Time.y * _TrackingSpeed;
-                float trackingBar = sin(uv.y * _TrackingSize - t_scroll);
+                float wave = (distortedUV.y * _TrackingAmount) - (_Time.y * _TrackingSpeed);
+                float trackingBar = sin(wave * _TrackingSpacing);
                 trackingBar = smoothstep(0.9, 1.0, trackingBar);
-                distortedUV.x += trackingBar * 0.02 * Noise(float2(t_stable, uv.y));
+                
+                distortedUV.x += trackingBar * 0.03 * Noise(float2(t_stable, distortedUV.y));
+                
+                #ifdef _USE_GLITCH_COLOR
+                float pNoise = Noise(distortedUV + t_stable);
+                glitchAddColor = trackingBar * pNoise * _GlitchRGB.rgb;
+                #endif
                 #endif
 
-                // 5. CHANNELS
+                // 5. CHANNELS (Restored CA and Constant Split)
                 float2 r_uv = distortedUV; float2 g_uv = distortedUV; float2 b_uv = distortedUV;
                 #ifdef _USE_CHROMA_ABB
                 float2 abbDir = distortedUV - 0.5;
@@ -170,20 +187,22 @@ Shader "Hidden/VHS_Final_Master"
                 color.g = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, g_uv).g;
                 color.b = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, b_uv).b;
                 #endif
+                
+                color.rgb += glitchAddColor;
                 color.a = 1.0;
 
-                // --- NEW CHILD OF GLITCH: RGB BURST ---
+                // 7. RGB BURSTS (DO NOT TOUCH)
                 #ifdef _USE_RGB_BURST
                 float burstChance = Noise(float2(floor(_Time.y * 2.0), 0));
                 if(burstChance > _BurstInterval) {
-                    float burstY = Noise(float2(floor(_Time.y * 5.0), 1.1));
+                    float burstY = (_USE_BURST_SCROLL) ? frac(_Time.y * 1.5) : Noise(float2(floor(_Time.y * 5.0), 1.1));
                     float burstMask = smoothstep(_BurstSize, 0.0, abs(uv.y - burstY));
                     float3 bCol = float3(Noise(uv + t_stable), Noise(uv + t_stable + 0.3), Noise(uv + t_stable + 0.6));
-                    color.rgb += bCol * burstMask * _BurstBrightness;
+                    color.rgb += bCol * burstMask * _BurstBrightness * _BurstColor.rgb;
                 }
                 #endif
 
-                // 7. COLOR BLEED
+                // 8. COLOR BLEED
                 #ifdef _USE_BLEED
                 float2 bleedUV = distortedUV + float2(_BleedAmount, 0);
                 half4 smearCol = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, bleedUV);
@@ -192,7 +211,7 @@ Shader "Hidden/VHS_Final_Master"
                 color.b = lerp(color.b, max(color.b, smearCol.b), _BleedB);
                 #endif
 
-                // 8. CHROMATIC COLOR GRAIN (Your original logic) 
+                // 9. CHROMATIC COLOR GRAIN (Restored Fuzzy)
                 #ifdef _USE_COLOR_GRAIN
                 float2 chunkyUV = floor(uv * _Chunkiness) / _Chunkiness;
                 float rN = Noise(chunkyUV + t_stable + 0.11);
@@ -202,12 +221,12 @@ Shader "Hidden/VHS_Final_Master"
                 color.rgb += fuzzyNoise * _ColorGrainRGB.rgb;
                 #endif
 
-                // 9. BW GRAIN
+                // 10. BW GRAIN
                 #ifdef _USE_GRAIN_ON
                 color.rgb += (Noise(uv + t_stable) - 0.5) * _GrainIntensity;
                 #endif
 
-                // 10. SCANLINES (Updated with Rotation/Sine Bend)
+                // 11. SCANLINES & WARP
                 #ifdef _USE_LINES_ON
                 float cosR = cos(_LineRotate); float sinR = sin(_LineRotate);
                 float2 rotatedUV = float2(uv.x * cosR - uv.y * sinR, uv.x * sinR + uv.y * cosR);
@@ -219,9 +238,9 @@ Shader "Hidden/VHS_Final_Master"
                 color.rgb -= smoothstep(0.8, 1.0, lines) * _LineStrength;
                 #endif
 
-                // 11. FLICKER
+                // 12. FLICKER
                 #ifdef _USE_FLICKER_ON
-                color.rgb += (Noise(float2(t_stable * 10, 0)) - 0.5) * _FlickerStrength;
+                color.rgb += (Noise(float2(t_stable * _FlickerSpeed, 0)) - 0.5) * _FlickerStrength;
                 #endif
 
                 return color;
