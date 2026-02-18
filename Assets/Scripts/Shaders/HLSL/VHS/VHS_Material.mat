@@ -83,15 +83,15 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _AbbIntensity: 0.5
+    - _AbbIntensity: 0.05
     - _AddPrecomputedVelocity: 0
     - _AlphaClip: 0
     - _AlphaToMask: 0
     - _B_Offset: 0.005
-    - _BleedAmount: 0.005
-    - _BleedB: 0.5
-    - _BleedG: 0.5
-    - _BleedR: 0.5
+    - _BleedAmount: 0
+    - _BleedB: 0.8
+    - _BleedG: 0.8
+    - _BleedR: 0.8
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _BlurStrength: 1
@@ -116,7 +116,7 @@ Material:
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
-    - _FlarePower: 1
+    - _FlarePower: 1.7
     - _FlickerSpeed: 10
     - _FlickerStrength: 0.0262
     - _G_Offset: 0.005
@@ -148,7 +148,7 @@ Material:
     - _TrackingAmount: 1
     - _TrackingJitter: 0.0249
     - _TrackingSize: 20
-    - _TrackingSpacing: 6.56
+    - _TrackingSpacing: 0.36
     - _TrackingSpeed: 0.5
     - _UseBlackout: 0
     - _UseBleed: 0

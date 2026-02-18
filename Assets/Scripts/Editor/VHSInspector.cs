@@ -25,8 +25,17 @@ public class VHSInspector : ShaderGUI
             materialEditor.ShaderProperty(FindProperty("_FlarePower", properties),   "Flare Strength (power)");
         });
 
-        // 3. TRACKING
-        DrawSection("3. Tracking & Damage", ref showGlitch, () => {
+        // 3. BLEED
+        DrawSection("3. Color Bleeding", ref showBleed, () => {
+            materialEditor.ShaderProperty(FindProperty("_UseBleed", properties), "Enable Color Bleed");
+            materialEditor.ShaderProperty(FindProperty("_BleedAmount", properties), "Bleed Range");
+            materialEditor.ShaderProperty(FindProperty("_BleedR", properties), "Red Intensity");
+            materialEditor.ShaderProperty(FindProperty("_BleedG", properties), "Green Intensity");
+            materialEditor.ShaderProperty(FindProperty("_BleedB", properties), "Blue Intensity");
+        });
+
+        // 4. TRACKING
+        DrawSection("4. Tracking & Damage", ref showGlitch, () => {
             materialEditor.ShaderProperty(FindProperty("_UseGlitch", properties), "Enable Damage");
             materialEditor.ShaderProperty(FindProperty("_TrackingSpeed", properties), "Scroll Speed");
             materialEditor.ShaderProperty(FindProperty("_TrackingAmount", properties), "Band Count (Lines)");
@@ -46,22 +55,15 @@ public class VHSInspector : ShaderGUI
             materialEditor.ShaderProperty(FindProperty("_UseBlackout", properties), "Enable Blackout");
         });
 
-        // 4. CONSTANT SPLIT
-        DrawSection("4. Constant RGB Split", ref showConstant, () => {
+        // 5. CONSTANT SPLIT
+        DrawSection("5. Constant RGB Split", ref showConstant, () => {
             materialEditor.ShaderProperty(FindProperty("_UseChroma", properties), "Enable Constant Split");
             materialEditor.ShaderProperty(FindProperty("_R_Offset", properties), "Red Offset");
             materialEditor.ShaderProperty(FindProperty("_G_Offset", properties), "Green Offset");
             materialEditor.ShaderProperty(FindProperty("_B_Offset", properties), "Blue Offset");
         });
 
-        // 5. BLEED
-        DrawSection("5. Color Bleeding", ref showBleed, () => {
-            materialEditor.ShaderProperty(FindProperty("_UseBleed", properties), "Enable Color Bleed");
-            materialEditor.ShaderProperty(FindProperty("_BleedAmount", properties), "Bleed Range");
-            materialEditor.ShaderProperty(FindProperty("_BleedR", properties), "Red Intensity");
-            materialEditor.ShaderProperty(FindProperty("_BleedG", properties), "Green Intensity");
-            materialEditor.ShaderProperty(FindProperty("_BleedB", properties), "Blue Intensity");
-        });
+
 
         // 6. STATIC
         DrawSection("6. Static and Lines", ref showGrain, () => {

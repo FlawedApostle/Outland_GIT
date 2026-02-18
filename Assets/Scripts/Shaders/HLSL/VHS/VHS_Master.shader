@@ -14,20 +14,27 @@ Shader "VHS_Effects/VHS_Final_Master" // CHANGED FROM HIDDEN
     Properties
     {
         _MainTex("Texture", 2D) = "white" {}
-        
+        // FISH EYE
         [Header(1. Lens Distortion and Edge Blur)]
         [Toggle(_USE_FISHEYE_ON)] _UseFisheye("Enable Lens FX", Float) = 1
         _DistortionStrength("Lens Bulge", Float) = 0.5
         _BlurStrength("Edge Blur Intensity", Range(0, 5)) = 1.0
         _Zoom("Zoom", Float) = 0.9
         _DistortionPower("Lens Edge Sharpness", Range(1, 5)) = 2.0              // pow() formula
-
+        // CHROMATIC ABB
         [Header(2. Chromatic Aberration and Flare)]
         [Toggle(_USE_CHROMA_ABB)] _UseChromaAbb("Enable Radial Flare", Float) = 0
         _AbbIntensity("Flare Strength", Range(0, 0.5)) = 0.1
         _FlarePower("Flare Sharpness (Pow)", Range(1, 10)) = 3.0
-
-        [Header(3. Tracking Glitch and Damage)]
+        // BLEEDING COLOR
+        [Header(3. Color Bleeding)]
+        [Toggle(_USE_BLEED)] _UseBleed("Enable Color Bleed", Float) = 0
+        _BleedAmount("Bleed Range", Range(0, 0.1)) = 0.02
+        _BleedR("Red Intensity", Range(0, 1)) = 1.0
+        _BleedG("Green Intensity", Range(0, 1)) = 0.0
+        _BleedB("Blue Intensity", Range(0, 1)) = 0.5
+        // GLITCH TAPE 'HEAD-CLOGGING'
+        [Header(4. Tracking Glitch and Damage)]
         [Toggle(_USE_GLITCH_ON)] _UseGlitch("Enable Damage", Float) = 1
         _TrackingSpeed("Band Scroll Speed", Float) = 1.0
         _TrackingSize("Band Thickness", Range(0, 20)) = 10.0
@@ -35,11 +42,11 @@ Shader "VHS_Effects/VHS_Final_Master" // CHANGED FROM HIDDEN
         _TrackingSpacing("Band Spacing (Loop)", Range(0, 10)) = 1.0
         [Toggle(_USE_GLITCH_COLOR)] _UseGlitchColor("Colorize Glitch Band", Float) = 0
         _GlitchRGB("Glitch Band RGB", Vector) = (1,1,1,1)
-
+        // BLACKOUT
         [Toggle(_USE_BLACKOUT)] _UseBlackout("Enable Random Blackout", Float) = 1
         _CutoutThreshold("Blackout Chance", Range(0.9, 1.0)) = 0.98
         
-        // NEW FEATURE: RGB GLITCH BURSTS (Child of Glitch)
+        // GLITCH CHILD - RGB GLITCH BURSTS
         [Toggle(_USE_RGB_BURST)] _UseRGBBurst("Enable Color Bursts", Float) = 0
         [Toggle(_USE_BURST_SCROLL)] _BurstScroll("Make Burst Scroll", Float) = 0
         _BurstSize("Burst Height", Range(0, 1)) = 0.1
@@ -47,19 +54,13 @@ Shader "VHS_Effects/VHS_Final_Master" // CHANGED FROM HIDDEN
         _BurstBrightness("Burst Intensity", Range(0, 2)) = 1.0
         _BurstColor("Burst RGB Color", Vector) = (1,1,1,1)
 
-        [Header(4. Constant RGB Split)]
+        // RGB SPLITTING
+        [Header(5. Constant RGB Split)]
         [Toggle(_USE_CHROMA)] _UseChroma("Enable Constant Split", Float) = 0
         _R_Offset("Red Offset", Range(-0.05, 0.05)) = 0.005
         _G_Offset("Green Offset", Range(-0.05, 0.05)) = 0.0
         _B_Offset("Blue Offset", Range(-0.05, 0.05)) = -0.005
 
-        [Header(5. Color Bleeding)]
-        [Toggle(_USE_BLEED)] _UseBleed("Enable Color Bleed", Float) = 0
-        _BleedAmount("Bleed Range", Range(0, 0.1)) = 0.02
-        _BleedR("Red Intensity", Range(0, 1)) = 1.0
-        _BleedG("Green Intensity", Range(0, 1)) = 0.0
-        _BleedB("Blue Intensity", Range(0, 1)) = 0.5
-        
         [Header(6. Static and Lines)]
         [Toggle(_USE_GRAIN_ON)] _UseGrain("Enable BW Grain", Float) = 1
         _GrainIntensity("Static Grain Amount", Range(0, 0.2)) = 0.05
@@ -261,13 +262,19 @@ Shader "VHS_Effects/VHS_Final_Master" // CHANGED FROM HIDDEN
                 }
                 #endif
 
-                // 8. COLOR BLEED
+
+
+
+                // 8. COLOR BLEED (Improved "Tape Lag")
                 #ifdef _USE_BLEED
-                float2 bleedUV = distortedUV + float2(_BleedAmount, 0);
+                // We sample slightly to the LEFT to make color "smear" to the RIGHT
+                float2 bleedUV = distortedUV - float2(_BleedAmount, 0); 
                 half4 smearCol = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, bleedUV);
-                color.r = lerp(color.r, max(color.r, smearCol.r), _BleedR);
-                color.g = lerp(color.g, max(color.g, smearCol.g), _BleedG);
-                color.b = lerp(color.b, max(color.b, smearCol.b), _BleedB);
+                
+                // Instead of just 'max', we use a lerp to 'soften' the bleed
+                color.r = lerp(color.r, smearCol.r, _BleedR);
+                color.g = lerp(color.g, smearCol.g, _BleedG);
+                color.b = lerp(color.b, smearCol.b, _BleedB);
                 #endif
 
                 // 9. CHROMATIC COLOR GRAIN (Restored Fuzzy)
