@@ -11,7 +11,8 @@ Material:
   m_Shader: {fileID: 4800000, guid: d5e59729fb5501e4781d68ba87108544, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
+  m_ValidKeywords:
+  - _USE_FISHEYE_ON
   m_InvalidKeywords:
   - _USE_FISHEYE
   m_LightmapFlags: 4
@@ -94,12 +95,12 @@ Material:
     - _BleedR: 0.5
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
-    - _BlurStrength: 0.39
+    - _BlurStrength: 1
     - _BumpScale: 1
-    - _BurstBrightness: 0.035
-    - _BurstInterval: 0.629
+    - _BurstBrightness: 0.02
+    - _BurstInterval: 0.073
     - _BurstScroll: 0
-    - _BurstSize: 0.601
+    - _BurstSize: 0.847
     - _ChromaAmount: 0.0073
     - _Chunkiness: 700
     - _ClearCoatMask: 0
@@ -111,6 +112,7 @@ Material:
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _Distortion: -0.5
+    - _DistortionPower: 1.5
     - _DistortionStrength: 0.5
     - _DstBlend: 0
     - _DstBlendAlpha: 0
@@ -143,17 +145,17 @@ Material:
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
-    - _TrackingAmount: 8.76
+    - _TrackingAmount: 1
     - _TrackingJitter: 0.0249
     - _TrackingSize: 20
-    - _TrackingSpacing: 9.44
+    - _TrackingSpacing: 6.56
     - _TrackingSpeed: 0.5
     - _UseBlackout: 0
     - _UseBleed: 0
     - _UseChroma: 0
     - _UseChromaAbb: 0
     - _UseColorGrain: 0
-    - _UseFisheye: 0
+    - _UseFisheye: 1
     - _UseFlicker: 0
     - _UseGlitch: 0
     - _UseGlitchColor: 0
@@ -165,8 +167,11 @@ Material:
     - _UseScanlines: 0
     - _UseTracking: 0
     - _UseVerticalJump: 0
+    - _UseVignette: 0
     - _UseWarp: 0
     - _VerticalJumpStrength: 0.003
+    - _VignetteSize: 0.95
+    - _VignetteStrength: 1.36
     - _WarpSpeed: 0
     - _WarpStrength: 0.0332
     - _WaveIntensity: 0.61
@@ -175,10 +180,10 @@ Material:
     - _WorkflowMode: 1
     - _XRMotionVectorsPass: 1
     - _ZWrite: 1
-    - _Zoom: 0.75
+    - _Zoom: 0.9
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _BurstColor: {r: 1, g: 1, b: 1, a: 1}
+    - _BurstColor: {r: 1, g: 1.72, b: 3.87, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _ColorGrainRGB: {r: 5, g: 5, b: 5, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}

@@ -4,7 +4,8 @@ using UnityEditor;
 public class VHSInspector : ShaderGUI
 {
     bool showLens = true; bool showChroma = true; bool showGlitch = true;
-    bool showConstant = true; bool showBleed = true; bool showGrain = true; bool showFuzzy = true; bool showJitter;
+    bool showConstant = true; bool showBleed = true; bool showGrain = true; bool showFuzzy = true; bool showJitter = true;
+    bool showVignette = true;
 
     public override void OnGUI(MaterialEditor materialEditor, MaterialProperty[] properties)
     {
@@ -14,6 +15,7 @@ public class VHSInspector : ShaderGUI
             materialEditor.ShaderProperty(FindProperty("_DistortionStrength", properties), "Lens Bulge");
             materialEditor.ShaderProperty(FindProperty("_BlurStrength", properties), "Edge Blur Intensity");
             materialEditor.ShaderProperty(FindProperty("_Zoom", properties), "Zoom");
+            materialEditor.ShaderProperty(FindProperty("_DistortionPower", properties), "Distortion Power");
         });
 
         // 2. CHROMA ABB
@@ -83,12 +85,20 @@ public class VHSInspector : ShaderGUI
         });
 
 
-        // 8. FRAME JITTER
-        // 8. JITTER (NEW)
+        // 8. FRAME JITTER (NEW)
         DrawSection("8. Frame Jitter", ref showJitter, () => {
             materialEditor.ShaderProperty(FindProperty("_UseJitter", properties), "Enable Frame Jitter");
             materialEditor.ShaderProperty(FindProperty("_JitterAmount", properties), "Jitter Intensity");
             materialEditor.ShaderProperty(FindProperty("_JitterSpeed", properties), "Jitter Speed");
+        });
+
+        // 9. vignette 
+        DrawSection("9. Vignette", ref showVignette, () =>
+        {
+            materialEditor.ShaderProperty(FindProperty("_UseVignette", properties), "Enable Vignette");
+            materialEditor.ShaderProperty(FindProperty("_VignetteStrength", properties), "Edge Darkness");
+            materialEditor.ShaderProperty(FindProperty("_VignetteSize", properties), " Vignette Smoothness (Power)");    
+
         });
 
 

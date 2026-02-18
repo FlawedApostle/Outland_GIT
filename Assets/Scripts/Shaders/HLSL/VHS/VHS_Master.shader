@@ -1,7 +1,11 @@
 // ================================================================================
-// COPYRIGHT (C) 2026 [YOUR NAME/BRAND]. ALL RIGHTS RESERVED.
+// COPYRIGHT (C) 2026 [Samuel Fearnley]. ALL RIGHTS RESERVED.
 // This shader is provided for use in projects but may not be resold or 
 // redistributed as source code without express permission.
+// ================================================================================
+// "RenderPipeline" = "UniversalPipeline": 
+// This is a "lock and key" tag. It tells Unity, "Only run this shader if the project is using URP." 
+// If you tried to use this in the old Built-in pipeline, it WONT'T run.
 // ================================================================================
 
 // Shader "Hidden/VHS_Final_Master"
@@ -16,6 +20,7 @@ Shader "VHS_Effects/VHS_Final_Master" // CHANGED FROM HIDDEN
         _DistortionStrength("Lens Bulge", Float) = 0.5
         _BlurStrength("Edge Blur Intensity", Range(0, 5)) = 1.0
         _Zoom("Zoom", Float) = 0.9
+        _DistortionPower("Lens Edge Sharpness", Range(1, 5)) = 2.0              // pow() formula
 
         [Header(2. Chromatic Aberration)]
         [Toggle(_USE_CHROMA_ABB)] _UseChromaAbb("Enable Lens Split", Float) = 0
@@ -83,6 +88,11 @@ Shader "VHS_Effects/VHS_Final_Master" // CHANGED FROM HIDDEN
         [Toggle(_USE_JITTER)] _UseJitter("Enable Frame Jitter", Float) = 0
         _JitterAmount("Jitter Intensity", Range(0, 0.01)) = 0.001
         _JitterSpeed("Jitter Speed", Float) = 20.0
+
+        [Header(9. Border Vignette)]
+        [Toggle(_USE_VIGNETTE)] _UseVignette("Enable Vignette", Float) = 0
+        _VignetteStrength("Edge Darkness", Range(0, 2)) = 1.0
+        _VignetteSize("Vignette Smoothness", Range(0.1, 5)) = 1.0
     }
 
     SubShader
@@ -115,20 +125,22 @@ Shader "VHS_Effects/VHS_Final_Master" // CHANGED FROM HIDDEN
             #pragma shader_feature_local _USE_VERTICAL_JUMP
             #pragma shader_feature_local _USE_COLOR_GRAIN
             #pragma shader_feature_local _USE_JITTER
+            #pragma shader_feature_local _USE_VIGNETTE
 
-            float _DistortionStrength, _BlurStrength, _Zoom, _AbbIntensity;
-            float _TrackingSpeed, _TrackingSize, _TrackingAmount, _TrackingSpacing, _CutoutThreshold;
-            float4 _GlitchRGB;
-            float _BurstSize, _BurstInterval, _BurstBrightness;
-            float4 _BurstColor;
-            float _R_Offset, _G_Offset, _B_Offset;
-            float _BleedAmount, _BleedR, _BleedG, _BleedB;
-            float _GrainIntensity, _LineDensity, _LineSpeed, _LineStrength;
-            float _LineRotate, _LineSineWarp;
-            float _ColorGrainIntensity, _Chunkiness;
-            float4 _ColorGrainRGB;
-            float _WarpStrength, _WarpSpeed, _FlickerStrength, _FlickerSpeed, _VerticalJumpStrength , _JitterSpeed;
-            float _JitterAmount;
+            float _DistortionStrength, _DistortionPower, _BlurStrength, _Zoom, _AbbIntensity;                                       // FISH EYE BLUR & DISTORTION
+            float _TrackingSpeed, _TrackingSize, _TrackingAmount, _TrackingSpacing, _CutoutThreshold;                               //
+            float4 _GlitchRGB;                                                                                                      //
+            float _BurstSize, _BurstInterval, _BurstBrightness;                                                                     //
+            float4 _BurstColor;                                                                                                     //
+            float _R_Offset, _G_Offset, _B_Offset;                                                                                  //
+            float _BleedAmount, _BleedR, _BleedG, _BleedB;                                                                          //
+            float _GrainIntensity, _LineDensity, _LineSpeed, _LineStrength;                                                         //
+            float _LineRotate, _LineSineWarp;                                                                                       //
+            float _ColorGrainIntensity, _Chunkiness;                                                                                //  COLOR GRAIN
+            float4 _ColorGrainRGB;                                                                                                  //  
+            float _WarpStrength, _WarpSpeed, _FlickerStrength, _FlickerSpeed, _VerticalJumpStrength , _JitterSpeed;                 //  WARP , FLICKER
+            float _JitterAmount;                                                                                                    //  JITTER
+            float _VignetteStrength, _VignetteSize;                                                                                 //  VIGNETTE
 
             float Noise(float2 uv) {
                 return frac(sin(dot(uv, float2(12.9898, 78.233))) * 43758.5453);
@@ -149,7 +161,9 @@ Shader "VHS_Effects/VHS_Final_Master" // CHANGED FROM HIDDEN
                 #ifdef _USE_FISHEYE_ON
                 float2 centeredUV = uv - 0.5;
                 float dist = dot(centeredUV, centeredUV);
-                distortedUV = 0.5 + (centeredUV * _Zoom) * (1.0 + _DistortionStrength * dist);
+                //distortedUV = 0.5 + (centeredUV * _Zoom) * (1.0 + _DistortionStrength * dist);
+                // Wrapping dist in pow() protects the center of the screen
+                distortedUV = 0.5 + (centeredUV * _Zoom) * (1.0 + _DistortionStrength * pow(dist, _DistortionPower));
                 #endif
 
                 // 3. VERTICAL JUMP
@@ -261,6 +275,14 @@ Shader "VHS_Effects/VHS_Final_Master" // CHANGED FROM HIDDEN
                 // 12. FLICKER
                 #ifdef _USE_FLICKER_ON
                 color.rgb += (Noise(float2(t_stable * _FlickerSpeed, 0)) - 0.5) * _FlickerStrength;
+                #endif
+
+                // 14. VIGNETTE
+                #ifdef _USE_VIGNETTE
+                float2 vignetteUV = uv - 0.5;
+                float vDist = length(vignetteUV);
+                float vMask = saturate(1.0 - vDist * _VignetteStrength / _VignetteSize);
+                color.rgb *= vMask;
                 #endif
 
                 return color;
