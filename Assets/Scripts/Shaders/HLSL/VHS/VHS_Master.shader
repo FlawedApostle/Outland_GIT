@@ -1,5 +1,5 @@
 // ================================================================================
-// COPYRIGHT (C) 2026 [Samuel Fearnley]. ALL RIGHTS RESERVED.
+// COPYRIGHT (C) 2026 []. ALL RIGHTS RESERVED.
 // This shader is provided for use in projects but may not be resold or 
 // redistributed as source code without express permission.
 // ================================================================================
@@ -22,9 +22,10 @@ Shader "VHS_Effects/VHS_Final_Master" // CHANGED FROM HIDDEN
         _Zoom("Zoom", Float) = 0.9
         _DistortionPower("Lens Edge Sharpness", Range(1, 5)) = 2.0              // pow() formula
 
-        [Header(2. Chromatic Aberration)]
-        [Toggle(_USE_CHROMA_ABB)] _UseChromaAbb("Enable Lens Split", Float) = 0
-        _AbbIntensity("Edge Split Strength", Range(0, 0.05)) = 0.01
+        [Header(2. Chromatic Aberration and Flare)]
+        [Toggle(_USE_CHROMA_ABB)] _UseChromaAbb("Enable Radial Flare", Float) = 0
+        _AbbIntensity("Flare Strength", Range(0, 0.5)) = 0.1
+        _FlarePower("Flare Sharpness (Pow)", Range(1, 10)) = 3.0
 
         [Header(3. Tracking Glitch and Damage)]
         [Toggle(_USE_GLITCH_ON)] _UseGlitch("Enable Damage", Float) = 1
@@ -127,7 +128,7 @@ Shader "VHS_Effects/VHS_Final_Master" // CHANGED FROM HIDDEN
             #pragma shader_feature_local _USE_JITTER
             #pragma shader_feature_local _USE_VIGNETTE
 
-            float _DistortionStrength, _DistortionPower, _BlurStrength, _Zoom, _AbbIntensity;                                       // FISH EYE BLUR & DISTORTION
+            float _DistortionStrength, _DistortionPower, _BlurStrength, _Zoom, _AbbIntensity, _FlarePower;                          // FISH EYE BLUR & DISTORTION & CHROMATIC
             float _TrackingSpeed, _TrackingSize, _TrackingAmount, _TrackingSpacing, _CutoutThreshold;                               //
             float4 _GlitchRGB;                                                                                                      //
             float _BurstSize, _BurstInterval, _BurstBrightness;                                                                     //
@@ -138,9 +139,9 @@ Shader "VHS_Effects/VHS_Final_Master" // CHANGED FROM HIDDEN
             float _LineRotate, _LineSineWarp;                                                                                       //
             float _ColorGrainIntensity, _Chunkiness;                                                                                //  COLOR GRAIN
             float4 _ColorGrainRGB;                                                                                                  //  
-            float _WarpStrength, _WarpSpeed, _FlickerStrength, _FlickerSpeed, _VerticalJumpStrength , _JitterSpeed;                 //  WARP , FLICKER
+            float _WarpStrength, _WarpSpeed, _FlickerStrength, _FlickerSpeed, _VerticalJumpStrength, _JitterSpeed;                 //  WARP , FLICKER
             float _JitterAmount;                                                                                                    //  JITTER
-            float _VignetteStrength, _VignetteSize;                                                                                 //  VIGNETTE
+            float _VignetteStrength, _VignetteSize;                                                                                 //  VIGNETTE                                                                                                                                                                                                 // The ingredients for the shift
 
             float Noise(float2 uv) {
                 return frac(sin(dot(uv, float2(12.9898, 78.233))) * 43758.5453);
@@ -157,10 +158,12 @@ Shader "VHS_Effects/VHS_Final_Master" // CHANGED FROM HIDDEN
                 if(Noise(float2(t_stable, 0)) > _CutoutThreshold) return half4(0,0,0,1);
                 #endif
 
-                // 2. FISHEYE
-                #ifdef _USE_FISHEYE_ON
+                // -------> Distance Calculation (all features can use it, so it's outside the Fisheye block)
                 float2 centeredUV = uv - 0.5;
                 float dist = dot(centeredUV, centeredUV);
+
+                // 2. FISHEYE
+                #ifdef _USE_FISHEYE_ON
                 //distortedUV = 0.5 + (centeredUV * _Zoom) * (1.0 + _DistortionStrength * dist);
                 // Wrapping dist in pow() protects the center of the screen
                 distortedUV = 0.5 + (centeredUV * _Zoom) * (1.0 + _DistortionStrength * pow(dist, _DistortionPower));
@@ -194,15 +197,37 @@ Shader "VHS_Effects/VHS_Final_Master" // CHANGED FROM HIDDEN
                 distortedUV.y += (Noise(float2(0, jitterTime)) - 0.5) * _JitterAmount;
                 #endif
 
-                // 5. CHANNELS (Restored CA and Constant Split)
-                float2 r_uv = distortedUV; float2 g_uv = distortedUV; float2 b_uv = distortedUV;
+
+
+
+
+                // 5. CHANNELS (Flare vs Shift)
+                float2 flareUV = distortedUV - 0.5;
+                float flareFactor = 0; // Start at zero (no flare)
+
+                // --- THE RADIAL FLARE (The "Pow" Flare) ---
                 #ifdef _USE_CHROMA_ABB
-                float2 abbDir = distortedUV - 0.5;
-                r_uv += abbDir * _AbbIntensity; b_uv -= abbDir * _AbbIntensity;
+                // We calculate the flare ONLY if the toggle is on
+                flareFactor = _AbbIntensity * pow(dist, _FlarePower);
                 #endif
+                
+                // Apply the Flare (or 0) to the Red and Blue channels
+                float2 r_uv = 0.5 + flareUV * (1.0 + flareFactor);
+                float2 g_uv = distortedUV;
+                float2 b_uv = 0.5 + flareUV * (1.0 - flareFactor);
+
+                // --- THE CONSTANT SHIFT (The Add-on Toggle) ---
                 #ifdef _USE_CHROMA
-                r_uv.x += _R_Offset; g_uv.x += _G_Offset; b_uv.x += _B_Offset;
+                r_uv.x += _R_Offset;
+                g_uv.x += _G_Offset;
+                b_uv.x += _B_Offset;
                 #endif
+               
+
+
+
+
+
 
                 // 6. SAMPLE
                 half4 color = 0;

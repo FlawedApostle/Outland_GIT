@@ -17,11 +17,12 @@ public class VHSInspector : ShaderGUI
             materialEditor.ShaderProperty(FindProperty("_Zoom", properties), "Zoom");
             materialEditor.ShaderProperty(FindProperty("_DistortionPower", properties), "Distortion Power");
         });
-
+         
         // 2. CHROMA ABB
         DrawSection("2. Chromatic Aberration", ref showChroma, () => {
             materialEditor.ShaderProperty(FindProperty("_UseChromaAbb", properties), "Enable Lens Split");
             materialEditor.ShaderProperty(FindProperty("_AbbIntensity", properties), "Edge Split Strength");
+            materialEditor.ShaderProperty(FindProperty("_FlarePower", properties),   "Flare Strength (power)");
         });
 
         // 3. TRACKING
