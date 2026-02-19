@@ -83,23 +83,29 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _AbbIntensity: 0.05
+    - _AbbIntensity: 0.015
     - _AddPrecomputedVelocity: 0
     - _AlphaClip: 0
     - _AlphaToMask: 0
     - _B_Offset: 0.005
-    - _BleedAmount: 0
-    - _BleedB: 0.8
-    - _BleedG: 0.8
-    - _BleedR: 0.8
+    - _BleedAmount: 0.001
+    - _BleedB: 0.5
+    - _BleedG: 0.5
+    - _BleedR: 0.5
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
-    - _BlurStrength: 1
+    - _BlurStrength: 0.5
     - _BumpScale: 1
-    - _BurstBrightness: 0.02
-    - _BurstInterval: 0.073
+    - _BurstBrightness: 0.61
+    - _BurstColorIntensity: 1
+    - _BurstFlickerSpeed: 10.4
+    - _BurstHorizontal: 0
+    - _BurstInterval: 0.128
+    - _BurstOpacity: 0
+    - _BurstPos: 0.042
     - _BurstScroll: 0
-    - _BurstSize: 0.847
+    - _BurstSize: 0.084
+    - _BurstWidth: 0.044
     - _ChromaAmount: 0.0073
     - _Chunkiness: 700
     - _ClearCoatMask: 0
@@ -111,12 +117,12 @@ Material:
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _Distortion: -0.5
-    - _DistortionPower: 1.5
+    - _DistortionPower: 1
     - _DistortionStrength: 0.5
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
-    - _FlarePower: 1.7
+    - _FlarePower: 1
     - _FlickerSpeed: 10
     - _FlickerStrength: 0.0262
     - _G_Offset: 0.005
@@ -144,14 +150,17 @@ Material:
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
+    - _StutterAmount: 0.0854
     - _Surface: 0
-    - _TrackingAmount: 1
+    - _TrackingAmount: 7.04
+    - _TrackingHardness: 0.927
     - _TrackingJitter: 0.0249
     - _TrackingSize: 20
-    - _TrackingSpacing: 0.36
+    - _TrackingSpacing: 1.04
     - _TrackingSpeed: 0.5
     - _UseBlackout: 0
     - _UseBleed: 0
+    - _UseBurstZone: 0
     - _UseChroma: 0
     - _UseChromaAbb: 0
     - _UseColorGrain: 0
@@ -178,6 +187,7 @@ Material:
     - _WaveSize: 25.01
     - _WaveSpeed: 6.28
     - _WorkflowMode: 1
+    - _XOffsetStrength: 0.0867
     - _XRMotionVectorsPass: 1
     - _ZWrite: 1
     - _Zoom: 0.9
