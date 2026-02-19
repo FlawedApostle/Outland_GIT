@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class DualSlidingDoor : MonoBehaviour
 {
@@ -7,7 +8,8 @@ public class DualSlidingDoor : MonoBehaviour
     [SerializeField] private Transform doorRight;
 
     [Header("Movement Settings")]
-    public Vector3 slideDirection = new Vector3(1, 0, 0); // Direction for Door A
+    public Vector3 slideDirection_L = new Vector3(1, 0, 0); // Direction for Door A
+    public Vector3 slideDirection_R = new Vector3(-1, 0, 0); // Direction for Door B
     public float slideDistance = 1.2f;
     public float speed = 3.0f;
 
@@ -38,8 +40,8 @@ public class DualSlidingDoor : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            leftTarget = leftStartPos + (slideDirection * slideDistance);
-            rightTarget = rightStartPos - (slideDirection * slideDistance); // The '-' makes it opposite
+            leftTarget = leftStartPos + (slideDirection_L * slideDistance);
+            rightTarget = rightStartPos + (slideDirection_R * slideDistance); // The '-' makes it opposite
         }
     }
 
