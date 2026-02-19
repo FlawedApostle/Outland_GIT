@@ -9,16 +9,21 @@ public class VHSInspector : ShaderGUI
 
     public override void OnGUI(MaterialEditor materialEditor, MaterialProperty[] properties)
     {
-        // 1. LENS
+        // 1. LENS - FISH EYE
         DrawSection("1. Lens & Distortion", ref showLens, () => {
             materialEditor.ShaderProperty(FindProperty("_UseFisheye", properties), "Enable Lens FX");
             materialEditor.ShaderProperty(FindProperty("_DistortionStrength", properties), "Lens Bulge");
             materialEditor.ShaderProperty(FindProperty("_BlurStrength", properties), "Edge Blur Intensity");
             materialEditor.ShaderProperty(FindProperty("_Zoom", properties), "Zoom");
             materialEditor.ShaderProperty(FindProperty("_DistortionPower", properties), "Distortion Power");
+            // VIGNETTE
+            EditorGUILayout.Space(); 
+            materialEditor.ShaderProperty(FindProperty("_UseVignette", properties), "Enable Vignette");
+            materialEditor.ShaderProperty(FindProperty("_VignetteStrength", properties), "Edge Darkness");
+            materialEditor.ShaderProperty(FindProperty("_VignetteSize", properties), " Vignette Smoothness (Power)");
         });
 
-        // 2. CHROMA ABB
+        // 2. CHROMATIC ABBERATION
         DrawSection("2. Chromatic Aberration", ref showChroma, () => {
             materialEditor.ShaderProperty(FindProperty("_UseChromaAbb", properties), "Enable Lens Split");
             materialEditor.ShaderProperty(FindProperty("_AbbIntensity", properties), "Edge Split Strength");
@@ -35,7 +40,7 @@ public class VHSInspector : ShaderGUI
         });
 
         // 4. TRACKING
-        DrawSection("4. Tracking & Damage", ref showGlitch, () => {
+        DrawSection("4. Glitch - Head Clogging", ref showGlitch, () => {
             materialEditor.ShaderProperty(FindProperty("_UseGlitch", properties), "Enable Damage");
             materialEditor.ShaderProperty(FindProperty("_TrackingSpeed", properties), "Scroll Speed");
             materialEditor.ShaderProperty(FindProperty("_TrackingAmount", properties), "Band Count (Lines)");
@@ -52,6 +57,9 @@ public class VHSInspector : ShaderGUI
             materialEditor.ShaderProperty(FindProperty("_BurstBrightness", properties), "Burst Intensity");
             materialEditor.ShaderProperty(FindProperty("_BurstColor", properties), "Burst RGB Color");
 
+            //--------------------------------------------------
+            // STAGE 1: FRAME EVENTS
+            //--------------------------------------------------
             materialEditor.ShaderProperty(FindProperty("_UseBlackout", properties), "Enable Blackout");
         });
 
@@ -66,9 +74,11 @@ public class VHSInspector : ShaderGUI
 
 
         // 6. STATIC
-        DrawSection("6. Static and Lines", ref showGrain, () => {
+        DrawSection("6. Static Grain & Scanlines [Black & White]  ", ref showGrain, () => {
             materialEditor.ShaderProperty(FindProperty("_UseGrain", properties), "Enable BW Grain");
             materialEditor.ShaderProperty(FindProperty("_GrainIntensity", properties), "Grain Amount");
+
+            EditorGUILayout.Space();
             materialEditor.ShaderProperty(FindProperty("_UseLines", properties), "Enable Scanlines");
             materialEditor.ShaderProperty(FindProperty("_LineDensity", properties), "Line Density");
             materialEditor.ShaderProperty(FindProperty("_LineSpeed", properties), "Line Speed");
@@ -95,14 +105,7 @@ public class VHSInspector : ShaderGUI
             materialEditor.ShaderProperty(FindProperty("_JitterSpeed", properties), "Jitter Speed");
         });
 
-        // 9. vignette 
-        DrawSection("9. Vignette", ref showVignette, () =>
-        {
-            materialEditor.ShaderProperty(FindProperty("_UseVignette", properties), "Enable Vignette");
-            materialEditor.ShaderProperty(FindProperty("_VignetteStrength", properties), "Edge Darkness");
-            materialEditor.ShaderProperty(FindProperty("_VignetteSize", properties), " Vignette Smoothness (Power)");
 
-        });
 
 
         materialEditor.RenderQueueField();

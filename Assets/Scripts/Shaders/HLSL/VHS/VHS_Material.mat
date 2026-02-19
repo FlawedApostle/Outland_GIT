@@ -83,28 +83,28 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _AbbIntensity: 0.015
+    - _AbbIntensity: 0.025
     - _AddPrecomputedVelocity: 0
     - _AlphaClip: 0
     - _AlphaToMask: 0
     - _B_Offset: 0.005
-    - _BleedAmount: 0.001
-    - _BleedB: 0.5
-    - _BleedG: 0.5
-    - _BleedR: 0.5
+    - _BleedAmount: 0.0035
+    - _BleedB: 0.508
+    - _BleedG: 0.658
+    - _BleedR: 0.701
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
-    - _BlurStrength: 0.5
+    - _BlurStrength: 1
     - _BumpScale: 1
-    - _BurstBrightness: 0.61
+    - _BurstBrightness: 0.06
     - _BurstColorIntensity: 1
     - _BurstFlickerSpeed: 10.4
     - _BurstHorizontal: 0
-    - _BurstInterval: 0.128
+    - _BurstInterval: 0.225
     - _BurstOpacity: 0
     - _BurstPos: 0.042
     - _BurstScroll: 0
-    - _BurstSize: 0.084
+    - _BurstSize: 0.014
     - _BurstWidth: 0.044
     - _ChromaAmount: 0.0073
     - _Chunkiness: 700
@@ -117,8 +117,8 @@ Material:
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _Distortion: -0.5
-    - _DistortionPower: 1
-    - _DistortionStrength: 0.5
+    - _DistortionPower: 2.6
+    - _DistortionStrength: 0.22
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
@@ -131,14 +131,14 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _GrainIntensity: 0.0294
+    - _GrainIntensity: 0.02
     - _JitterAmount: 0.00128
     - _JitterSpeed: 136.2
-    - _LineDensity: 2225
+    - _LineDensity: 216
     - _LineRotate: 1.89
     - _LineSineWarp: 0.015
-    - _LineSpeed: 5
-    - _LineStrength: 0.02
+    - _LineSpeed: 15
+    - _LineStrength: 0.513
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.005
@@ -152,11 +152,11 @@ Material:
     - _SrcBlendAlpha: 1
     - _StutterAmount: 0.0854
     - _Surface: 0
-    - _TrackingAmount: 7.04
+    - _TrackingAmount: 1.89
     - _TrackingHardness: 0.927
     - _TrackingJitter: 0.0249
     - _TrackingSize: 20
-    - _TrackingSpacing: 1.04
+    - _TrackingSpacing: 1.66
     - _TrackingSpeed: 0.5
     - _UseBlackout: 0
     - _UseBleed: 0
@@ -179,10 +179,10 @@ Material:
     - _UseVignette: 0
     - _UseWarp: 0
     - _VerticalJumpStrength: 0.003
-    - _VignetteSize: 0.95
-    - _VignetteStrength: 1.36
+    - _VignetteSize: 2.08
+    - _VignetteStrength: 1.28
     - _WarpSpeed: 0
-    - _WarpStrength: 0.0332
+    - _WarpStrength: 0.0086
     - _WaveIntensity: 0.61
     - _WaveSize: 25.01
     - _WaveSpeed: 6.28
@@ -190,14 +190,14 @@ Material:
     - _XOffsetStrength: 0.0867
     - _XRMotionVectorsPass: 1
     - _ZWrite: 1
-    - _Zoom: 0.9
+    - _Zoom: 0.96
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _BurstColor: {r: 1, g: 1.72, b: 3.87, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _ColorGrainRGB: {r: 5, g: 5, b: 5, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _GlitchRGB: {r: 0.2, g: 0.3, b: 0.5, a: 1}
+    - _GlitchRGB: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
