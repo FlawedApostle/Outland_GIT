@@ -94,7 +94,7 @@ Material:
     - _BleedR: 0.701
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
-    - _BlurStrength: 1
+    - _BlurStrength: 0.5
     - _BumpScale: 1
     - _BurstBrightness: 0.06
     - _BurstColorIntensity: 1
@@ -117,8 +117,8 @@ Material:
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _Distortion: -0.5
-    - _DistortionPower: 2.6
-    - _DistortionStrength: 0.22
+    - _DistortionPower: 1
+    - _DistortionStrength: 0.5
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
@@ -190,7 +190,7 @@ Material:
     - _XOffsetStrength: 0.0867
     - _XRMotionVectorsPass: 1
     - _ZWrite: 1
-    - _Zoom: 0.96
+    - _Zoom: 0.8
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _BurstColor: {r: 1, g: 1.72, b: 3.87, a: 0}
