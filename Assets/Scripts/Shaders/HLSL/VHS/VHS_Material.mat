@@ -83,15 +83,15 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _AbbIntensity: 0.025
+    - _AbbIntensity: 0.068
     - _AddPrecomputedVelocity: 0
     - _AlphaClip: 0
     - _AlphaToMask: 0
     - _B_Offset: 0.005
-    - _BleedAmount: 0.0035
-    - _BleedB: 0.508
-    - _BleedG: 0.658
-    - _BleedR: 0.701
+    - _BleedAmount: 0.0011
+    - _BleedB: 0.097
+    - _BleedG: 0.712
+    - _BleedR: 0.785
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _BlurStrength: 0.5
@@ -100,17 +100,17 @@ Material:
     - _BurstColorIntensity: 1
     - _BurstFlickerSpeed: 10.4
     - _BurstHorizontal: 0
-    - _BurstInterval: 0.225
+    - _BurstInterval: 0.872
     - _BurstOpacity: 0
     - _BurstPos: 0.042
     - _BurstScroll: 0
-    - _BurstSize: 0.014
+    - _BurstSize: 0.167
     - _BurstWidth: 0.044
     - _ChromaAmount: 0.0073
     - _Chunkiness: 700
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
-    - _ColorGrainIntensity: 0.01
+    - _ColorGrainIntensity: 0.007
     - _Cull: 2
     - _Cutoff: 0.5
     - _CutoutThreshold: 0.98
@@ -125,25 +125,25 @@ Material:
     - _FlarePower: 1
     - _FlickerSpeed: 10
     - _FlickerStrength: 0.0262
-    - _G_Offset: 0.005
+    - _G_Offset: 0.0024
     - _GlitchBurstIntensity: 0.141
     - _GlitchTimer: 1
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
     - _GrainIntensity: 0.02
-    - _JitterAmount: 0.00128
+    - _JitterAmount: 0.00308
     - _JitterSpeed: 136.2
-    - _LineDensity: 216
+    - _LineDensity: 3228.2
     - _LineRotate: 1.89
     - _LineSineWarp: 0.015
     - _LineSpeed: 15
-    - _LineStrength: 0.513
+    - _LineStrength: 1
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueOffset: 0
-    - _R_Offset: 0.005
+    - _R_Offset: 0.002
     - _ReceiveShadows: 1
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
@@ -179,10 +179,10 @@ Material:
     - _UseVignette: 0
     - _UseWarp: 0
     - _VerticalJumpStrength: 0.003
-    - _VignetteSize: 2.08
-    - _VignetteStrength: 1.28
+    - _VignetteSize: 1.3
+    - _VignetteStrength: 1.83
     - _WarpSpeed: 0
-    - _WarpStrength: 0.0086
+    - _WarpStrength: 0.017
     - _WaveIntensity: 0.61
     - _WaveSize: 25.01
     - _WaveSpeed: 6.28
@@ -193,9 +193,9 @@ Material:
     - _Zoom: 0.8
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _BurstColor: {r: 1, g: 1.72, b: 3.87, a: 0}
+    - _BurstColor: {r: 1, g: 0, b: 1, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _ColorGrainRGB: {r: 5, g: 5, b: 5, a: 0}
+    - _ColorGrainRGB: {r: 11, g: 1, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _GlitchRGB: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
