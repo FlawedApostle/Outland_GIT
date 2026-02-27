@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AI;       // unity AI NavMesh
 
 public class ProximityDualSlidingDoor : MonoBehaviour
 {
@@ -18,14 +19,21 @@ public class ProximityDualSlidingDoor : MonoBehaviour
         [Header("Movement Axis")]
         public Axis axis = Axis.X;
 
-        [Tooltip("Positive = Right/Up/Forward, Negative = Left/Down/Back")]
         public bool negativeDirection = false;
 
-        [Header("Slide Reference (for auto-direction)")]
+        [Header("Slide Reference")]
         public Transform slideReference;
+
+        [Header("NavMesh")]
+        public NavMeshObstacle obstacle;
+
+        [Header("Collider (optional but recommended)")]
+        public Collider doorCollider;
 
         [HideInInspector] public Vector3 startLocalPos;
         [HideInInspector] public Vector3 targetLocalPos;
+
+        [HideInInspector] public bool isOpen;
     }
 
     [Header("Door Slots")]
@@ -78,9 +86,18 @@ public class ProximityDualSlidingDoor : MonoBehaviour
 
         if (open)
         {
+            if (!slot.isOpen)
+            {
+                slot.isOpen = true;
+
+                if (slot.obstacle != null)
+                    slot.obstacle.carving = false;
+
+                if (slot.doorCollider != null)
+                    slot.doorCollider.enabled = false;
+            }
+
             Vector3 dir = GetLocalAxis(slot.door, slot.axis);
-            slot.targetLocalPos = slot.startLocalPos + dir * slideDistance;
-            //Vector3 dir = (slot.slideReference.position - slot.door.position).normalized;
 
             if (slot.negativeDirection)
                 dir = -dir;
@@ -89,6 +106,17 @@ public class ProximityDualSlidingDoor : MonoBehaviour
         }
         else
         {
+            if (slot.isOpen)
+            {
+                slot.isOpen = false;
+
+                if (slot.obstacle != null)
+                    slot.obstacle.carving = true;
+
+                if (slot.doorCollider != null)
+                    slot.doorCollider.enabled = true;
+            }
+
             slot.targetLocalPos = slot.startLocalPos;
         }
     }
