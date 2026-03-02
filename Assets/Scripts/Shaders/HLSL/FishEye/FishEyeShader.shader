@@ -10,17 +10,17 @@ Shader "Hidden/FisheyeCode"
         _BlurStrength("Blur Strength", Float) = 1.0
         _Zoom("Zoom", Float) = 0.9
 
-        [Header(FishEye _ TEST 2 Settings)]
-        [Toggle(_USE_FISHEYE_ON_TEST_2)] _UseFisheye_2("Enable FishEye TEST 2", Float) = 1
-        _DistortionStrength_2("Distortion Strength", Float) = 0.5
-        _BlurStrength_2("Blur Strength", Float) = 1.0
-        _Zoom_2("Zoom Strength", Float) = 0.9
+        // [Header(FishEye _ TEST 2 Settings)]
+        // [Toggle(_USE_FISHEYE_ON_TEST_2)] _UseFisheye_2("Enable FishEye TEST 2", Float) = 1
+        // _DistortionStrength_2("Distortion Strength", Float) = 0.5
+        // _BlurStrength_2("Blur Strength", Float) = 1.0
+        // _Zoom_2("Zoom Strength", Float) = 0.9
 
         [Header(FishEye _ TEST 3 Settings)]
         [Toggle(_USE_FISHEYE_ON_TEST_3)] _UseFisheye_3("Enable FishEye TEST 3", Float) = 1
-        _DistortionStrength_3("Distortion Strength", Float) = 0.5
-        _BlurStrength_3("Blur Strength", Float) = 1.0
-        _Zoom_3("Zoom Strength", Float) = 0.9
+        _DistortionStrength_3("Distortion Strength 3", Float) = 0.5
+        _BlurStrength_3("Blur Strength 3", Float) = 1.0
+        _Zoom_3("Zoom Strength 3", Float) = 0.9
         
         [Header(Tracking Glitch)]
         [Toggle(_USE_GLITCH_ON)] _UseGlitch("Enable Damage", Float) = 1
@@ -83,17 +83,17 @@ Shader "Hidden/FisheyeCode"
                 #endif
 
 
-                // 1.a Fisheye Distortion Logic TEST 2
-                #ifdef _USE_FISHEYE_ON_TEST_2
-                    // float2 sphereUV = uv * 2.0 - 1.0;
-                    sphereUV *= _Zoom_2;
-                    float r = length(sphereUV);
-                    float safeR = max(r, 0.0001);
-                    float theta = r * _DistortionStrength_2;
-                    float projected = sin(theta);
-                    sphereUV = sphereUV * (projected / safeR);
-                    distortedUV = sphereUV * 0.5 + 0.5;
-                #endif
+                // // 1.a Fisheye Distortion Logic TEST 2
+                // #ifdef _USE_FISHEYE_ON_TEST_2
+                //     // float2 sphereUV = uv * 2.0 - 1.0;
+                //     sphereUV *= _Zoom_2;
+                //     float r = length(sphereUV);
+                //     float safeR = max(r, 0.0001);
+                //     float theta = r * _DistortionStrength_2;
+                //     float projected = sin(theta);
+                //     sphereUV = sphereUV * (projected / safeR);
+                //     distortedUV = sphereUV * 0.5 + 0.5;
+                // #endif
 
 
                 // 1.b Fisheye Distortion Logic TEST 3
