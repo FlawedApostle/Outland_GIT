@@ -1,13 +1,25 @@
-// this is my old fisheye code. im keeping it for now more as a reference
+﻿// this is my old fisheye code. im keeping it for now more as a reference
 Shader "Hidden/FisheyeCode"
 {
     Properties
     {
-        [Header(FishEye Settings)]
+        [Header(FishEye _ TEST 1 Settings)]
         [Toggle(_USE_FISHEYE_ON)] _UseFisheye("Enable FishEye", Float) = 1
         _DistortionStrength("Lens Bulge", Float) = 0.5
         _BlurStrength("Blur Strength", Float) = 1.0
         _Zoom("Zoom", Float) = 0.9
+
+        [Header(FishEye _ TEST 2 Settings)]
+        [Toggle(_USE_FISHEYE_ON_TEST_2)] _UseFisheye_2("Enable FishEye TEST 2", Float) = 1
+        _DistortionStrength_2("Distortion Strength", Float) = 0.5
+        _BlurStrength_2("Blur Strength", Float) = 1.0
+        _Zoom_2("Zoom Strength", Float) = 0.9
+
+        [Header(FishEye _ TEST 3 Settings)]
+        [Toggle(_USE_FISHEYE_ON_TEST_3)] _UseFisheye_3("Enable FishEye TEST 3", Float) = 1
+        _DistortionStrength_3("Distortion Strength", Float) = 0.5
+        _BlurStrength_3("Blur Strength", Float) = 1.0
+        _Zoom_3("Zoom Strength", Float) = 0.9
         
         [Header(Tracking Glitch)]
         [Toggle(_USE_GLITCH_ON)] _UseGlitch("Enable Damage", Float) = 1
@@ -40,11 +52,15 @@ Shader "Hidden/FisheyeCode"
             #pragma fragment Frag
             
             #pragma shader_feature _USE_FISHEYE_ON
+            #pragma shader_feature _USE_FISHEYE_ON_TEST_2
+            #pragma shader_feature _USE_FISHEYE_ON_TEST_3
             #pragma shader_feature _USE_GLITCH_ON
             #pragma shader_feature _USE_GRAIN_ON
             #pragma shader_feature _USE_LINES_ON
 
-            float _DistortionStrength, _BlurStrength, _Zoom;
+            float _DistortionStrength, _BlurStrength, _Zoom;            // fish eye 0
+            float _DistortionStrength_2, _BlurStrength_2, _Zoom_2;            // fish eye 1
+            float _DistortionStrength_3, _BlurStrength_3, _Zoom_3;            // fish eye 3
             float _GrainIntensity, _TrackingSpeed, _TrackingSize, _CutoutThreshold;
             float _LineDensity, _LineSpeed;
 
@@ -56,6 +72,7 @@ Shader "Hidden/FisheyeCode"
             {
                 float2 uv = input.texcoord;
                 float2 distortedUV = uv; 
+                float2 sphereUV = uv * 2.0 - 1.0;
 
                 // 1. Fisheye Distortion Logic
                 #ifdef _USE_FISHEYE_ON
@@ -64,33 +81,142 @@ Shader "Hidden/FisheyeCode"
                     distortedUV = 0.5 + (centeredUV * _Zoom) * (1.0 + _DistortionStrength * dist * dist);
                 #endif
 
+
+                // 1.a Fisheye Distortion Logic TEST 2
+                #ifdef _USE_FISHEYE_ON_TEST_2
+                    // float2 sphereUV = uv * 2.0 - 1.0;
+                    sphereUV *= _Zoom_2;
+                    float r = length(sphereUV);
+                    float safeR = max(r, 0.0001);
+                    float theta = r * _DistortionStrength_2;
+                    float projected = sin(theta);
+                    sphereUV = sphereUV * (projected / safeR);
+                    distortedUV = sphereUV * 0.5 + 0.5;
+                #endif
+
+
+                // 1.b Fisheye Distortion Logic TEST 2
+                #ifdef _USE_FISHEYE_ON_TEST_3
+                // Convert UV from 0–1 → -1 to +1 space
+                // float2 sphereUV = uv * 2.0 - 1.0;
+                // Apply zoom BEFORE projection
+                sphereUV *= _Zoom_3;
+                // Distance from center
+                float r = length(sphereUV);
+                // Prevent divide-by-zero
+                float safeR = max(r, 0.0001);
+                // Convert radius into angular space
+                float theta = r * _DistortionStrength_3;
+                // Project onto sphere using sin()
+                // This is the critical step that creates true spherical wrapping
+                float projected = sin(theta);
+                // Normalize back to direction
+                sphereUV = sphereUV * (projected / safeR);
+                // Convert back to 0–1 UV space
+                distortedUV = sphereUV * 0.5 + 0.5;
+                #endif
+
+                //  /*
+                // //distortedUV = 0.5 + (centeredUV * _Zoom) * (1.0 + _DistortionStrength * dist);
+                // // Wrapping dist in pow() protects the center of the screen
+                // distortedUV = 0.5 + (centeredUV * _Zoom) * (1.0 + _DistortionStrength * pow(dist, _DistortionPower));
+                // */
+                // #endif
+
                 // 2. Tracking Glitch Logic
                 #ifdef _USE_GLITCH_ON
                     float time = _Time.y * _TrackingSpeed;
                     float trackingBar = sin(uv.y * _TrackingSize - time);
                     trackingBar = smoothstep(0.9, 1.0, trackingBar); 
-                    
                     distortedUV.x += trackingBar * 0.02 * SimpleNoise(float2(time, uv.y));
-
                     if(SimpleNoise(float2(_Time.y, 0)) > _CutoutThreshold) return half4(0,0,0,1);
                 #endif
 
+
                 // 3. Optimized Sample and Sharpness Fix
                 half4 color = 0;
+                
+                // BLUR FISH_EYE 1
+                // #ifdef _USE_FISHEYE_ON
+                //     // Blur only applies if FishEye is toggled ON
+                //     float distForBlur = length(uv - 0.5);
+                //     float blur = distForBlur * _BlurStrength * 0.005;
+                //     color += SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, distortedUV + float2(blur, 0));
+                //     color += SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, distortedUV + float2(-blur, 0));
+                //     color += SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, distortedUV + float2(0, blur));
+                //     color += SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, distortedUV + float2(0, -blur));
+                //     color /= 4.0;
+                // #else
+                //     Perfectly sharp sampling when FishEye is toggled OFF
+                //     color = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, distortedUV);
+                // #endif
 
+
+                bool blurred = false;
+
+                // BLUR FISHEYE 1
                 #ifdef _USE_FISHEYE_ON
-                    // Blur only applies if FishEye is toggled ON
+                {
                     float distForBlur = length(uv - 0.5);
                     float blur = distForBlur * _BlurStrength * 0.005;
+
                     color += SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, distortedUV + float2(blur, 0));
                     color += SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, distortedUV + float2(-blur, 0));
                     color += SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, distortedUV + float2(0, blur));
                     color += SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, distortedUV + float2(0, -blur));
                     color /= 4.0;
-                #else
-                    // Perfectly sharp sampling when FishEye is toggled OFF
-                    color = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, distortedUV);
+
+                    blurred = true;
+                }
                 #endif
+
+
+                    // BLUR FISHEYE 2
+                    #ifdef _USE_FISHEYE_ON_TEST_2
+                    {
+                        float distForBlur = length(uv - 0.5);
+                        float blur = distForBlur * _BlurStrength_2 * 0.005;
+
+                        color += SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, distortedUV + float2(blur, 0));
+                        color += SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, distortedUV + float2(-blur, 0));
+                        color += SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, distortedUV + float2(0, blur));
+                        color += SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, distortedUV + float2(0, -blur));
+                        color /= 4.0;
+
+                        blurred = true;
+                    }
+                    #endif
+
+
+                    // BLUR FISHEYE 3
+                    #ifdef _USE_FISHEYE_ON_TEST_3
+                    {
+                        float distForBlur = length(uv - 0.5);
+                        float blur = distForBlur * _BlurStrength_3 * 0.005;
+
+                        color += SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, distortedUV + float2(blur, 0));
+                        color += SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, distortedUV + float2(-blur, 0));
+                        color += SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, distortedUV + float2(0, blur));
+                        color += SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, distortedUV + float2(0, -blur));
+                        color /= 4.0;
+
+                        blurred = true;
+                    }
+                    #endif
+
+
+                    // FALLBACK (only if no fisheye active)
+                    if (!blurred)
+                    {
+                        color = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, distortedUV);
+                    }
+
+
+
+
+
+
+
 
                 // 4. Static Grain
                 #ifdef _USE_GRAIN_ON

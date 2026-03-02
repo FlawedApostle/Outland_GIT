@@ -1,4 +1,4 @@
-// ================================================================================
+﻿// ================================================================================
 // COPYRIGHT (C) 2026 []. ALL RIGHTS RESERVED.
 // This shader is provided for use in projects but may not be resold or 
 // redistributed as source code without express permission.
@@ -206,7 +206,6 @@ Shader "VHS_Effects/VHS_Final_Master" // CHANGED FROM HIDDEN
             _JitterSpeed,
             _JitterAmount;                          // END OF FLOAT
 
-                                                 
 
             float Noise(float2 uv) {
                 return frac(sin(dot(uv, float2(12.9898, 78.233))) * 43758.5453);
@@ -261,9 +260,9 @@ Shader "VHS_Effects/VHS_Final_Master" // CHANGED FROM HIDDEN
                 //--------------------------------------------------
 
                  // FISHEYE
-                #ifdef _USE_FISHEYE_ON
-                //distortedUV = 0.5 + (centeredUV * _Zoom) * (1.0 + _DistortionStrength * dist);
-                // Wrapping dist in pow() protects the center of the screen
+                 #ifdef _USE_FISHEYE_ON
+                // //distortedUV = 0.5 + (centeredUV * _Zoom) * (1.0 + _DistortionStrength * dist);
+                // // Wrapping dist in pow() protects the center of the screen
                 distortedUV = 0.5 + (centeredUV * _Zoom) * (1.0 + _DistortionStrength * pow(dist, _DistortionPower));
                 #endif
 
