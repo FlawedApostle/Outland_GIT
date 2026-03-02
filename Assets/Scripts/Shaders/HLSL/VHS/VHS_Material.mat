@@ -11,8 +11,7 @@ Material:
   m_Shader: {fileID: 4800000, guid: d5e59729fb5501e4781d68ba87108544, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
-  - _USE_FISHEYE_ON
+  m_ValidKeywords: []
   m_InvalidKeywords:
   - _USE_FISHEYE
   m_LightmapFlags: 4
@@ -165,7 +164,7 @@ Material:
     - _UseChroma: 0
     - _UseChromaAbb: 0
     - _UseColorGrain: 0
-    - _UseFisheye: 1
+    - _UseFisheye: 0
     - _UseFlicker: 0
     - _UseGlitch: 0
     - _UseGlitchColor: 0

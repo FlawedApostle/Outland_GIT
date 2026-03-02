@@ -1,4 +1,5 @@
 ﻿// this is my old fisheye code. im keeping it for now more as a reference
+// THIS IS MY PRACTICE SCRIPT - DO NOT DELETE IT ENSURE AL IS TURNED OFF TOO
 Shader "Hidden/FisheyeCode"
 {
     Properties
@@ -58,9 +59,9 @@ Shader "Hidden/FisheyeCode"
             #pragma shader_feature _USE_GRAIN_ON
             #pragma shader_feature _USE_LINES_ON
 
-            float _DistortionStrength, _BlurStrength, _Zoom;            // fish eye 0
-            float _DistortionStrength_2, _BlurStrength_2, _Zoom_2;            // fish eye 1
-            float _DistortionStrength_3, _BlurStrength_3, _Zoom_3;            // fish eye 3
+            float _DistortionStrength, _BlurStrength, _Zoom;                         // fish eye 0
+            float _DistortionStrength_2, _BlurStrength_2, _Zoom_2;                   // fish eye 1
+            float _DistortionStrength_3, _BlurStrength_3, _Zoom_3;                   // fish eye 3
             float _GrainIntensity, _TrackingSpeed, _TrackingSize, _CutoutThreshold;
             float _LineDensity, _LineSpeed;
 
@@ -95,7 +96,7 @@ Shader "Hidden/FisheyeCode"
                 #endif
 
 
-                // 1.b Fisheye Distortion Logic TEST 2
+                // 1.b Fisheye Distortion Logic TEST 3
                 #ifdef _USE_FISHEYE_ON_TEST_3
                 // Convert UV from 0–1 → -1 to +1 space
                 // float2 sphereUV = uv * 2.0 - 1.0;
@@ -135,8 +136,7 @@ Shader "Hidden/FisheyeCode"
 
                 // 3. Optimized Sample and Sharpness Fix
                 half4 color = 0;
-                
-                // BLUR FISH_EYE 1
+                // BLUR FISH_EYE 1  -ORIGINAL DO NOT DELETE
                 // #ifdef _USE_FISHEYE_ON
                 //     // Blur only applies if FishEye is toggled ON
                 //     float distForBlur = length(uv - 0.5);
@@ -153,7 +153,6 @@ Shader "Hidden/FisheyeCode"
 
 
                 bool blurred = false;
-
                 // BLUR FISHEYE 1
                 #ifdef _USE_FISHEYE_ON
                 {

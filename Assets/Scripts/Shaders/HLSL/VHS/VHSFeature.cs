@@ -62,7 +62,7 @@ public class VHSFeature : ScriptableRendererFeature
 
             TextureHandle destination = renderGraph.CreateTexture(desc);
 
-            // Blit source → destination using your VHS material
+            // Blit source → destination using VHS material
             RenderGraphUtils.BlitMaterialParameters blitParams =
                 new RenderGraphUtils.BlitMaterialParameters(
                     source,
