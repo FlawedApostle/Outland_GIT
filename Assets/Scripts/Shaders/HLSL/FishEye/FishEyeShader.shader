@@ -4,23 +4,24 @@ Shader "Hidden/FisheyeCode"
 {
     Properties
     {
-        [Header(FishEye _ TEST 1 Settings)]
+        [Header(FishEye _ TEST 0 Settings)]
         [Toggle(_USE_FISHEYE_ON)] _UseFisheye("Enable FishEye", Float) = 1
         _DistortionStrength("Lens Bulge", Float) = 0.5
         _BlurStrength("Blur Strength", Float) = 1.0
         _Zoom("Zoom", Float) = 0.9
 
-        // [Header(FishEye _ TEST 2 Settings)]
-        // [Toggle(_USE_FISHEYE_ON_TEST_2)] _UseFisheye_2("Enable FishEye TEST 2", Float) = 1
-        // _DistortionStrength_2("Distortion Strength", Float) = 0.5
-        // _BlurStrength_2("Blur Strength", Float) = 1.0
-        // _Zoom_2("Zoom Strength", Float) = 0.9
+        [Header(FishEye _ TEST 1 Settings)]
+        [Toggle(_USE_FISHEYE_ON_TEST_1)] _UseFisheye_1("Enable FishEye TEST 1", Float) = 1
+        _DistortionStrength_1("Distortion Strength", Float) = 0.5
+        _BlurStrength_1("Blur Strength", Float) = 1.0
+        _Zoom_1("Zoom Strength", Float) = 0.9
 
-        [Header(FishEye _ TEST 3 Settings)]
-        [Toggle(_USE_FISHEYE_ON_TEST_3)] _UseFisheye_3("Enable FishEye TEST 3", Float) = 1
-        _DistortionStrength_3("Distortion Strength 3", Float) = 0.5
-        _BlurStrength_3("Blur Strength 3", Float) = 1.0
-        _Zoom_3("Zoom Strength 3", Float) = 0.9
+        [Header(FishEye _ TEST 2 Settings)]
+        [Toggle(_USE_FISHEYE_ON_TEST_2)] _UseFisheye_2("Enable FishEye TEST 2", Float) = 1
+        _DistortionStrength_2("Distortion Strength", Float) = 0.5
+        _BlurStrength_2("Blur Strength", Float) = 1.0
+        _Zoom_2("Zoom Strength", Float) = 0.9
+        _BulgeBias("Bulge Strength", Float) = 0.9
         
         [Header(Tracking Glitch)]
         [Toggle(_USE_GLITCH_ON)] _UseGlitch("Enable Damage", Float) = 1
@@ -52,18 +53,27 @@ Shader "Hidden/FisheyeCode"
             #pragma vertex Vert
             #pragma fragment Frag
             
+            // TOGGLES
             #pragma shader_feature _USE_FISHEYE_ON
+            #pragma shader_feature _USE_FISHEYE_ON_TEST_1
             #pragma shader_feature _USE_FISHEYE_ON_TEST_2
-            #pragma shader_feature _USE_FISHEYE_ON_TEST_3
             #pragma shader_feature _USE_GLITCH_ON
             #pragma shader_feature _USE_GRAIN_ON
             #pragma shader_feature _USE_LINES_ON
 
-            float _DistortionStrength, _BlurStrength, _Zoom;                         // fish eye 0
-            float _DistortionStrength_2, _BlurStrength_2, _Zoom_2;                   // fish eye 1
-            float _DistortionStrength_3, _BlurStrength_3, _Zoom_3;                   // fish eye 3
+            float _DistortionStrength, _BlurStrength, _Zoom;                                        // fish eye 0
+            float _DistortionStrength_1, _BlurStrength_1, _Zoom_1;                                  // fish eye 1
+            float _DistortionStrength_2, _BlurStrength_2, _Zoom_2;                                  // fish eye 2
+            float _exponent_1 , _exponent_2;
+            float bias , _BulgeBias;
             float _GrainIntensity, _TrackingSpeed, _TrackingSize, _CutoutThreshold;
             float _LineDensity, _LineSpeed;
+
+            // Fish Eye 1 & 2
+                float r;
+                float safeR;
+                float theta;
+                float projected, projected_real, projected_fake;
 
             float SimpleNoise(float2 uv) {
                 return frac(sin(dot(uv, float2(12.9898, 78.233))) * 43758.5453);
@@ -71,46 +81,64 @@ Shader "Hidden/FisheyeCode"
 
             half4 Frag (Varyings input) : SV_Target
             {
+                //// GLOBALS
                 float2 uv = input.texcoord;
                 float2 distortedUV = uv; 
                 float2 sphereUV = uv * 2.0 - 1.0;
+                // float r;
+                // float safeR;
+                // float theta;
+                // float projected;
 
-                // 1. Fisheye Distortion Logic
+                // 1. Fisheye Distortion Logic  r' = r * (1 + k*r²)
                 #ifdef _USE_FISHEYE_ON
                     float2 centeredUV = uv - 0.5;
                     float dist = length(centeredUV);
-                    distortedUV = 0.5 + (centeredUV * _Zoom) * (1.0 + _DistortionStrength * dist * dist);
+                    distortedUV = 0.5 + (centeredUV * _Zoom) * (1.0 + _DistortionStrength * dist * dist);       // distortionStrength is what 'bulging' the lens 
                 #endif
 
-
-                // // 1.a Fisheye Distortion Logic TEST 2
-                // #ifdef _USE_FISHEYE_ON_TEST_2
-                //     // float2 sphereUV = uv * 2.0 - 1.0;
-                //     sphereUV *= _Zoom_2;
-                //     float r = length(sphereUV);
-                //     float safeR = max(r, 0.0001);
-                //     float theta = r * _DistortionStrength_2;
-                //     float projected = sin(theta);
-                //     sphereUV = sphereUV * (projected / safeR);
-                //     distortedUV = sphereUV * 0.5 + 0.5;
-                // #endif
-
-
-                // 1.b Fisheye Distortion Logic TEST 3
-                #ifdef _USE_FISHEYE_ON_TEST_3
-                // Convert UV from 0–1 → -1 to +1 space
-                // float2 sphereUV = uv * 2.0 - 1.0;
+                // 1.b Fisheye Distortion Logic TEST 1  r' = sin(r * k))
+                #ifdef _USE_FISHEYE_ON_TEST_1
                 // Apply zoom BEFORE projection
-                sphereUV *= _Zoom_3;
+                sphereUV *= _Zoom_1;
                 // Distance from center
-                float r = length(sphereUV);
+                r = length(sphereUV);
                 // Prevent divide-by-zero
-                float safeR = max(r, 0.0001);
+                safeR = max(r, 0.0001);
                 // Convert radius into angular space
-                float theta = r * _DistortionStrength_3;
+                theta = r * _DistortionStrength_1;
                 // Project onto sphere using sin()
                 // This is the critical step that creates true spherical wrapping
-                float projected = sin(theta);
+                projected = sin(theta);                            // bulge - inward 
+                // Normalize back to direction
+                sphereUV = sphereUV * (projected / safeR);
+                // Convert back to 0–1 UV space
+                distortedUV = sphereUV * 0.5 + 0.5;
+                #endif
+
+                
+                // 1.b Fisheye Distortion Logic TEST 1  r' = sin(r * k))
+                #ifdef _USE_FISHEYE_ON_TEST_2
+                // Apply zoom BEFORE projection
+                sphereUV *= _Zoom_2;
+                // Distance from center
+                r = length(sphereUV);
+                // Prevent divide-by-zero
+                safeR = max(r, 0.0001);
+                // Convert radius into angular space
+                theta = r * _DistortionStrength_2;
+                // Project onto sphere using sin()
+                // This is the critical step that creates true spherical wrapping
+                projected_real= sin(theta);   
+                projected_fake = theta * (1.0 + theta * theta);
+                projected = lerp(projected_real, projected_fake, _BulgeBias);
+               
+                //// TEST FUNCTIONS ///
+                // projected = tan(clamp(theta,-1.5,1.5)); 
+                // // float projected = sin(theta) * (1.0 + bias); 
+                // float projected = pow(theta, exponent);
+                
+                
                 // Normalize back to direction
                 sphereUV = sphereUV * (projected / safeR);
                 // Convert back to 0–1 UV space
@@ -170,11 +198,11 @@ Shader "Hidden/FisheyeCode"
                 #endif
 
 
-                    // BLUR FISHEYE 2
-                    #ifdef _USE_FISHEYE_ON_TEST_2
+                    // BLUR FISHEYE 1
+                    #ifdef _USE_FISHEYE_ON_TEST_1
                     {
                         float distForBlur = length(uv - 0.5);
-                        float blur = distForBlur * _BlurStrength_2 * 0.005;
+                        float blur = distForBlur * _BlurStrength_1 * 0.005;
 
                         color += SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, distortedUV + float2(blur, 0));
                         color += SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, distortedUV + float2(-blur, 0));
@@ -186,12 +214,11 @@ Shader "Hidden/FisheyeCode"
                     }
                     #endif
 
-
-                    // BLUR FISHEYE 3
-                    #ifdef _USE_FISHEYE_ON_TEST_3
+                                        // BLUR FISHEYE 2
+                    #ifdef _USE_FISHEYE_ON_TEST_2
                     {
                         float distForBlur = length(uv - 0.5);
-                        float blur = distForBlur * _BlurStrength_3 * 0.005;
+                        float blur = distForBlur * _BlurStrength_2 * 0.005;
 
                         color += SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, distortedUV + float2(blur, 0));
                         color += SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, distortedUV + float2(-blur, 0));
