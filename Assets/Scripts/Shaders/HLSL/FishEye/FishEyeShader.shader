@@ -22,6 +22,11 @@ Shader "Hidden/FisheyeCode"
         _TrackingSpeed("Glitch Scroll Speed", Float) = 1.0
         _TrackingSize("Glitch Band Size", Range(0, 20)) = 10.0
         _CutoutThreshold("Blackout Chance", Range(0.9, 1.0)) = 0.98
+        _TrackingPosition("Tracking Y Position", Range(0,1)) = 0.5
+        _TrackingThickness ("Tracking Thickness", Range(0.001, 0.2)) = 0.05  
+        _ScrollAmount("Scroll Blend (0 Static / 1 Scroll)", Range(0,1)) = 0
+        _ColorSplit("Color Split Amount", Range(0,0.05)) = 0.01
+        _ColorSplitIntensity("Color Split Intensity", Range(0,1)) = 0.5
 
         [Header(Static and Grain)]
         [Toggle(_USE_GRAIN_ON)] _UseGrain("Enable Grain", Float) = 1
@@ -51,6 +56,7 @@ Shader "Hidden/FisheyeCode"
             #pragma shader_feature _USE_FISHEYE_ON
             #pragma shader_feature _USE_FISHEYE_SP_ON
             #pragma shader_feature _USE_GLITCH_ON
+            #pragma shader_feature _USE_GLITCH_ON_1
             #pragma shader_feature _USE_GRAIN_ON
             #pragma shader_feature _USE_LINES_ON
 
@@ -61,12 +67,11 @@ Shader "Hidden/FisheyeCode"
             float bias , _BulgeBias;
             float _GrainIntensity, _TrackingSpeed, _TrackingSize, _CutoutThreshold;
             float _LineDensity, _LineSpeed;
+            float _trackingBar, _TrackingPosition, _TrackingThickness;                                            // Tracking (head clogging)
+            float staticBand , _ScrollAmount; 
+            float _ColorSplit , _ColorSplitIntensity; 
 
-            // Fish Eye 1 & 2
-                float r;
-                float safeR;
-                float theta;
-                float projected, projected_real, projected_fake;
+
 
             float SimpleNoise(float2 uv) {
                 return frac(sin(dot(uv, float2(12.9898, 78.233))) * 43758.5453);
@@ -78,10 +83,13 @@ Shader "Hidden/FisheyeCode"
                 float2 uv = input.texcoord;
                 float2 distortedUV = uv; 
                 float2 sphereUV = uv * 2.0 - 1.0;
-                // float r;
-                // float safeR;
-                // float theta;
-                // float projected;
+                half4 color = 0;
+
+                // Fish Eye 1 & 2
+                float r;
+                float safeR;
+                float theta;
+                float projected, projected_real, projected_fake;
 
                 // 1. Fisheye Distortion Logic  r' = r * (1 + k*r²)
                 #ifdef _USE_FISHEYE_ON
@@ -120,16 +128,48 @@ Shader "Hidden/FisheyeCode"
 
                 // 2. Tracking Glitch Logic
                 #ifdef _USE_GLITCH_ON
+                    // ----- 1. STATIC BAND MASK -----
+                    float bandDistance = abs(uv.y - _TrackingPosition);
+                    staticBand = smoothstep(_TrackingThickness, 0.0, bandDistance);
+
+                    // ----- 2. SCROLLING BAND (Optional Mode) -----
                     float time = _Time.y * _TrackingSpeed;
-                    float trackingBar = sin(uv.y * _TrackingSize - time);
-                    trackingBar = smoothstep(0.9, 1.0, trackingBar); 
-                    distortedUV.x += trackingBar * 0.02 * SimpleNoise(float2(time, uv.y));
-                    if(SimpleNoise(float2(_Time.y, 0)) > _CutoutThreshold) return half4(0,0,0,1);
+                    float scrollWave = sin(uv.y * _TrackingSize - time);
+                    float scrollBand = smoothstep(0.9, 1.0, scrollWave);
+
+                    // ----- SWITCH -----
+                    _trackingBar = lerp(staticBand, scrollBand, _ScrollAmount);
+
+                    // ----- DISTORTION -----
+                    float noise = SimpleNoise(float2(uv.y, time));
+                    // distortedUV.x += _trackingBar * 0.02 * noise;
+                    float tear = (noise - 0.5) * 0.1;
+                    distortedUV.x += _trackingBar * tear;
+
+                    // float split = _trackingBar * _ColorSplit;
+
+                    float smearAmount = _trackingBar * 0.02;
+                    half4 smearColor = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, distortedUV + float2(smearAmount, 0));
+                    color = lerp(color, smearColor, _trackingBar * 0.7);
+
+
+                    // ----- 5. OPTIONAL RANDOM CUTOUT -----
+                    if(SimpleNoise(float2(time, 0)) > _CutoutThreshold)
+                    return half4(0,0,0,1);
+                    
+                    // float time = _Time.y * _TrackingSpeed;
+                    // float trackingBar = sin(uv.y * _TrackingSize - time);
+                    // trackingBar = smoothstep(0.9, 1.0, trackingBar); 
+                    // distortedUV.x += trackingBar * 0.02 * SimpleNoise(float2(time, uv.y));
+                    // if(SimpleNoise(float2(_Time.y, 0)) > _CutoutThreshold) return half4(0,0,0,1);
                 #endif
 
 
+
+
+
                 // 3. Optimized Sample and Sharpness Fix
-                half4 color = 0;
+
                 bool blurred = false;
                 // BLUR FISHEYE 1
                 #ifdef _USE_FISHEYE_ON
@@ -170,6 +210,17 @@ Shader "Hidden/FisheyeCode"
                     {
                         // Perfectly sharp sampling when FishEye is toggled OFF
                         color = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, distortedUV);
+
+                        // float colorOffset = _trackingBar * 0.01;
+
+                        // float2 redUV  = distortedUV + float2(colorOffset, 0);
+                        // float2 blueUV = distortedUV - float2(colorOffset, 0);
+
+                        // half r = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, redUV).r;
+                        // half g = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, distortedUV).g;
+                        // half b = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, blueUV).b;
+
+                        // color = half4(r, g, b, 1);
                     }
 
 

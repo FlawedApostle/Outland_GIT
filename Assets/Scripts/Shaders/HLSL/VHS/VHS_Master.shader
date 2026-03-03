@@ -28,11 +28,12 @@ Shader "VHS_Effects/VHS_Final_Master" // CHANGED FROM HIDDEN
         // LENS - FISH EYE   
         [Header(Lens Distortion and Edge Blur)]
         [Toggle(_USE_FISHEYE_ON)] _UseFisheye("Enable Lens FX", Float) = 1
-        _DistortionStrength("Lens Bulge", Float) = 0.5
-        _BlurStrength("Edge Blur Intensity", Range(0, 5)) = 1.0
+        _DistortionStrength("Distortion Strength", Float) = 0.5
+        _BlurStrength("Blur Strength - Edge", Float) = 1.0
         _Zoom("Zoom", Float) = 0.9
-        _DistortionPower("Lens Edge Sharpness", Range(1, 5)) = 2.0              // pow() formula
-        /// VIGNETTE BORDER
+        _BulgeBias("Bulge Strength", Float) = 0.9                               // exaggerated polynomial growth
+        // _DistortionPower("Lens Edge Sharpness", Range(1, 5)) = 2.0              // pow() formula
+        /// VIGNETTE BORDER 
         [Header(Border Vignette)]
         [Toggle(_USE_VIGNETTE)] _UseVignette("Enable Vignette", Float) = 0
         _VignetteStrength("Edge Darkness", Range(0, 2)) = 1.0
@@ -162,6 +163,7 @@ Shader "VHS_Effects/VHS_Final_Master" // CHANGED FROM HIDDEN
             _DistortionPower, 
             _BlurStrength, 
             _Zoom,
+            _BulgeBias,
             // GLITCH
             _TrackingSpeed, 
             _TrackingAmount, 
@@ -204,6 +206,8 @@ Shader "VHS_Effects/VHS_Final_Master" // CHANGED FROM HIDDEN
             _FlickerSpeed, 
             _VerticalJumpStrength, 
             _JitterSpeed,
+            _projected_real,
+            _projected_fake,
             _JitterAmount;                          // END OF FLOAT
 
 
@@ -231,19 +235,19 @@ Shader "VHS_Effects/VHS_Final_Master" // CHANGED FROM HIDDEN
                 // STAGE 0: INITIAL SETUP
                 //--------------------------------------------------
                 
-                float2 uv = input.texcoord;
-
                 // Effects
+                float2 uv = input.texcoord;
                 float2 distortedUV = uv;
+                // float2 sphereUV = uv * 2.0 - 1.0;               // Fish Eye 
                 float t_stable = frac(_Time.y);
 
                 // -------> Distance Calculation (all features can use it, so it's outside the Fisheye block)
                 float2 centeredUV = uv - 0.5;
                 float dist = dot(centeredUV, centeredUV);
 
-                half4 color = 0;            // -- BLUR
-                float3 glitchAddColor = 0;  // GLITCH
 
+                half4 color = 0;                                 // BLUR
+                float3 glitchAddColor = 0;                       // GLITCH
 
                 //--------------------------------------------------
                 // STAGE 1: FRAME EVENTS
@@ -259,12 +263,36 @@ Shader "VHS_Effects/VHS_Final_Master" // CHANGED FROM HIDDEN
                 // These modify WHERE we sample from
                 //--------------------------------------------------
 
-                 // FISHEYE
-                 #ifdef _USE_FISHEYE_ON
-                // //distortedUV = 0.5 + (centeredUV * _Zoom) * (1.0 + _DistortionStrength * dist);
-                // // Wrapping dist in pow() protects the center of the screen
-                distortedUV = 0.5 + (centeredUV * _Zoom) * (1.0 + _DistortionStrength * pow(dist, _DistortionPower));
+                 // FISHEYE - NOTE NOT USING THE GLOBALS, RATHER ITS CREATED INSIDE THE SCOPE TO SEPERATE 'USAGE'
+                #ifdef _USE_FISHEYE_ON
+                float2 sphereUV = uv * 2.0 - 1.0;
+                // Apply zoom BEFORE projection
+                sphereUV *= _Zoom;
+                // Distance from center
+                float r = length(sphereUV);
+                float safeR = max(r, 0.0001);
+                // Angular mapping
+                float theta = r * _DistortionStrength;
+
+                // Hybrid projection
+                float projected_real = sin(theta);
+                float projected_fake = theta * (1.0 + theta * theta);
+                float projected = lerp(projected_real, projected_fake, _BulgeBias);
+
+                // Normalize direction
+                sphereUV = sphereUV * (projected / safeR);
+
+                // Back to 0–1 UV
+                distortedUV = sphereUV * 0.5 + 0.5;
+
                 #endif
+
+
+                // //distortedUV = 0.5 + (centeredUV * _Zoom) * (1.0 + _DistortionStrength * dist);
+                // Wrapping dist in pow() protects the center of the screen
+                // distortedUV = 0.5 + (centeredUV * _Zoom) * (1.0 + _DistortionStrength * pow(dist, _DistortionPower));
+
+
 
                 // VERTICAL TAPE JUMP
                 #ifdef _USE_VERTICAL_JUMP
@@ -320,27 +348,38 @@ Shader "VHS_Effects/VHS_Final_Master" // CHANGED FROM HIDDEN
                 // STAGE 4: IMAGE SAMPLING
                 // This actually creates the image
                 //--------------------------------------------------
-                
-                //  BLUR - SAMPLE 
-                #ifdef _USE_FISHEYE_ON
-                float distForBlur = length(uv - 0.5);
-                float blur = distForBlur * _BlurStrength * 0.005;
-                float2 offsets[4] = { float2(blur, blur), float2(-blur, blur), float2(blur, -blur), float2(-blur, -blur) };
-                for(int i = 0; i < 4; i++) {
-                    color.r += SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, r_uv + offsets[i]).r;
-                    color.g += SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, g_uv + offsets[i]).g;
-                    color.b += SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, b_uv + offsets[i]).b;
-                }
-                color /= 4.0;
-                #else
-                color.r = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, r_uv).r;
-                color.g = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, g_uv).g;
-                color.b = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, b_uv).b;
-                #endif
-                
-                color.rgb += glitchAddColor;
-                color.a = 1.0;
 
+
+                //  BLUR - SAMPLE 
+                bool blurred = false;
+                #ifdef _USE_FISHEYE_ON // -SECOND TEST
+                float distForBlur = length(distortedUV - 0.5);
+                float blur = pow(distForBlur, 1.5) * _BlurStrength * 0.005;
+
+                // Center sample
+                half4 accum = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, distortedUV);
+
+                // Cross samples
+                accum += SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, distortedUV + float2( blur, 0));
+                accum += SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, distortedUV + float2(-blur, 0));
+                accum += SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, distortedUV + float2(0,  blur));
+                accum += SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, distortedUV + float2(0, -blur));
+
+                // Average
+                color = accum / 5.0;
+                 #endif
+
+
+
+
+                // FALLBACK (only if no fisheye active)
+                if (!blurred)
+                {
+                    // Perfectly sharp sampling when FishEye is toggled OFF
+                    color = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, distortedUV);
+                }
+               
+                    
                 //--------------------------------------------------
                 // STAGE 5: POST COLOR EFFECTS
                 // These modify the sampled image
@@ -420,3 +459,32 @@ Shader "VHS_Effects/VHS_Final_Master" // CHANGED FROM HIDDEN
     }
     CustomEditor "VHSInspector"
 }
+
+
+
+
+//// OLD CODE MOVING SOON
+
+                
+                // #ifdef _USE_FISHEYE_ON // - FIRST TEST
+                // float distForBlur = length(uv - 0.5);
+                // float blur = distForBlur * _BlurStrength * 0.005;
+                // float2 offsets[4] = { float2(blur, blur), float2(-blur, blur), float2(blur, -blur), float2(-blur, -blur) };
+                // for(int i = 0; i < 4; i++) {
+                //     color.r += SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, r_uv + offsets[i]).r;
+                //     color.g += SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, g_uv + offsets[i]).g;
+                //     color.b += SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, b_uv + offsets[i]).b;
+                // }
+                // color /= 4.0;
+                // #else
+                // color.r = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, r_uv).r;
+                // color.g = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, g_uv).g;
+                // color.b = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, b_uv).b;
+
+                // color.rgb += glitchAddColor;
+                // color.a = 1.0;
+
+                // float distForBlur = length(uv - 0.5);
+                // #endif
+
+////// OLD CODE MOVING SOON - END

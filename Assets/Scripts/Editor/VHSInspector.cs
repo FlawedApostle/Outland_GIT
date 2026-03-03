@@ -12,10 +12,11 @@ public class VHSInspector : ShaderGUI
         // 1. LENS - FISH EYE
         DrawSection("1. Lens & Distortion", ref showLens, () => {
             materialEditor.ShaderProperty(FindProperty("_UseFisheye", properties), "Enable Lens FX");
-            materialEditor.ShaderProperty(FindProperty("_DistortionStrength", properties), "Lens Bulge");
-            materialEditor.ShaderProperty(FindProperty("_BlurStrength", properties), "Edge Blur Intensity");
+            materialEditor.ShaderProperty(FindProperty("_DistortionStrength", properties), "Distortion Strength");
+            materialEditor.ShaderProperty(FindProperty("_BlurStrength", properties), "Blur Strength - Edge");
             materialEditor.ShaderProperty(FindProperty("_Zoom", properties), "Zoom");
-            materialEditor.ShaderProperty(FindProperty("_DistortionPower", properties), "Distortion Power");
+            materialEditor.ShaderProperty(FindProperty("_BulgeBias", properties), "Bulge Bias Strength");
+            //materialEditor.ShaderProperty(FindProperty("_DistortionPower", properties), "Distortion Strength");
             // VIGNETTE
             EditorGUILayout.Space(); 
             materialEditor.ShaderProperty(FindProperty("_UseVignette", properties), "Enable Vignette");

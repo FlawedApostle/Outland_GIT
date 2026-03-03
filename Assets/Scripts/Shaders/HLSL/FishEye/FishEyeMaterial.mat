@@ -24,8 +24,7 @@ Material:
   m_Shader: {fileID: 4800000, guid: 0c42a83e02265634991be7dae41337aa, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
-  - _USE_FISHEYE_SP_ON
+  m_ValidKeywords: []
   m_InvalidKeywords:
   - _USE_BLACKOUT
   m_LightmapFlags: 4
@@ -111,9 +110,11 @@ Material:
     - _BumpScale: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
+    - _ColorSplit: 0.0166
+    - _ColorSplitIntensity: 0.936
     - _Cull: 2
     - _Cutoff: 0.5
-    - _CutoutThreshold: 0.9372
+    - _CutoutThreshold: 1
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DistortionStrength: 0.93
@@ -140,6 +141,7 @@ Material:
     - _ScanlineCount: 500
     - _ScanlineIntensity: 0.0033
     - _ScanlineSpeed: 100.08
+    - _ScrollAmount: 0
     - _Sharpness: 10
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
@@ -148,14 +150,16 @@ Material:
     - _SrcBlendAlpha: 1
     - _Surface: 0
     - _TextureScale: 1
-    - _TrackingSize: 6.4
+    - _TrackingPosition: 0.513
+    - _TrackingSize: 13.5
     - _TrackingSpeed: 1
+    - _TrackingThickness: 0.183
     - _UseBlackout: 1
     - _UseFisheye: 0
     - _UseFisheye_1: 0
     - _UseFisheye_2: 0
     - _UseFisheye_3: 0
-    - _UseFisheye_SP: 1
+    - _UseFisheye_SP: 0
     - _UseGlitch: 0
     - _UseGrain: 0
     - _UseLines: 0
