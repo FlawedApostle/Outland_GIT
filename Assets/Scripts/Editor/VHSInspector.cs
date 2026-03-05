@@ -5,7 +5,7 @@ public class VHSInspector : ShaderGUI
 {
     bool showLens = true; bool showChroma = true; bool showGlitch = true;
     bool showConstant = true; bool showBleed = true; bool showGrain = true; bool showFuzzy = true; bool showJitter = true;
-    bool showVignette = true;
+    bool showVignette = true; bool showBlur = true;
 
     public override void OnGUI(MaterialEditor materialEditor, MaterialProperty[] properties)
     {
@@ -13,10 +13,9 @@ public class VHSInspector : ShaderGUI
         DrawSection("1. Lens & Distortion", ref showLens, () => {
             materialEditor.ShaderProperty(FindProperty("_UseFisheye", properties), "Enable Lens FX");
             materialEditor.ShaderProperty(FindProperty("_DistortionStrength", properties), "Distortion Strength");
-            materialEditor.ShaderProperty(FindProperty("_BlurStrength", properties), "Blur Strength - Edge");
             materialEditor.ShaderProperty(FindProperty("_Zoom", properties), "Zoom");
             materialEditor.ShaderProperty(FindProperty("_BulgeBias", properties), "Bulge Bias Strength");
-            //materialEditor.ShaderProperty(FindProperty("_DistortionPower", properties), "Distortion Strength");
+            
             // VIGNETTE
             EditorGUILayout.Space(); 
             materialEditor.ShaderProperty(FindProperty("_UseVignette", properties), "Enable Vignette");
@@ -24,8 +23,17 @@ public class VHSInspector : ShaderGUI
             materialEditor.ShaderProperty(FindProperty("_VignetteSize", properties), " Vignette Smoothness (Power)");
         });
 
+        // 1.b BLUR
+        DrawSection("1b. Blur", ref showBlur, () =>
+        {
+            materialEditor.ShaderProperty(FindProperty("_UseBlur", properties), "Enable Blur");
+            materialEditor.ShaderProperty(FindProperty("_BlurStrength", properties), "Blur Strength");
+            materialEditor.ShaderProperty(FindProperty("_DSLRBlurStart", properties), "Blur Start");
+            materialEditor.ShaderProperty(FindProperty("_DSLRBlurPower", properties), "Blur Power");
+        });
+
         // 2. CHROMATIC ABBERATION
-        DrawSection("2. Chromatic Aberration", ref showChroma, () => {
+            DrawSection("2. Chromatic Aberration", ref showChroma, () => {
             materialEditor.ShaderProperty(FindProperty("_UseChromaAbb", properties), "Enable Lens Split");
             materialEditor.ShaderProperty(FindProperty("_AbbIntensity", properties), "Edge Split Strength");
             materialEditor.ShaderProperty(FindProperty("_FlarePower", properties), "Flare Strength (power)");

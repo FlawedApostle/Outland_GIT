@@ -11,7 +11,8 @@ Material:
   m_Shader: {fileID: 4800000, guid: d5e59729fb5501e4781d68ba87108544, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
+  m_ValidKeywords:
+  - _USE_GLITCH_COLOR
   m_InvalidKeywords:
   - _USE_FISHEYE
   m_LightmapFlags: 4
@@ -83,19 +84,19 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _AbbIntensity: 0.068
+    - _AbbIntensity: 0.06
     - _AddPrecomputedVelocity: 0
     - _AlphaClip: 0
     - _AlphaToMask: 0
     - _B_Offset: 0.005
-    - _BleedAmount: 0.0011
+    - _BleedAmount: 0
     - _BleedB: 0.097
     - _BleedG: 0.712
     - _BleedR: 0.785
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
-    - _BlurStrength: 1
-    - _BulgeBias: 1
+    - _BlurStrength: 2.86
+    - _BulgeBias: 0.5
     - _BumpScale: 1
     - _BurstBrightness: 0.06
     - _BurstColorIntensity: 1
@@ -111,10 +112,12 @@ Material:
     - _Chunkiness: 700
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
-    - _ColorGrainIntensity: 0.027
+    - _ColorGrainIntensity: 0.02
     - _Cull: 2
     - _Cutoff: 0.5
     - _CutoutThreshold: 0.98
+    - _DSLRBlurPower: 0.5
+    - _DSLRBlurStart: 0.523
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _Distortion: -0.5
@@ -123,7 +126,7 @@ Material:
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
-    - _FlarePower: 1
+    - _FlarePower: 2.13
     - _FlickerSpeed: 10
     - _FlickerStrength: 0.0262
     - _G_Offset: 0.0024
@@ -133,7 +136,7 @@ Material:
     - _Glossiness: 0
     - _GlossyReflections: 0
     - _GrainIntensity: 0.02
-    - _JitterAmount: 0.00308
+    - _JitterAmount: 0.00417
     - _JitterSpeed: 136.2
     - _LineDensity: 3228.2
     - _LineRotate: 1.89
@@ -157,10 +160,11 @@ Material:
     - _TrackingHardness: 0.927
     - _TrackingJitter: 0.0249
     - _TrackingSize: 20
-    - _TrackingSpacing: 0.37
-    - _TrackingSpeed: 1
+    - _TrackingSpacing: 7.88
+    - _TrackingSpeed: 0
     - _UseBlackout: 0
     - _UseBleed: 0
+    - _UseBlur: 0
     - _UseBurstZone: 0
     - _UseChroma: 0
     - _UseChromaAbb: 0
@@ -168,7 +172,7 @@ Material:
     - _UseFisheye: 0
     - _UseFlicker: 0
     - _UseGlitch: 0
-    - _UseGlitchColor: 0
+    - _UseGlitchColor: 1
     - _UseGrain: 0
     - _UseJitter: 0
     - _UseLines: 0
@@ -198,7 +202,7 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _ColorGrainRGB: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _GlitchRGB: {r: 0, g: 0, b: 0.13, a: 0}
+    - _GlitchRGB: {r: 0.5, g: 0.5, b: 2.12, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
