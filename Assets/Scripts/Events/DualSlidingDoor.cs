@@ -44,7 +44,7 @@ public class ProximityDualSlidingDoor : MonoBehaviour
     public Transform player;
     public Transform enemy;                                             // enemy AI - for openeing the doors (for now)
     public float openDistance = 3.0f; 
-    float dist = Mathf.Infinity;
+    //float dist = Mathf.Infinity;
 
     [Header("Movement Settings")]
     public float slideDistance = 1.2f;
@@ -60,22 +60,13 @@ public class ProximityDualSlidingDoor : MonoBehaviour
 
     void Update()
     {
-        
-        // Player open the door
-        if (player != null)
-        {
-            float playerDistance = Vector3.Distance(distanceReference.position, player.position);
-            dist  = Mathf.Min(dist, playerDistance);
-        }
-        // Enemy open the door
-        if (enemy != null)
-        {
-            float enemyDist = Vector3.Distance(distanceReference.position, enemy.position);
-            dist = Mathf.Min(dist, enemyDist);
-        }
 
-        //float dist = Vector3.Distance(transform.position, player.position);
-        //float dist = Vector3.Distance(distanceReference.position, player.position);
+        /// Player open the door
+        ///if (player != null) ;
+        ///float dist = Vector3.Distance(transform.position, player.position);
+        ///float dist = Vector3.Distance(distanceReference.position, player.position);
+       
+        float dist = GetClosestDistance(player, enemy);
 
         bool shouldOpen = dist <= openDistance;
 
@@ -155,5 +146,27 @@ public class ProximityDualSlidingDoor : MonoBehaviour
         }
 
         return Vector3.right;
+    }
+
+
+    /// <summary>
+    /// Checks the distance from the distanceReference to any number of actors.
+    /// Returns the **closest distance** found.
+    /// </summary>
+    float GetClosestDistance(params Transform[] actors)
+    {
+        float closest = Mathf.Infinity;
+
+        foreach (var t in actors)
+        {
+            if (t != null)
+            {
+                float dist = Vector3.Distance(distanceReference.position, t.position);
+                if (dist < closest)
+                    closest = dist;
+            }
+        }
+
+        return closest;
     }
 }
