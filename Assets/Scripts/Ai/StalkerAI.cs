@@ -4,6 +4,11 @@ using UnityEngine.AI;
 public class StalkerAI : MonoBehaviour
 {
     public Transform player;
+
+    // NEW: simple follow mode
+    public bool directFollowMode = false;
+    public Transform followTarget;
+
     NavMeshAgent agent;
     float stalkTimer;
 
@@ -15,14 +20,21 @@ public class StalkerAI : MonoBehaviour
 
     void Update()
     {
+        // NEW: direct Follow Mode
+        if (directFollowMode && followTarget != null)
+        {
+            agent.SetDestination(followTarget.position);
+            return;
+        }
         stalkTimer += Time.deltaTime;
 
         // Every 5 seconds, move to a "hiding spot" near the player
+        // need to add - a navmesh radius/space checker ? (Random.insideUnitSphere * 10f); - float value 10 should be the navmesh radius / then we can implement 'hot-zones'
         if (stalkTimer > 5f)
         {
             Vector3 randomSpotNearPlayer = player.position + (Random.insideUnitSphere * 10f);
             NavMeshHit hit;
-            if (NavMesh.SamplePosition(player.position, out hit, 10f, NavMesh.AllAreas))   // randomSpotNearPlayer
+            if (NavMesh.SamplePosition(randomSpotNearPlayer, out hit, 10f, NavMesh.AllAreas))
             {
                 agent.SetDestination(hit.position);
             }
