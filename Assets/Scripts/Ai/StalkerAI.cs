@@ -22,7 +22,7 @@ public class StalkerAI : MonoBehaviour
         {
             Vector3 randomSpotNearPlayer = player.position + (Random.insideUnitSphere * 10f);
             NavMeshHit hit;
-            if (NavMesh.SamplePosition(randomSpotNearPlayer, out hit, 10f, NavMesh.AllAreas))
+            if (NavMesh.SamplePosition(player.position, out hit, 10f, NavMesh.AllAreas))   // randomSpotNearPlayer
             {
                 agent.SetDestination(hit.position);
             }
