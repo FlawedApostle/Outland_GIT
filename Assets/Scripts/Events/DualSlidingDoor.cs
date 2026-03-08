@@ -42,7 +42,9 @@ public class ProximityDualSlidingDoor : MonoBehaviour
 
     [Header("Detection")]
     public Transform player;
-    public float openDistance = 3.0f;
+    public Transform enemy;                                             // enemy AI - for openeing the doors (for now)
+    public float openDistance = 3.0f; 
+    float dist = Mathf.Infinity;
 
     [Header("Movement Settings")]
     public float slideDistance = 1.2f;
@@ -58,10 +60,22 @@ public class ProximityDualSlidingDoor : MonoBehaviour
 
     void Update()
     {
-        if (player == null) return;
+        
+        // Player open the door
+        if (player != null)
+        {
+            float playerDistance = Vector3.Distance(distanceReference.position, player.position);
+            dist  = Mathf.Min(dist, playerDistance);
+        }
+        // Enemy open the door
+        if (enemy != null)
+        {
+            float enemyDist = Vector3.Distance(distanceReference.position, enemy.position);
+            dist = Mathf.Min(dist, enemyDist);
+        }
 
         //float dist = Vector3.Distance(transform.position, player.position);
-        float dist = Vector3.Distance(distanceReference.position, player.position);
+        //float dist = Vector3.Distance(distanceReference.position, player.position);
 
         bool shouldOpen = dist <= openDistance;
 

@@ -385,6 +385,7 @@ MonoBehaviour:
     targetLocalPos: {x: 0, y: 0, z: 0}
     isOpen: 0
   player: {fileID: 717572124}
+  enemy: {fileID: 0}
   openDistance: 2.5
   slideDistance: 10
   speed: 2
@@ -2832,6 +2833,7 @@ MonoBehaviour:
     targetLocalPos: {x: 0, y: 0, z: 0}
     isOpen: 0
   player: {fileID: 717572124}
+  enemy: {fileID: 0}
   openDistance: 3
   slideDistance: 1.2
   speed: 3
@@ -3138,6 +3140,7 @@ MonoBehaviour:
     targetLocalPos: {x: 0, y: 0, z: 0}
     isOpen: 0
   player: {fileID: 717572124}
+  enemy: {fileID: 0}
   openDistance: 2.5
   slideDistance: 10
   speed: 2
@@ -3435,6 +3438,7 @@ MonoBehaviour:
     targetLocalPos: {x: 0, y: 0, z: 0}
     isOpen: 0
   player: {fileID: 717572124}
+  enemy: {fileID: 0}
   openDistance: 2.5
   slideDistance: 10
   speed: 2
@@ -3988,6 +3992,7 @@ MonoBehaviour:
     targetLocalPos: {x: 0, y: 0, z: 0}
     isOpen: 0
   player: {fileID: 717572124}
+  enemy: {fileID: 0}
   openDistance: 3
   slideDistance: 1.2
   speed: 3
@@ -4121,6 +4126,7 @@ MonoBehaviour:
     targetLocalPos: {x: 0, y: 0, z: 0}
     isOpen: 0
   player: {fileID: 717572124}
+  enemy: {fileID: 0}
   openDistance: 2.5
   slideDistance: 10
   speed: 2
@@ -5980,6 +5986,7 @@ MonoBehaviour:
     targetLocalPos: {x: 0, y: 0, z: 0}
     isOpen: 0
   player: {fileID: 717572124}
+  enemy: {fileID: 0}
   openDistance: 3
   slideDistance: 1.2
   speed: 3
@@ -6254,6 +6261,11 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 903574f217ea11344a0cf63d82f07b2f, type: 3}
   m_PrefabInstance: {fileID: 873349579}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &874703971 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6339190266867086226, guid: fcc360a07b90e6344992d5da733b02d6, type: 3}
+  m_PrefabInstance: {fileID: 1234087135}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &882547701 stripped
 Transform:
@@ -8257,6 +8269,10 @@ PrefabInstance:
       propertyPath: followTarget
       value: 
       objectReference: {fileID: 717572124}
+    - target: {fileID: 3721944535602960471, guid: fcc360a07b90e6344992d5da733b02d6, type: 3}
+      propertyPath: directFollowMode
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6339190266867086226, guid: fcc360a07b90e6344992d5da733b02d6, type: 3}
       propertyPath: m_LocalPosition.x
       value: -72
@@ -10969,6 +10985,7 @@ MonoBehaviour:
     targetLocalPos: {x: 0, y: 0, z: 0}
     isOpen: 0
   player: {fileID: 717572124}
+  enemy: {fileID: 0}
   openDistance: 3
   slideDistance: 1.2
   speed: 3
@@ -16130,6 +16147,7 @@ MonoBehaviour:
     targetLocalPos: {x: 0, y: 0, z: 0}
     isOpen: 0
   player: {fileID: 717572124}
+  enemy: {fileID: 874703971}
   openDistance: 3
   slideDistance: 1.2
   speed: 3
