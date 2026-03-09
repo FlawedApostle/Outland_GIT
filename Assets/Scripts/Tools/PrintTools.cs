@@ -25,6 +25,11 @@ public static class PrintTools
         UnityEngine.Debug.Log($"{label}: <color=red>{value}</color>");
     }
 
+    public static void Print(string label, string color) 
+    { 
+        UnityEngine.Debug.Log($"<color={color}>{label}</color>");
+    }
+
     public static void Print(string label, object value , string color)
     {
         UnityEngine.Debug.Log($"<color={color}>{label}</color>: <color={color}>{value}</color>");

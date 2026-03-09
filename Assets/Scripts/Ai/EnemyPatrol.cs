@@ -90,7 +90,7 @@ public class EnemyPatrol : MonoBehaviour
         randomPointTrue = NavMesh.SamplePosition(randomPoint, out hit, floorDistance, NavMesh.AllAreas);
 
         // 2. SMALL number (5.0f) here just to find the floor.
-        //  PatrolRadius here, the AI gets "analysis paralysis" and stands still.
+        // PatrolRadius here, the AI gets "analysis paralysis" and stands still.
         if (randomPointTrue) // this will break navMesh Ai controll if messed with change to 2.0f  this is fixed, however I have a PUBLIC GLOBAL variable set in inspector. its mainly for debugging purposes. REMOVE IN RELEASE VERSION
         {
             Debug.DrawLine(transform.position, hit.position, Color.red, 5f);
