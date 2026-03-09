@@ -10,7 +10,7 @@ public class StalkerAI : MonoBehaviour
     public bool directFollowMode = false;
     public Transform followTarget;
     public float stalk_value = 3f;
-    public float navMesh_radius = 5f;
+    [Tooltip ("recommended that you specify a maxDistance of twice the agent height")] public float navMesh_radius = 5f;       /// recommended that you specify a maxDistance of twice the agent height
 
     Vector3 navMeshCenter;
     float navMeshWorldRadius;
@@ -22,9 +22,10 @@ public class StalkerAI : MonoBehaviour
 
     void Start()
     {
-        agent = GetComponent<NavMeshAgent>();
-        agent.Warp(transform.position); // Fixes NavMesh errors on start
-        ReadNavMeshBounds();
+        agent = GetComponent<NavMeshAgent>();                           // Get component player
+        agent.Warp(transform.position);                                 // Fixes NavMesh errors on start
+        ReadNavMeshBounds();                                            // Get NavMesh Radius/Bounds
+        OnDrawGizmos();                                                 // Draw NavMesh
     }
 
     void Update()
@@ -54,7 +55,7 @@ public class StalkerAI : MonoBehaviour
     }
 
 
-
+    // Read The NavMesh Bounds
     void ReadNavMeshBounds()
     {
         var triangulation = NavMesh.CalculateTriangulation();
@@ -75,14 +76,34 @@ public class StalkerAI : MonoBehaviour
         navMeshWorldRadius = Vector3.Distance(min, max) * 0.5f;
     }
 
+    // Draw The NavMesh Bounds
+    void OnDrawGizmos()
+    {
+        var triangulation = NavMesh.CalculateTriangulation();
+
+        Gizmos.color = Color.violetRed;
+
+        for (int i = 0; i < triangulation.indices.Length; i += 3)
+        {
+            Vector3 a = triangulation.vertices[triangulation.indices[i]];
+            Vector3 b = triangulation.vertices[triangulation.indices[i + 1]];
+            Vector3 c = triangulation.vertices[triangulation.indices[i + 2]];
+
+            Gizmos.DrawLine(a, b);
+            Gizmos.DrawLine(b, c);
+            Gizmos.DrawLine(c, a);
+        }
+    }
+
 
 
     void Position_Stalk(Vector3 target)
     {
-        NavMeshHit hit = default;
+        /// Output parameter that Unity fills with information about the nearest NavMesh point.
+        NavMeshHit hit;// = default;
        
         if (NavMesh.SamplePosition(target, out hit, navMesh_radius, NavMesh.AllAreas))
-        {
+        {   // raycast
             Debug.DrawLine(transform.position, hit.position, Color.red, 1f);
             // to stop spamming the same point
             if (Vector3.Distance(agent.destination, hit.position) > 1f)         //agent.SetDestination(hit.position);
