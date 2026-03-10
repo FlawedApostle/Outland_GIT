@@ -108,8 +108,8 @@ public class StalkerAI : MonoBehaviour
 
 
         // DEBUG 
-        NavMeshPathTest();  // CHECK SUMMARY BELOW FUNCTION NavMeshPathTest - LEFT OFF HERE - PARTIAL PATH MEANS THAT WE MUST GO OVER THE MODULARITY OF THE WORLD - TEST EVERYTHING ! 
-
+        NavMeshPathTest();                  // CHECK SUMMARY BELOW FUNCTION NavMeshPathTest - LEFT OFF HERE - PARTIAL PATH MEANS THAT WE MUST GO OVER THE MODULARITY OF THE WORLD - TEST EVERYTHING ! 
+        DebugSampleEndpoints();
 
     }
 
@@ -128,6 +128,19 @@ public class StalkerAI : MonoBehaviour
             Debug.Log("CalculatePath FAILED");
         }
     }
+
+    void DebugSampleEndpoints()
+    {
+        NavMeshHit hitStart;
+        NavMeshHit hitEnd;
+
+        bool startOK = NavMesh.SamplePosition(transform.position, out hitStart, 0.5f, NavMesh.AllAreas);
+        bool endOK = NavMesh.SamplePosition(player.position, out hitEnd, 0.5f, NavMesh.AllAreas);
+
+        Debug.Log($"Sample START: {startOK} at {hitStart.position}");
+        Debug.Log($"Sample END:   {endOK} at {hitEnd.position}");
+    }
+
 
 
 
