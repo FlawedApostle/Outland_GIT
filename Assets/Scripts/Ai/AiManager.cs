@@ -5,6 +5,7 @@ using static UnityEngine.GraphicsBuffer;
 
 public class AiManager : MonoBehaviour
 {
+    public Animator animatorScript;
     public Transform player_user;           // User Player Position
     public Transform player_enemy;         // Enemy Position
     // NavMesh

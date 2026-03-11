@@ -4,6 +4,7 @@ using static UnityEngine.GraphicsBuffer;
 // This is is in testing phase 0.0
 public class StalkerAI : MonoBehaviour
 {
+    public Animator animatorScript;
     private Animator animatorPlayer;
     public Transform player;        // User Player Position
 
@@ -84,8 +85,6 @@ public class StalkerAI : MonoBehaviour
             //Position_Stalk_Path();
 
             Vector3 stalkPoint = GetValidPointNearPlayer(navMesh_radius);       // stalk_value
-            
-           
             if (agent.CalculatePath(stalkPoint, path))
             {
                 Debug.Log("PATH STATUS: " + path.status);
@@ -102,6 +101,21 @@ public class StalkerAI : MonoBehaviour
             }
   
             stalkTimer = 0;
+        }
+
+        if (!agent.pathPending)
+            Debug.Log("Agent path status: " + agent.pathStatus + ", remainingDist=" + agent.remainingDistance);
+
+        NavMeshHit hit;
+        Vector3 testPos = new Vector3(transform.position.x, transform.position.y, transform.position.z); // e.g. player position or door threshold
+        bool onMesh = NavMesh.SamplePosition(testPos, out hit, 0.5f, NavMesh.AllAreas);
+        Debug.Log("SamplePosition(" + testPos + "): " + onMesh + " at " + hit.position);
+
+
+        NavMeshPath debugPath = agent.path;
+        for (int i = 1; i < debugPath.corners.Length; i++)
+        {
+            Debug.DrawLine(debugPath.corners[i - 1], debugPath.corners[i], Color.cyan, 1.0f);
         }
 
 
@@ -171,7 +185,6 @@ public class StalkerAI : MonoBehaviour
     /// </summary>
     void Position_Stalk_Path()
     {
-        PrintTools.Print("lOADING STALK_PATH");
         NavMeshPath path = new NavMeshPath();
 
         if (NavMesh.CalculatePath(transform.position, player.position, NavMesh.AllAreas, path))
