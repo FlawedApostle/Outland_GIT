@@ -6,26 +6,78 @@ using static UnityEngine.GraphicsBuffer;
 public class AiManager : MonoBehaviour
 {
     public Animator animatorScript;
-    public Transform player_user;           // User Player Position
-    public Transform player_enemy;         // Enemy Position
+    public Transform player_user;                       // User Player Position
+    public Transform player_enemy;                      // Enemy Position
     // NavMesh
     float navMeshWorldRadius;
     Vector3 navMeshCenter;
-    public NavMeshAgent agent;
+    public NavMeshAgent agent;                          // This also checks the NavMeshPath Path , Using the agent we can check both
+
 
 
     void Start ()
     {
-
+        ReadNavMeshBounds();                            // expensive LEAVE  in start
     }
 
     void Update()
     {
-        NavMeshPathTest(); DebugSampleEndpoints(); ReadNavMeshBounds();
+        NavMeshPathTest();  DebugAgentPath(agent);                               
+        // DebugSampleEndpoints();  /Position_Player(player_user, player_enemy); 
+        Direction_ForwardVector(player_user);
+        Direction_ToEnemy(player_user, player_enemy);
     }
 
+    /// Is the player facing the enemy
+    void Direction_ToEnemy(Transform _player , Transform _enemy)
+    {
+        Vector3 dirToEnemy = (_enemy.position - _player.position).normalized;
+        float dot = Vector3.Dot(_player.forward, dirToEnemy);
+        //PrintTools.Print("Dot value = ", dot, "yellow");
+        if (dot > 0.7f)
+        {
+            PrintTools.Print("Player is facing the enemy" , "green");
+        }
+        else
+        {
+            PrintTools.Print("Player is NOT facing the enemy" , "red");
+        }
+    }
 
-    // Path Debugging
+    /// What direction is the player facing using direction Vector transform.forward
+    void Direction_ForwardVector(Transform _player)
+    {
+        //Debug.Log("Player Forward Dir: " + player_user.forward);
+        PrintTools.Print("Player Forward Direction vector: ", _player.forward, "green");
+    }
+
+    // FIX THIS - SOME REASON THE ENEMY & THE PLAYER ARE THE SAME LOCATION
+    void Position_Player(Transform _player , Transform _enemy)
+    {
+        /// player_user
+        Vector3 pos_player = _player.position;
+        Vector3 pos_enemy = _player.position;
+        //Debug.Log("Player Position XYZ: " + pos_player);
+        //Debug.Log("Enemy Position XYZ: " + pos_enemy);
+        PrintTools.Print("Player Position XYZ: ", pos_player, "green");
+        PrintTools.Print("Enemy Position XYZ: ", pos_enemy, "red");
+    }
+
+    /// THis is the navmesh drawn with color
+    void DebugAgentPath(NavMeshAgent agent)
+    {
+        // debugging 
+        NavMeshPath debugPath = agent.path;
+        for (int i = 1; i < debugPath.corners.Length; i++)
+        {
+            Debug.DrawLine(debugPath.corners[i - 1], debugPath.corners[i], Color.limeGreen, 1.0f);
+        }
+
+        //if (!agent.pathPending)
+        //    Debug.Log("Agent path status: " + agent.pathStatus + ", remainingDist=" + agent.remainingDistance);
+    }
+
+    /// Path Debugging - checking whether the enemy has found a partial / failed / completed path
     void NavMeshPathTest()
     {
         NavMeshPath debugPath = new NavMeshPath();
@@ -39,7 +91,7 @@ public class AiManager : MonoBehaviour
         }
     }
 
-    // Sample Positions of player & enemy
+    /// Sample Positions of player & enemy
     void DebugSampleEndpoints()
     {
         NavMeshHit hitStart;
@@ -52,7 +104,7 @@ public class AiManager : MonoBehaviour
         Debug.Log($"Sample END:   {endOK} at {hitEnd.position}");
     }
 
-    // Read The NavMesh Bounds
+    /// Read The NavMesh Bounds
     void ReadNavMeshBounds()
     {
         var triangulation = NavMesh.CalculateTriangulation();
@@ -72,10 +124,16 @@ public class AiManager : MonoBehaviour
         navMeshCenter = (min + max) * 0.5f;
         navMeshWorldRadius = Vector3.Distance(min, max) * 0.5f;
     }
+    
+    /// Check for point inside the NavMesh
+    bool IsPointInsideNavMeshBounds(Vector3 point)
+    {
+        float distance = Vector3.Distance(point, navMeshCenter);
+        PrintTools.Print("Distance is inside = True", "red");                                        // Debug
+        return distance <= navMeshWorldRadius;
+    }
 
-    // GIZMO - {so this is an odd function i need to check if I can call this, as at times I cannot,
-    // sounds dumb but is this a function that just runs once inside the script ?
-    // i know i can place scripts inside unity and it justruns so im wondering something similar ? dumb i know}
+    /// GIZMO - {so this is an odd function i need to check if I can call this, as at times I cannot,
     void OnDrawGizmos()
     {
         var triangulation = NavMesh.CalculateTriangulation();
@@ -94,13 +152,6 @@ public class AiManager : MonoBehaviour
         }
     }
    
-    // Check for point inside the NavMesh
-    bool IsPointInsideNavMeshBounds(Vector3 point)
-    {
-        float distance = Vector3.Distance(point, navMeshCenter);
-        PrintTools.Print("Distance is inside = True", "red");                                        // Debug
-        return distance <= navMeshWorldRadius;
-    }
 
 
 }       // END
