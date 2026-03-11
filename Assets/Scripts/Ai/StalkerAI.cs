@@ -68,7 +68,9 @@ public class StalkerAI : MonoBehaviour
         ///Vector3 target = player.position - dir * stalk_value;
         if (stalkTimer > 5.0f)
         {
-            Vector3 stalkPoint = GetValidPointNearPlayer(navMesh_radius);       // stalk_value
+            //Vector3 stalkPoint = GetValidPointNearPlayer(navMesh_radius);         // stalk_value
+            //Vector3 stalkPoint = GetRefinedStalkPoint(navMesh_radius);              // stalk_value
+            Vector3 stalkPoint = GetAValidPointNearPlayer(navMesh_radius);              // stalk_value
             // Check if path is complete first
             if (agent.CalculatePath(stalkPoint, path) && path.status == NavMeshPathStatus.PathComplete)
             {
@@ -92,10 +94,10 @@ public class StalkerAI : MonoBehaviour
 
         //if (!agent.pathPending)
         //    Debug.Log("Agent path status: " + agent.pathStatus + ", remainingDist=" + agent.remainingDistance);
-        //NavMeshHit hit;
-        //Vector3 testPos = new Vector3(transform.position.x, transform.position.y, transform.position.z); // e.g. player position or door threshold
-        //bool onMesh = NavMesh.SamplePosition(testPos, out hit, 0.5f, NavMesh.AllAreas);
-        //Debug.Log("SamplePosition(" + testPos + "): " + onMesh + " at " + hit.position);
+        NavMeshHit hit;
+        Vector3 testPos = new Vector3(transform.position.x, transform.position.y, transform.position.z); // e.g. player position or door threshold
+        bool onMesh = NavMesh.SamplePosition(testPos, out hit, 0.5f, NavMesh.AllAreas);
+        Debug.Log("SamplePosition(" + testPos + "): " + onMesh + " at " + hit.position);
 
     }
 
@@ -184,8 +186,54 @@ public class StalkerAI : MonoBehaviour
     }
 
 
+    /// <summary>
+    ///  AI - Function 3.
+    ///  Improved candidate selection: navmesh sample -> LOS check -> path completeness
+    /// </summary>
+    Vector3 GetAValidPointNearPlayer(float radius)
+    {
+        // attempt many times
+        for (int i = 0; i < 30; i++)
+        {
+            Vector2 circle = Random.insideUnitCircle.normalized * Random.Range(radius * 0.5f, radius);
+            Vector3 randomPoint = player.position + new Vector3(circle.x, 0f, circle.y);
 
-                            // --- HELPERS
+            NavMeshHit hit;
+            // use a slightly larger sample radius to catch near edges
+            if (!NavMesh.SamplePosition(randomPoint, out hit, 3.0f, NavMesh.AllAreas))
+                continue;
+
+            Vector3 candidate = hit.position;
+
+            // 1) candidate must have a path from agent (complete)
+            NavMeshPath testPath = new NavMeshPath();
+            if (!agent.CalculatePath(candidate, testPath) || testPath.status != NavMeshPathStatus.PathComplete)
+                continue;
+
+            // 2) candidate should have direct line-of-sight to the player (no walls)
+            // Ray from candidate -> player
+            Vector3 start = candidate + Vector3.up * 1.0f;   // raise off floor slightly
+            Vector3 target = player.position + Vector3.up * 1.0f;
+            if (!HasLineOfSight(start, target))
+            {
+                // candidate blocked by environment, reject
+                continue;
+            }
+
+            // success
+            return candidate;
+        }
+
+        // fallback: return a point near player but clamp to navmesh sample
+        NavMeshHit fallback;
+        if (NavMesh.SamplePosition(player.position, out fallback, 2.0f, NavMesh.AllAreas))
+            return fallback.position;
+
+        return player.position;
+    }
+
+
+    // --- HELPERS
     /// <summary>
     /// HELPER - Function 0.
     /// helper: set destination but do not allow agent to continue if within stoppingDistance
@@ -231,6 +279,73 @@ public class StalkerAI : MonoBehaviour
     }
 
 
+    // Raycast helper using environmentMask. Returns true when no blocking hit found (i.e., direct sight)
+    bool HasLineOfSight(Vector3 from, Vector3 to)
+    {
+        Vector3 dir = to - from;
+        float dist = dir.magnitude;
+        if (dist <= 0.001f) return true;
+
+        RaycastHit hit;
+        // Only check collisions against environmentMask (set this to walls/doors in inspector)
+        if (Physics.Raycast(from, dir.normalized, out hit, dist, environmentMask, QueryTriggerInteraction.Ignore))
+        {
+            // NEW: Check if what we hit is actually an obstacle, not the player or ourselves
+            if (hit.transform != player && hit.transform != transform)
+            {
+                PrintTools.Print("It hit a wall or prop!");
+                return false;   // It hit a wall or prop! hit something before reaching the target: blocked
+            }
+
+        }
+
+        return true;  // Clear sight (or only hit the player)
+    }
+
+
+
+    /// <summary>
+    /// AI - Function 3 (Refined).
+    /// Uses NavMesh.Raycast to ensure the point is in the same room, 
+    /// then Physics.Raycast to ensure no small props are blocking the view.
+    /// </summary>
+    Vector3 GetRefinedStalkPoint(float radius)
+    {
+        for (int i = 0; i < 30; i++)
+        {
+            // Pick a random spot
+            Vector2 circle = Random.insideUnitCircle.normalized * Random.Range(radius * 0.5f, radius);
+            Vector3 randomPoint = player.position + new Vector3(circle.x, 0, circle.y);
+
+            NavMeshHit hit;
+            // 1. Is this point on the floor?
+            if (NavMesh.SamplePosition(randomPoint, out hit, 3.0f, NavMesh.AllAreas))
+            {
+                // 2. NAVMESH FLOOR CHECK: Is there a wall boundary between player and point?
+                // NavMesh.Raycast returns TRUE if it HITS a wall. We want FALSE.
+                NavMeshHit navHit;
+                if (!NavMesh.Raycast(player.position, hit.position, out navHit, NavMesh.AllAreas))
+                {
+                    // 3. SIGHT CHECK: Is there a prop/environment object in the way?
+                    Vector3 eyeLevelStart = hit.position + Vector3.up * 1.5f;
+                    Vector3 eyeLevelTarget = player.position + Vector3.up * 1.5f;
+
+                    if (HasLineOfSight(eyeLevelStart, eyeLevelTarget))
+                    {
+                        // 4. PATH CHECK: Can the AI actually walk here?
+                        NavMeshPath testPath = new NavMeshPath();
+                        if (agent.CalculatePath(hit.position, testPath) && testPath.status == NavMeshPathStatus.PathComplete)
+                        {
+                            return hit.position; // Success!
+                        }
+                    }
+                }
+            }
+        }
+
+        // Fallback if no perfect spot is found in 30 tries
+        return player.position;
+    }
 
 
 
