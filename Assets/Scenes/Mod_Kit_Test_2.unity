@@ -867,6 +867,52 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: d794ee14e4988bf48be34003e2319d42, type: 3}
   m_PrefabInstance: {fileID: 499227342}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &583460165
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 583460167}
+  - component: {fileID: 583460166}
+  m_Layer: 0
+  m_Name: 00.GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &583460166
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 583460165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5667f54876868a04594bbace27325b7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FPSTarget
+  switch_60: 1
+  switch_30: 0
+--- !u!4 &583460167
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 583460165}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &771167326
 GameObject:
   m_ObjectHideFlags: 0
@@ -906,6 +952,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1035289686}
     m_Modifications:
+    - target: {fileID: 770187780301805777, guid: 163ed7a7dec89894483c0885071df2b0, type: 3}
+      propertyPath: isLightOn
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3433035506047690157, guid: 163ed7a7dec89894483c0885071df2b0, type: 3}
       propertyPath: m_Name
       value: 'Player_YBot(FLASLIGHT_MOD)[TEST]'
@@ -2422,6 +2472,7 @@ SceneRoots:
   - {fileID: 999080440}
   - {fileID: 1432059318}
   - {fileID: 1349338058}
+  - {fileID: 583460167}
   - {fileID: 1035289686}
   - {fileID: 998680529}
   - {fileID: 1483275823}

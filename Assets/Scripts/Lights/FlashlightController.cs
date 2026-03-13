@@ -9,7 +9,7 @@ public class FlashlightController : MonoBehaviour
     public float lightRange = 20.0f;
     public float fieldOfView = 45.0f; // This is 'Spot Angle'
 
-    private bool isLightOn = true;
+    [SerializeField] private bool isLightOn = true;
 
     void Start()
     {
@@ -21,6 +21,7 @@ public class FlashlightController : MonoBehaviour
 
         // Apply your float settings
         UpdateLightSettings();
+        mySpotlight.enabled = isLightOn;
     }
 
     void Update()
