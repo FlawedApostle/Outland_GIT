@@ -1,30 +1,28 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public static class NavHelper
+[ExecuteAlways] // lets OnDrawGizmos show in editor and runtime
+public class NavHelper : MonoBehaviour
 {
-    // Returns the total "radius" (size) of the current NavMesh
-    public static float GetWorldRadius()
+    public NavMeshAgent agent;
+    public bool drawTriangles = true;
+    public Color navmeshColor = Color.green;
+    public bool drawAgentPath = true;
+    public Color agentPathColor = new Color(0.2f, 0.8f, 0.2f); // lime-ish
+    [Tooltip("0 = draw for one frame (call each frame). >0 = seconds to persist.")]
+    public float duration = 0f;
+
+    void Update()
     {
-        NavMeshTriangulation tri = NavMesh.CalculateTriangulation();
-        if (tri.vertices.Length == 0) return 0f;
-
-        Bounds bounds = new Bounds(tri.vertices[0], Vector3.zero);
-        foreach (Vector3 point in tri.vertices) bounds.Encapsulate(point);
-
-        // Returns half the diagonal size of the map
-        return bounds.extents.magnitude;
+        // if duration == 0 you'll want to call these every frame (Update)
+        if (drawTriangles) NavDebugger.DrawNavMeshTriangles(navmeshColor, duration);
+        if (drawAgentPath && agent != null) NavDebugger.DebugAgentPath(agent, agentPathColor, duration);
     }
 
-    // Returns the absolute CENTER of your map (useful if your level isn't at 0,0,0)
-    public static Vector3 GetWorldCenter()
+    // Optional: draws when the object is selected in Editor
+    void OnDrawGizmosSelected()
     {
-        NavMeshTriangulation tri = NavMesh.CalculateTriangulation();
-        if (tri.vertices.Length == 0) return Vector3.zero;
-
-        Bounds bounds = new Bounds(tri.vertices[0], Vector3.zero);
-        foreach (Vector3 point in tri.vertices) bounds.Encapsulate(point);
-
-        return bounds.center;
+        if (drawTriangles) NavDebugger.DrawNavMeshTriangles(navmeshColor, 0f);
+        if (drawAgentPath && agent != null) NavDebugger.DebugAgentPath(agent, agentPathColor, 0f);
     }
 }

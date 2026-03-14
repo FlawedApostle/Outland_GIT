@@ -46,8 +46,8 @@ public static class PrintTools
     // Get World Nav Mesh Radius - relying on NavMesh script placed in world
     public static void ReportWorldSize()
     {
-        float radius = NavHelper.GetWorldRadius();
-        Vector3 center = NavHelper.GetWorldCenter();
+        float radius = NavDebugger.GetWorldRadius();
+        Vector3 center = NavDebugger.GetWorldCenter();
 
         // Using your 3-parameter print style: Value, Title, Color
         Print(radius.ToString("F2"), "--- NAVMESH RADIUS ---", "cyan");

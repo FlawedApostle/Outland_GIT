@@ -31,8 +31,8 @@ public class EnemyPatrol : MonoBehaviour
         agent.Warp(transform.position);
 
         // 2. GET MAP DATA (The logic you asked for)
-        calculatedMapRadius = NavHelper.GetWorldRadius();
-        mapCenter = NavHelper.GetWorldCenter();
+        calculatedMapRadius = NavDebugger.GetWorldRadius();
+        mapCenter = NavDebugger.GetWorldCenter();
 
         // 3. PRINT IT
         // Using your PrintTools format: "Value", "Title", "Color"
