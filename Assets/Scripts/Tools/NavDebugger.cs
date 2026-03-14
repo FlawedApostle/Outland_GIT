@@ -9,6 +9,9 @@ public static class NavDebugger
     public static Vector3 navMeshCenter;
 
 
+
+
+
     // Returns the total "radius" (size) of the current NavMesh
     public static float GetWorldRadius()
     {
@@ -19,7 +22,9 @@ public static class NavDebugger
         foreach (Vector3 point in tri.vertices) bounds.Encapsulate(point);
 
         // Returns half the diagonal size of the map
-        return bounds.extents.magnitude;
+        //return bounds.extents.magnitude;
+        // Align radii better with Rectanglular maps
+        return Mathf.Max(bounds.extents.x, bounds.extents.z);
     }
 
     // Returns the absolute CENTER of your map (useful if your level isn't at 0,0,0)
@@ -65,7 +70,7 @@ public static class NavDebugger
 
     }
 
-    /// Read The NavMesh Bounds
+    // Read The NavMesh Bounds
     public static void ReadNavMeshBounds()
     {
         var triangulation = NavMesh.CalculateTriangulation();

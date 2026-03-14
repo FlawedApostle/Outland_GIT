@@ -79,7 +79,6 @@ public class EnemyPatrol : MonoBehaviour
         // 2. IMPORTANT: Decide if this is "Global" or "Local"
         // If patrolRadius is HUGE (like the whole map), we add it to mapCenter.
         // If patrolRadius is SMALL (like 15), we add it to transform.position (Local Patrol).
-
         Vector3 targetOrigin = (patrolRadius >= calculatedMapRadius * 0.5f) ? mapCenter : transform.position;
 
 
