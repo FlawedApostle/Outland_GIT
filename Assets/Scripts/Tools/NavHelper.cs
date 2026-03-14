@@ -12,11 +12,22 @@ public class NavHelper : MonoBehaviour
     [Tooltip("0 = draw for one frame (call each frame). >0 = seconds to persist.")]
     public float duration = 0f;
 
+    // Add this to your NavHelper class
+    [ContextMenu("Recalculate NavMesh Bounds")]
+    void RefreshBounds()
+    {
+        NavDebugger.ReadNavMeshBounds();
+        Debug.Log($"NavMesh Center: {NavDebugger.navMeshCenter}, Radius: {NavDebugger.navMeshWorldRadius}");
+    }
+
     void Update()
     {
         // if duration == 0 call these every frame (Update)
-        if (drawTriangles) NavDebugger.DrawNavMeshTriangles(navmeshColor, duration);
-        if (drawAgentPath && agent != null) NavDebugger.DebugAgentPath(agent, agentPathColor, duration);
+        //if (duration <= 0 )
+        //{
+        //if (drawTriangles) NavDebugger.DrawNavMeshTriangles(navmeshColor, duration);
+        //if (drawAgentPath && agent != null) NavDebugger.DebugAgentPath(agent, agentPathColor, duration);
+        //}
     }
 
     // Optional: draws when the object is selected in Editor

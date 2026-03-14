@@ -1,8 +1,14 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
 public static class NavDebugger
 {
+
+    public static float navMeshWorldRadius;
+    public static Vector3 navMeshCenter;
+
+
     // Returns the total "radius" (size) of the current NavMesh
     public static float GetWorldRadius()
     {
@@ -39,6 +45,9 @@ public static class NavDebugger
         }
     }
 
+
+    // -- NAVMESH
+
     public static void DrawNavMeshTriangles(Color color, float duration = 0f)
     {
         var tri = NavMesh.CalculateTriangulation();
@@ -55,4 +64,69 @@ public static class NavDebugger
         }
 
     }
-}
+
+    /// Read The NavMesh Bounds
+    public static void ReadNavMeshBounds()
+    {
+        var triangulation = NavMesh.CalculateTriangulation();
+        var vertices = triangulation.vertices;
+
+        if (vertices.Length == 0) return;
+
+        Vector3 min = vertices[0];
+        Vector3 max = vertices[0];
+
+        foreach (var v in vertices)
+        {
+            min = Vector3.Min(min, v);
+            max = Vector3.Max(max, v);
+        }
+
+        navMeshCenter = (min + max) * 0.5f;
+        navMeshWorldRadius = Vector3.Distance(min, max) * 0.5f;
+    }
+
+
+    public static List<Vector3> GetAllNavMeshPoints(int samplesPerTriangle = 5)
+    {
+        var triangulation = NavMesh.CalculateTriangulation();
+        var verts = triangulation.vertices;
+        var indices = triangulation.indices;
+
+        List<Vector3> points = new List<Vector3>();
+
+        for (int i = 0; i < indices.Length; i += 3)
+        {
+            Vector3 a = verts[indices[i]];
+            Vector3 b = verts[indices[i + 1]];
+            Vector3 c = verts[indices[i + 2]];
+
+            for (int s = 0; s < samplesPerTriangle; s++)
+            {
+                // Random barycentric coordinates
+                float r1 = Random.value;
+                float r2 = Random.value;
+
+                // Ensure point stays inside triangle
+                if (r1 + r2 > 1f)
+                {
+                    r1 = 1f - r1;
+                    r2 = 1f - r2;
+                }
+
+                Vector3 p = a + r1 * (b - a) + r2 * (c - a);
+
+                // Optional: project to nearest NavMesh point (ensures validity)
+                if (NavMesh.SamplePosition(p, out NavMeshHit hit, 0.1f, NavMesh.AllAreas))
+                    points.Add(hit.position);
+            }
+        }
+
+        return points;
+    }
+
+
+
+
+
+}       // END

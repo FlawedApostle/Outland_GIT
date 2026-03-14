@@ -31,7 +31,7 @@ public class AiManager : MonoBehaviour
 
 
     // ---- PATH TRACING 
-    /// Path Debugging - checking whether the enemy has found a partial / failed / completed path
+    // Check The Path Between ENEMY and PLAYER
     void NavMeshPathTest()
     {
         NavMeshPath debugPath = new NavMeshPath();
