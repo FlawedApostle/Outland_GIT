@@ -22,13 +22,46 @@ public class AiManager : MonoBehaviour
 
     void Update()
     {
-        NavMeshPathTest();  DebugAgentPath(agent);                               
+        NavMeshPathTest();
+        //DebugAgentPath(agent);                               
         // DebugSampleEndpoints();  /Position_Player(player_user, player_enemy); 
-        Direction_ForwardVector(player_user);
-        Direction_ToEnemy(player_user, player_enemy);
+        //Direction_ForwardVector(player_user);
+        //Direction_ToEnemy(player_user, player_enemy);
     }
 
-    /// Is the player facing the enemy
+
+    // ---- PATH TRACING 
+    /// Path Debugging - checking whether the enemy has found a partial / failed / completed path
+    void NavMeshPathTest()
+    {
+        NavMeshPath debugPath = new NavMeshPath();
+        if (NavMesh.CalculatePath(player_enemy.position, player_user.position, NavMesh.AllAreas, debugPath))
+        {
+            Debug.Log("PATH STATUS = " + debugPath.status);
+        }
+        else
+        {
+            Debug.Log("CalculatePath FAILED");
+        }
+    }
+
+
+    // Draw NavMesh On Screen with Color
+    void DebugAgentPath(NavMeshAgent agent)
+    {
+        // debugging 
+        NavMeshPath debugPath = agent.path;
+        for (int i = 1; i < debugPath.corners.Length; i++)
+        {
+            Debug.DrawLine(debugPath.corners[i - 1], debugPath.corners[i], Color.limeGreen, 1.0f);
+        }
+
+        //if (!agent.pathPending)
+        //    Debug.Log("Agent path status: " + agent.pathStatus + ", remainingDist=" + agent.remainingDistance);
+    }
+
+    // --- ENEMY PATH TRACING
+    /// Is User Looking At Enemy  - Check the forward transform of the User in Relation to the Enemy
     void Direction_ToEnemy(Transform _player , Transform _enemy)
     {
         Vector3 dirToEnemy = (_enemy.position - _player.position).normalized;
@@ -44,14 +77,14 @@ public class AiManager : MonoBehaviour
         }
     }
 
-    /// What direction is the player facing using direction Vector transform.forward
+    // Direction The player facing using direction Vector transform.forward
     void Direction_ForwardVector(Transform _player)
     {
-        //Debug.Log("Player Forward Dir: " + player_user.forward);
+        ///Debug.Log("Player Forward Dir: " + player_user.forward);
         PrintTools.Print("Player Forward Direction vector: ", _player.forward, "green");
     }
 
-    // FIX THIS - SOME REASON THE ENEMY & THE PLAYER ARE THE SAME LOCATION
+    /// FIX THIS - SOME REASON THE ENEMY & THE PLAYER ARE THE SAME LOCATION
     void Position_Player(Transform _player , Transform _enemy)
     {
         /// player_user
@@ -63,33 +96,9 @@ public class AiManager : MonoBehaviour
         PrintTools.Print("Enemy Position XYZ: ", pos_enemy, "red");
     }
 
-    /// THis is the navmesh drawn with color
-    void DebugAgentPath(NavMeshAgent agent)
-    {
-        // debugging 
-        NavMeshPath debugPath = agent.path;
-        for (int i = 1; i < debugPath.corners.Length; i++)
-        {
-            Debug.DrawLine(debugPath.corners[i - 1], debugPath.corners[i], Color.limeGreen, 1.0f);
-        }
 
-        //if (!agent.pathPending)
-        //    Debug.Log("Agent path status: " + agent.pathStatus + ", remainingDist=" + agent.remainingDistance);
-    }
 
-    /// Path Debugging - checking whether the enemy has found a partial / failed / completed path
-    void NavMeshPathTest()
-    {
-        NavMeshPath debugPath = new NavMeshPath();
-        if (NavMesh.CalculatePath(player_enemy.position, player_user.position, NavMesh.AllAreas, debugPath))
-        {
-            Debug.Log("PATH STATUS = " + debugPath.status);
-        }
-        else
-        {
-            Debug.Log("CalculatePath FAILED");
-        }
-    }
+
 
     /// Sample Positions of player & enemy
     void DebugSampleEndpoints()

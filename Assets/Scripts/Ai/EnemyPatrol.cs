@@ -23,7 +23,8 @@ public class EnemyPatrol : MonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        anim = GetComponent<Animator>();
+        anim = GetComponentInChildren<Animator>();
+        if(anim == null) { Debug.LogError("Animator :: Anim is Not Found of Component In 'Children'"); }
 
         PrintTools.ReportWorldSize();
 

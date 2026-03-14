@@ -14,7 +14,7 @@ public class NavHelper : MonoBehaviour
 
     void Update()
     {
-        // if duration == 0 you'll want to call these every frame (Update)
+        // if duration == 0 call these every frame (Update)
         if (drawTriangles) NavDebugger.DrawNavMeshTriangles(navmeshColor, duration);
         if (drawAgentPath && agent != null) NavDebugger.DebugAgentPath(agent, agentPathColor, duration);
     }
