@@ -14,12 +14,21 @@ public static class NavDebugger
     // -- NAVMESH
 
     // Get The NavMesh Points - Right Click In Inspector
-    public static List<Vector3> GetAllNavMeshPoints(int samplesPerTriangle = 5)
+    public static List<Vector3> GetAllNavMeshPoints(int samplesPerTriangle = 5, float minDistance = 0.5f)
     {
         var triangulation = NavMesh.CalculateTriangulation();
         var verts = triangulation.vertices;
         var indices = triangulation.indices;
         List<Vector3> points = new List<Vector3>();
+
+
+        // Spatial hash (grid) to quickly check nearby points
+        if (verts == null || indices == null || indices.Length == 0) return points;
+        if (minDistance <= 0f) minDistance = 0.0001f;
+
+        var buckets = new Dictionary<long, List<Vector3>>();
+        float cellSize = minDistance;
+
 
         for (int i = 0; i < indices.Length; i += 3)
         {
@@ -33,7 +42,7 @@ public static class NavDebugger
                 float r1 = Random.value;
                 float r2 = Random.value;
 
-                // Ensure point stays inside triangle
+                // ENSURE POINT STAYS INSIDE TRIANGLE
                 /// point = A + some amount toward B + some amount toward C
                 /// (b - a) = direction from A → B , (c - a) = direction from A → C
                 if (r1 + r2 > 1f) 
@@ -43,23 +52,56 @@ public static class NavDebugger
                 Vector3 p = a + r1 * (b - a) + r2 * (c - a);
 
         
-                // Optional: project to nearest NavMesh point (ensures validity)
+                // Pproject to nearest NavMesh point (ensures validity)
                 if (NavMesh.SamplePosition(p, out NavMeshHit hit, 0.1f, NavMesh.AllAreas))
                 {
+
+                    Vector3 hp = hit.position;
+
+                    // Convert world position → grid cell index
+                    int cellX = Mathf.FloorToInt(hp.x / cellSize);
+                    int cellZ = Mathf.FloorToInt(hp.z / cellSize);
+
+
                     // NEW: Check if OVerlap - Find New Point 0.5 apart
                     bool tooClose = false;
-                    foreach (Vector3 existingPoint in points)
+
+                    // Check this cell + the 8 surrounding cells
+                    for (int offsetX = -1; offsetX <= 1 && !tooClose; offsetX++)
                     {
-                        if (Vector3.Distance(hit.position, existingPoint) < 0.5f) // 0.5m buffer
+                        for (int offsetZ = -1; offsetZ <= 1 && !tooClose; offsetZ++)
                         {
-                            tooClose = true;
-                            break;
+                            long neighborKey =
+                                ((long)(cellX + offsetX) << 32) ^ (uint)(cellZ + offsetZ);
+
+                            if (buckets.TryGetValue(neighborKey, out List<Vector3> neighborPoints))
+                            {
+                                for (int n = 0; n < neighborPoints.Count; n++)
+                                {
+                                    if ((neighborPoints[n] - hp).sqrMagnitude <
+                                        minDistance * minDistance)
+                                    {
+                                        tooClose = true;
+                                        break;
+                                    }
+                                }
+                            }
                         }
                     }
 
                     if (!tooClose)
                     {
-                        points.Add(hit.position);
+                        points.Add(hp);
+
+                        long cellKey = ((long)cellX << 32) ^ (uint)cellZ;
+
+                        if (!buckets.TryGetValue(cellKey, out List<Vector3> cellList))
+                        {
+                            cellList = new List<Vector3>();
+                            buckets.Add(cellKey, cellList);
+                        }
+
+                        cellList.Add(hp);
                     }
                 }
             }
@@ -185,3 +227,15 @@ public static class NavDebugger
 
 
 }       // END
+
+
+/// - OLD Deprecated 
+
+//foreach (Vector3 existingPoint in points)
+//{
+//    if (Vector3.Distance(hit.position, existingPoint) < 3.0f) // 0.5m buffer        ADD A RANGE SLIDER TO INCREASE DECRASE DISTANCE !
+//    {
+//        tooClose = true;
+//        break;
+//    }
+//}

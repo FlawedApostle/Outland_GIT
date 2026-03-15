@@ -22,8 +22,14 @@ public class NavHelper : MonoBehaviour
     // Generate Points
     [Header("Point Cloud Testing")]
     public bool showPointSamples = false;
-    public Color validPointColor = Color.green;             // Pick Color
-    [Range(1,20)] public int samplesPerTriangle = 3;            // Increase Amount    
+    public Color validPointColor = Color.green;                  // Pick Color
+    [Range(1,20)] public int samplesPerTriangle = 3;            // Increase Amount
+
+    // NEW: min distance slider for points
+    [Header("Sampling Spacing")]
+    [Tooltip("Minimum distance (meters) between generated sample points")]
+    [Range(0.1f, 5f)] public float minPointDistance = 0.5f;
+
     private List<Vector3> cachedPoints = new List<Vector3>();
 
     // -----------------------------------------------------
@@ -34,7 +40,7 @@ public class NavHelper : MonoBehaviour
     [ContextMenu("Generate Point Samples")]
     public void GenerateSamples()
     {
-        cachedPoints = NavDebugger.GetAllNavMeshPoints(samplesPerTriangle); // 3 samples per tri is plenty
+        cachedPoints = NavDebugger.GetAllNavMeshPoints(samplesPerTriangle , minPointDistance); // 3 samples per tri is plenty
         Debug.Log($"Generated {cachedPoints.Count} points from NavMesh.");
     }
 
