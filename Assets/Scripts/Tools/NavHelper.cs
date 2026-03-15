@@ -22,6 +22,8 @@ public class NavHelper : MonoBehaviour
     // Generate Points
     [Header("Point Cloud Testing")]
     public bool showPointSamples = false;
+    public Color validPointColor = Color.green;             // Pick Color
+    [Range(1,20)] public int samplesPerTriangle = 3;            // Increase Amount    
     private List<Vector3> cachedPoints = new List<Vector3>();
 
     // -----------------------------------------------------
@@ -32,7 +34,7 @@ public class NavHelper : MonoBehaviour
     [ContextMenu("Generate Point Samples")]
     public void GenerateSamples()
     {
-        cachedPoints = NavDebugger.GetAllNavMeshPoints(3); // 3 samples per tri is plenty
+        cachedPoints = NavDebugger.GetAllNavMeshPoints(samplesPerTriangle); // 3 samples per tri is plenty
         Debug.Log($"Generated {cachedPoints.Count} points from NavMesh.");
     }
 
@@ -61,6 +63,7 @@ public class NavHelper : MonoBehaviour
     // FUNCTIONS
     // -----------------------------------------------------
     
+    // Draw NavMesh Lines on Triangles
     void DrawNavMeshLines()
     {
         var tri = NavMesh.CalculateTriangulation();
@@ -76,17 +79,7 @@ public class NavHelper : MonoBehaviour
         }
     }
 
-    // Take the generated points from NavDebugger.GetAllNavMeshPoints stored in cachedPoints and relay onto the screen
-    //void DrawPointSamples()
-    //{
-    //    if (cachedPoints == null) return;
-    //    Gizmos.color = Color.darkRed;
-    //    foreach (Vector3 p in cachedPoints)
-    //    {
-    //        Gizmos.DrawSphere(p, 0.1f);
-    //    }
-    //}
-
+    // Gather Points on Triangle
     void DrawPointSamples()
     {
         if (cachedPoints == null) return;
@@ -95,9 +88,9 @@ public class NavHelper : MonoBehaviour
         {
             // This checks LIVE if the point is still on the NavMesh
             if (NavMesh.SamplePosition(p, out NavMeshHit hit, 0.1f, NavMesh.AllAreas))
-                Gizmos.color = Color.green; // Safe!
+                Gizmos.color = validPointColor; // Safe!
             else
-                Gizmos.color = Color.red;   // Outside/Invalid!
+                Gizmos.color = Color.red;       // Outside/Invalid!
 
             Gizmos.DrawSphere(p, 0.1f);
         }
