@@ -142,24 +142,24 @@ public class AiManager : MonoBehaviour
         return distance <= navMeshWorldRadius;
     }
 
-    /// GIZMO - {so this is an odd function i need to check if I can call this, as at times I cannot,
-    void OnDrawGizmos()
-    {
-        var triangulation = NavMesh.CalculateTriangulation();
+    ///// GIZMO - {so this is an odd function i need to check if I can call this, as at times I cannot,
+    //void OnDrawGizmos()
+    //{
+    //    var triangulation = NavMesh.CalculateTriangulation();
 
-        Gizmos.color = Color.violetRed;
+    //    Gizmos.color = Color.blue;
 
-        for (int i = 0; i < triangulation.indices.Length; i += 3)
-        {
-            Vector3 a = triangulation.vertices[triangulation.indices[i]];
-            Vector3 b = triangulation.vertices[triangulation.indices[i + 1]];
-            Vector3 c = triangulation.vertices[triangulation.indices[i + 2]];
+    //    for (int i = 0; i < triangulation.indices.Length; i += 3)
+    //    {
+    //        Vector3 a = triangulation.vertices[triangulation.indices[i]];
+    //        Vector3 b = triangulation.vertices[triangulation.indices[i + 1]];
+    //        Vector3 c = triangulation.vertices[triangulation.indices[i + 2]];
 
-            Gizmos.DrawLine(a, b);
-            Gizmos.DrawLine(b, c);
-            Gizmos.DrawLine(c, a);
-        }
-    }
+    //        Gizmos.DrawLine(a, b);
+    //        Gizmos.DrawLine(b, c);
+    //        Gizmos.DrawLine(c, a);
+    //    }
+    //}
    
 
 
