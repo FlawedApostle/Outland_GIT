@@ -154,6 +154,9 @@ public static class NavDebugger
             Vector3 hp = hit.position;
 
             // Grid Cell - Spatial Hash
+            // Bucket List - WHen a point falls into a grid block its dropped into that 'bucket'
+            // When a random point is found on the NavMesh - Its x y coordinates are divided by the cellSize
+            // - This tells what square did the point land in - which 'bucket/grid did it land in'
             int bx = Mathf.FloorToInt(hp.x / cellSize);
             int bz = Mathf.FloorToInt(hp.z / cellSize);
 
@@ -163,6 +166,7 @@ public static class NavDebugger
             {
                 for (int dz = -1; dz <= 1 && !tooClose; dz++)
                 {
+                    // Bit shift
                     long nkey = ((long)(bx + dx) << 32) ^ (uint)(bz + dz);
                     if (buckets.TryGetValue(nkey, out List<Vector3> list))
                     {
