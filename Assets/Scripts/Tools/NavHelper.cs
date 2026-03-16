@@ -5,10 +5,6 @@ using UnityEngine.AI;
 [ExecuteAlways] // lets OnDrawGizmos show in editor and runtime
 public class NavHelper : MonoBehaviour
 {
-    [Tooltip("0 = draw for one frame (call each frame). >0 = seconds to persist.")]
-    public float duration = 0f;
-    public bool drawTriangles = true;
-    
     [Header("Agent Settings")]
     public NavMeshAgent agent;
     public bool drawAgentPath = true;
@@ -180,33 +176,6 @@ public class NavHelper : MonoBehaviour
     //        Gizmos.DrawWireCube(agent.destination, new Vector3(0.5f, 0.5f, 0.5f));
     //        Gizmos.DrawLine(agent.transform.position, agent.destination);
     //    }
-    //}
-
-
-
-
-
-
-
-
-
-
-    //void Update()
-    //{
-    //    //if duration == 0 call these every frame(Update)
-    //    //if (duration <= 0)
-    //    //{
-    //        //if (drawTriangles) NavDebugger.DrawNavMeshTriangles(navmeshColor, duration);
-    //        //if (drawAgentPath && agent != null) NavDebugger.DebugAgentPath(agent, agentPathColor, duration);
-    //    //}
-    //}
-
-
-    //// Optional: draws when the object is selected in Editor
-    //void OnDrawGizmosSelected()
-    //{
-    //    //if (drawTriangles) NavDebugger.DrawNavMeshTriangles(navmeshColor, 0f);
-    //    //if (drawAgentPath && agent != null) NavDebugger.DebugAgentPath(agent, agentPathColor, 0f);
     //}
 
 

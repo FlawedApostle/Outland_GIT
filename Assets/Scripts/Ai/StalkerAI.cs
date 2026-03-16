@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SocialPlatforms;
 using static UnityEngine.GraphicsBuffer;
 // This is is in testing phase 1.1
 public class StalkerAI : MonoBehaviour
@@ -15,6 +16,7 @@ public class StalkerAI : MonoBehaviour
     public float navMesh_radius = 5f;
     public float stalk_value = 3f;
     public bool directFollowMode = false;
+    [Range (0.1f , 5.0f)] public float Enemy_Distance = 0.2f;
     public LayerMask environmentMask = ~0; // set in inspector to only world (walls/floors), default everything
 
     float stalkTimer;
@@ -68,8 +70,8 @@ public class StalkerAI : MonoBehaviour
         ///Vector3 target = player.position - dir * stalk_value;
         if (stalkTimer > 5.0f)
         {
-            //Vector3 stalkPoint = GetValidPointNearPlayer(navMesh_radius);         // stalk_value
-            //Vector3 stalkPoint = GetRefinedStalkPoint(navMesh_radius);              // stalk_value
+            //Vector3 stalkPoint = GetValidPointNearPlayer(navMesh_radius);             // stalk_value
+            //Vector3 stalkPoint = GetRefinedStalkPoint(navMesh_radius);                // stalk_value
             Vector3 stalkPoint = GetAValidPointNearPlayer(navMesh_radius);              // stalk_value
             // Check if path is complete first
             if (agent.CalculatePath(stalkPoint, path) && path.status == NavMeshPathStatus.PathComplete)
@@ -240,8 +242,8 @@ public class StalkerAI : MonoBehaviour
     /// </summary>
     void SetAgentDestinationWithStop(Vector3 dest)
     {
-        float dist = Vector3.Distance(transform.position, dest);            // transform is the Ai - not using a inspector Transform
-        if (dist <= agent.stoppingDistance + 0.1f)                          // float value is distance value of which it stops
+        float dist = Vector3.Distance(transform.position, dest);                        // transform is the Ai - not using a inspector Transform
+        if (dist <= agent.stoppingDistance + Enemy_Distance)                            // float value is distance value of which it stops
         {
             agent.isStopped = true;
             agent.ResetPath();
