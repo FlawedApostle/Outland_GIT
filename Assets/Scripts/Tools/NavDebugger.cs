@@ -13,7 +13,7 @@ public static class NavDebugger
 
     // -- NAVMESH
 
-    // Get The NavMesh Points - Right Click In Inspector
+    // Function 1. Get The NavMesh Points - Right Click In Inspector
     public static List<Vector3> GetAllNavMeshPoints(int samplesPerTriangle = 5, float minDistance = 0.5f)
     {
         var triangulation = NavMesh.CalculateTriangulation();
@@ -109,6 +109,91 @@ public static class NavDebugger
 
         return points;
     }
+    // Function 2. Get The NavMesh Points - Right Click In Inspector
+    public static List<Vector3> GetRandomNavMeshPoints(int count = 100, float minDistance = 0.5f, int maxAttempts = 5000, float sampleSearchRadius = 0.2f)
+    {
+        // Generate Nav Mesh info
+        var tri = NavMesh.CalculateTriangulation();                                     
+        var verts = tri.vertices;
+        var inds = tri.indices;
+
+        List<Vector3> points = new List<Vector3>();
+        if (verts == null || inds == null || verts.Length == 0) return points;
+        if (minDistance <= 0f) minDistance = 0.0001f;
+        if (count <= 0) return points;
+
+        // NavMesh (Bound-Box) - compute bounds from triangulation (min/max)
+        Vector3 min = verts[0];
+        Vector3 max = verts[0];
+        // Bound-Box-Corners --- min = bottom-left corner , max = top-right corner
+        for (int i = 1; i < verts.Length; i++)              
+        {
+            min = Vector3.Min(min, verts[i]);
+            max = Vector3.Max(max, verts[i]);
+        }
+
+        // spatial hash (grid)
+        var buckets = new Dictionary<long, List<Vector3>>();
+        float cellSize = Mathf.Max(minDistance, 0.01f); // avoid 0
+        int attempts = 0;
+        // Loop for points or keep searching
+        while (points.Count < count && attempts < maxAttempts)
+        {
+            attempts++;
+
+            /// pick a random point inside XZ bounds
+            float rx = Random.Range(min.x, max.x);
+            float rz = Random.Range(min.z, max.z);
+            /// use navMesh center Y (triangulation isn't guaranteed to give a single Y) -- sample will snap to correct height
+            Vector3 randomPoint = new Vector3(rx, (min.y + max.y) * 0.5f, rz);
+
+            // sample to nearest navmesh location
+            if (!NavMesh.SamplePosition(randomPoint, out NavMeshHit hit, sampleSearchRadius, NavMesh.AllAreas))
+                continue;
+
+            Vector3 hp = hit.position;
+
+            // Grid Cell - Spatial Hash
+            int bx = Mathf.FloorToInt(hp.x / cellSize);
+            int bz = Mathf.FloorToInt(hp.z / cellSize);
+
+            bool tooClose = false;
+            // check neighbors
+            for (int dx = -1; dx <= 1 && !tooClose; dx++)
+            {
+                for (int dz = -1; dz <= 1 && !tooClose; dz++)
+                {
+                    long nkey = ((long)(bx + dx) << 32) ^ (uint)(bz + dz);
+                    if (buckets.TryGetValue(nkey, out List<Vector3> list))
+                    {
+                        for (int i = 0; i < list.Count; i++)
+                        {
+                            if ((list[i] - hp).sqrMagnitude < minDistance * minDistance)
+                            {
+                                tooClose = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (tooClose) continue;
+
+            // accept point
+            points.Add(hp);
+            long key = ((long)bx << 32) ^ (uint)bz;
+            if (!buckets.TryGetValue(key, out List<Vector3> cellList))
+            {
+                cellList = new List<Vector3>();
+                buckets.Add(key, cellList);
+            }
+            cellList.Add(hp);
+        }
+
+        return points;
+    }
+
 
     // Read The NavMesh Bounds - Right Click In Inspector
     public static void ReadNavMeshBounds()

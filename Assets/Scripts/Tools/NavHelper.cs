@@ -19,29 +19,45 @@ public class NavHelper : MonoBehaviour
     public bool drawLines = false;
     public Color navmeshColor = Color.blue;
     
-    // Generate Points
+    // 0. Generate Points - SHOW THE POINTS
     [Header("Point Cloud Testing")]
     public bool showPointSamples = false;
     public Color validPointColor = Color.green;                  // Pick Color
     [Range(1,20)] public int samplesPerTriangle = 3;            // Increase Amount
 
-    // NEW: min distance slider for points
+    // 1. Generate Points - SAMPLE MODE
+    public enum SamplingMode { PerTriangle, Random }
+    [Header("Sampling Mode")]
+    public SamplingMode samplingMode = SamplingMode.PerTriangle;
+    [Tooltip("If Random sampling selected, how many points to sample")]
+    public int randomSampleCount = 150;
+
+    // 2. Generate Points - SAMPLE SPACING
     [Header("Sampling Spacing")]
     [Tooltip("Minimum distance (meters) between generated sample points")]
     [Range(0.1f, 5f)] public float minPointDistance = 0.5f;
 
-    private List<Vector3> cachedPoints = new List<Vector3>();
 
+    private List<Vector3> cachedPoints = new List<Vector3>();
     // -----------------------------------------------------
     // INSPECTOR BUTTONS (Right-Click)
     // -----------------------------------------------------
+
 
     // Function 1. GetAllNavMeshPoints - Right Click In Inspector
     [ContextMenu("Generate Point Samples")]
     public void GenerateSamples()
     {
-        cachedPoints = NavDebugger.GetAllNavMeshPoints(samplesPerTriangle , minPointDistance); // 3 samples per tri is plenty
-        Debug.Log($"Generated {cachedPoints.Count} points from NavMesh.");
+        if (samplingMode == SamplingMode.PerTriangle)
+        {
+            cachedPoints = NavDebugger.GetAllNavMeshPoints(samplesPerTriangle , minPointDistance); // 3 samples per tri is plenty
+            Debug.Log($"Generated {cachedPoints.Count} points from NavMesh (per-triangle, samplesPerTriangle={samplesPerTriangle}).");
+        }
+        else
+        {
+            cachedPoints = NavDebugger.GetRandomNavMeshPoints(randomSampleCount, minPointDistance);
+            Debug.Log($"Generated {cachedPoints.Count} points from NavMesh (random, count={randomSampleCount}).");
+        }
     }
 
     // Function 2. Recalculate NavMesh Bounds - Right Click In Inspector
